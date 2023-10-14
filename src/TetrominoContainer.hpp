@@ -43,6 +43,7 @@ namespace GameEntity
         void moveRight();
         void moveLeft();
         void moveDown();
+        void drop();
         void rotateTeromino();
         void render();
         ~TetrominoContainer();

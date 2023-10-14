@@ -13,6 +13,8 @@ void handleKeyEvents(GameEntity::TetrominoContainer *container)
         container->moveLeft();
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
         container->moveDown();
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+        container->drop();
 }
 
 int main(int, char**)

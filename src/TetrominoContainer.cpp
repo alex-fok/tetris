@@ -86,6 +86,26 @@ void GameEntity::TetrominoContainer::moveDown()
     placeActive();
 }
 
+void GameEntity::TetrominoContainer::drop()
+{
+    int offset = 0;
+    while (true)
+    {
+        int curr_offset = m_active.offset.y + offset + 1;
+        for (int i = 0; i < Tetromino::blockCount; i++)
+        {
+            if (m_active.tetromino->blockPosition[i].y + curr_offset > m_blockCount_y - 1)
+            {
+                clearActive();
+                m_active.offset.y += offset;
+                placeActive();
+                return;
+            }
+        }
+        ++offset;
+    }
+}
+
 void GameEntity::TetrominoContainer::rotateTeromino()
 {
     const Vector *blocks = m_active.tetromino->peek();
