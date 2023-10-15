@@ -11,6 +11,7 @@ namespace GameEntity
         GameEntity::Tetromino *tetromino;
         // offset[] = {x, y}
         Vector offset;
+        int ghost_y;
     };
 
     class TetrominoContainer
@@ -32,18 +33,19 @@ namespace GameEntity
         Block m_arr[m_blockCount_y][m_blockCount_x];
 
     public:
-        TetrominoContainer(sf::RenderWindow *window, float blockSize, float borderWidth, float pos_x, float pos_y);
+        TetrominoContainer(sf::RenderWindow *w, float blockSize, float borderWidth, float pos_x, float pos_y);
+        bool isStaticBlock(Vector v);
         void moveRight();
         void moveLeft();
         void moveDown();
         void drop();
-        void rotateTetromino();
+        void rotate();
         void nextActive();
         void render();
         ~TetrominoContainer();
 
     private:
-        void placeActive(Vector, Rotation);
+        void placeActive(Vector v, Rotation r);
         void clearActive();
         
         void drawBlocks();

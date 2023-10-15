@@ -27,19 +27,53 @@ GameEntity::TetrominoContainer::TetrominoContainer(sf::RenderWindow *window, flo
     placeActive({0, 0}, Rotation::None);
 }
 
+bool GameEntity::TetrominoContainer::isStaticBlock(Vector v)
+{
+    Block b = m_arr[v.y][v.x];
+    return b.t_id != -1 && b.t_id != m_active.tetromino->id;
+}
+
 void GameEntity::TetrominoContainer::placeActive(Vector offset, Rotation dir)
 {
+    // Update active offset and rotation
     m_active.offset.x += offset.x;
     m_active.offset.y += offset.y;
     
     m_active.tetromino->rotate(dir);
 
-    // paste tetromino positions to container m_arr 
+    // Update Ghost
+    int ghost_offset = -1;
+    bool ghostFound = false;
+    while (!ghostFound)
+    {
+        ghost_offset++;
+        int offset_x = m_active.offset.x;
+        int offset_y = m_active.offset.y + ghost_offset + 1;
+        Tetromino *active = m_active.tetromino;
+        
+        for (int i = 0; i < Tetromino::blockCount; i++)
+        {
+            int y = active->position[i].y + offset_y;
+            int x = active->position[i].x + offset_x;
+            if (y > m_blockCount_y - 1 || isStaticBlock({x, y}))
+            {
+                ghostFound = true;
+                break;
+            }
+        }
+    }
+    m_active.ghost_y = ghost_offset;
+
+    // Set Tetromino and Ghost
     for (int i = 0; i < Tetromino::blockCount; i++)
     {
-        const Vector v = m_active.tetromino->blockPosition[i];
+        const Vector v = m_active.tetromino->position[i];
         m_arr[v.y + m_active.offset.y][v.x + m_active.offset.x]
             .setTetromino(m_active.tetromino->id, m_active.tetromino->type);
+
+        if (ghost_offset)
+            m_arr[v.y + m_active.offset.y + m_active.ghost_y][v.x + m_active.offset.x]
+                .setGhost(m_active.tetromino->type);
     }
 }
 
@@ -47,18 +81,15 @@ void GameEntity::TetrominoContainer::clearActive()
 {
     for (int i = 0; i < Tetromino::blockCount; i++)
     {
-        const Vector v = m_active.tetromino->blockPosition[i];
-        m_arr[v.y + m_active.offset.y][v.x + m_active.offset.x].setEmpty();
+        const Vector v = m_active.tetromino->position[i];
+        m_arr[v.y + m_active.offset.y][v.x + m_active.offset.x].reset();
+        m_arr[v.y + m_active.offset.y + m_active.ghost_y][v.x + m_active.offset.x].reset();
     }    
 }
 
-void GameEntity::TetrominoContainer::rotateTetromino()
+void GameEntity::TetrominoContainer::rotate()
 {
     const Vector *blocks = m_active.tetromino->peek();
-    for (int i = 0; i < Tetromino::blockCount; i++)
-    {
-        std::cout << "Block #" << i << ": {" << blocks[i].x << ", " << blocks[i].y << "}" << std::endl;
-    }
     
     int offset_x = 0;
     int offset_y = 0;
@@ -143,8 +174,9 @@ void GameEntity::TetrominoContainer::moveRight()
     for (int i = 0; i < Tetromino::blockCount; i++)
     {
         // new x
-        int x = m_active.tetromino->blockPosition[i].x + m_active.offset.x + 1;
-        if (x > m_blockCount_x - 1)
+        int x = m_active.tetromino->position[i].x + m_active.offset.x + 1;
+        int y = m_active.tetromino->position[i].y + m_active.offset.y;
+        if (x > m_blockCount_x - 1 || isStaticBlock({x, y}))
             return;
     }
     clearActive();
@@ -156,8 +188,9 @@ void GameEntity::TetrominoContainer::moveLeft()
     for (int i = 0; i < Tetromino::blockCount; i++)
     {
         // new x
-        int x = m_active.tetromino->blockPosition[i].x + m_active.offset.x - 1;
-        if (x < 0)
+        int x = m_active.tetromino->position[i].x + m_active.offset.x - 1;
+        int y = m_active.tetromino->position[i].y + m_active.offset.y;
+        if (x < 0 || isStaticBlock({x, y}))
             return;
     }
     clearActive();
@@ -168,9 +201,11 @@ void GameEntity::TetrominoContainer::moveDown()
 {
     for (int i = 0; i < Tetromino::blockCount; i++)
     {
+        int x = m_active.tetromino->position[i].x + m_active.offset.x;
         // new y
-        int y = m_active.tetromino->blockPosition[i].y + m_active.offset.y + 1;
-        if (y > m_blockCount_y - 1)
+        int y = m_active.tetromino->position[i].y + m_active.offset.y + 1;
+        
+        if (y > m_blockCount_y - 1 || isStaticBlock({x, y}))
             return;
     }
     clearActive();
@@ -178,34 +213,10 @@ void GameEntity::TetrominoContainer::moveDown()
 }
 
 void GameEntity::TetrominoContainer::drop()
-{
-    int offset = 0;
-    while (true)
-    {
-        int offset_x = m_active.offset.x;
-        int offset_y = m_active.offset.y + offset + 1;
-        Tetromino *active = m_active.tetromino;
-        
-        for (int i = 0; i < Tetromino::blockCount; i++)
-        {
-            int y = active->blockPosition[i].y + offset_y;
-            int x = active->blockPosition[i].x + offset_x;
-            if (
-                y > m_blockCount_y - 1 ||
-                (
-                    m_arr[y][x].t_id != -1 &&
-                    m_arr[y][x].t_id != active->id
-                )
-            )
-            {
-                clearActive();
-                placeActive({0, offset}, Rotation::None);
-                nextActive();
-                return;
-            }
-        }
-        ++offset;
-    }
+{   
+    clearActive();
+    placeActive({0, m_active.ghost_y}, Rotation::None);
+    nextActive();
 }
 
 void GameEntity::TetrominoContainer::nextActive()

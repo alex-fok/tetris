@@ -78,7 +78,7 @@ namespace GameEntity
         static const int blockCount = 4;
         int id;
         BlockType type;
-        const Vector *blockPosition;
+        const Vector *position;
         Tetromino(int id, BlockType type);
         const Vector * peek();
         void rotate(Rotation);

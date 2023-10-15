@@ -10,7 +10,9 @@ namespace GameEntity {
         EMPTY = 0, I, O, T, J, L, S, Z
     };
 
-    const static sf::Color BlockColor[8] =
+    
+
+    static const sf::Color BlockColor[] =
     {
         sf::Color::Transparent,
         sf::Color::Color(0, 255, 255), // I, Cyan
@@ -21,6 +23,21 @@ namespace GameEntity {
         sf::Color::Color(0, 255, 0), // S, Green
         sf::Color::Color(255, 0, 0) //Z, Red
     };
+
+    static const sf::Color OutlineColor_Default = sf::Color::Color(64, 64, 64);
+
+    static const sf::Color OutlineColor[] =
+    {
+        sf::Color::Transparent,
+        sf::Color::Color(0, 255, 255, 223), // I, Cyan
+        sf::Color::Color(255, 255, 0, 223), // O, Yellow
+        sf::Color::Color(255, 0, 255, 223), // T, Magneta
+        sf::Color::Color(0, 0, 255, 223), // J, Blue
+        sf::Color::Color(255, 165, 0, 223), // L, Orange
+        sf::Color::Color(0, 255, 0, 223), // S, Green
+        sf::Color::Color(255, 0, 0, 223) //Z, Red
+    };
+
     class Block
     {
     public:
@@ -30,7 +47,8 @@ namespace GameEntity {
         Block(int id, BlockType type);
         Block();
         void setTetromino(int id, GameEntity::BlockType);
-        void setEmpty();
+        void setGhost(GameEntity::BlockType);
+        void reset();
         void setPosition(float x, float y);
     };
 }

@@ -2,30 +2,36 @@
 #include "Block.hpp"
 #include <iostream>
 
-GameEntity::Block::Block(int id, GameEntity::BlockType type) :
+GameEntity::Block::Block(int id, BlockType type) :
     t_id(id),
     type(type),
-    content(sf::RectangleShape(sf::Vector2(GameEntity::BlockSize, GameEntity::BlockSize)))
+    content(sf::RectangleShape(sf::Vector2(BlockSize, BlockSize)))
 {
-    content.setFillColor(GameEntity::BlockColor[type]);
+    content.setFillColor(BlockColor[type]);
     content.setOutlineThickness(-1.f);
-    content.setOutlineColor(sf::Color::Color(64, 64, 64));
+    content.setOutlineColor(OutlineColor_Default);
 }
 
 GameEntity::Block::Block() :
-    GameEntity::Block::Block(-1, GameEntity::BlockType::EMPTY)
+    Block::Block(-1, BlockType::EMPTY)
 {
 };
 
-void GameEntity::Block::setTetromino(int id, GameEntity::BlockType type)
+void GameEntity::Block::setTetromino(int id, BlockType type)
 {
     t_id = id;
-    content.setFillColor(GameEntity::BlockColor[type]);
+    content.setFillColor(BlockColor[type]);
+    content.setOutlineColor(OutlineColor_Default);
 }
 
-void GameEntity::Block::setEmpty()
+void GameEntity::Block::setGhost(BlockType type)
 {
-    setTetromino(-1, GameEntity::BlockType::EMPTY);
+    content.setOutlineColor(BlockColor[type]);
+}
+
+void GameEntity::Block::reset()
+{
+    setTetromino(-1, BlockType::EMPTY);
 }
 
 void GameEntity::Block::setPosition(float x, float y)

@@ -1,7 +1,7 @@
 #include "Tetromino.hpp"
 
 GameEntity::Tetromino::Tetromino(int i, GameEntity::BlockType type) :
-    m_rotation(0), type(type), id(i), blockPosition(TetrominoType[type][0])
+    m_rotation(0), type(type), id(i), position(TetrominoType[type][0])
 {
 }
 
@@ -13,7 +13,7 @@ const GameEntity::Vector * GameEntity::Tetromino::peek()
 void GameEntity::Tetromino::rotate(Rotation dir)
 {
     if (dir == Rotation::Clockwise)
-        blockPosition = TetrominoType[type][++m_rotation % 4];
+        position = TetrominoType[type][++m_rotation % 4];
     else if (dir == Rotation::CounterClockwise)
-        blockPosition = TetrominoType[type][--m_rotation % 4];
+        position = TetrominoType[type][--m_rotation % 4];
 }
