@@ -6,7 +6,7 @@
 void handleKeyEvents(GameEntity::TetrominoContainer *container)
 {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-        container->rotateTeromino();
+        container->rotateTetromino();
      else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         container->moveRight();
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))

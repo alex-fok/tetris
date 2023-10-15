@@ -24,11 +24,16 @@ GameEntity::TetrominoContainer::TetrominoContainer(sf::RenderWindow *window, flo
             m_arr[y][x].setTetromino(-1, EMPTY);
             m_arr[y][x].setPosition(m_pos_x + m_borderWidth + x * m_blockSize, m_pos_y + m_borderWidth + y * m_blockSize);
         }
-    placeActive();
+    placeActive({0, 0}, Direction::None);
 }
 
-void GameEntity::TetrominoContainer::placeActive()
+void GameEntity::TetrominoContainer::placeActive(Vector offset, Direction dir)
 {
+    m_active.offset.x += offset.x;
+    m_active.offset.y += offset.y;
+    
+    m_active.tetromino->rotate(dir);
+
     // paste tetromino positions to container m_arr 
     for (int i = 0; i < Tetromino::blockCount; i++)
     {
@@ -47,66 +52,7 @@ void GameEntity::TetrominoContainer::clearActive()
     }    
 }
 
-void GameEntity::TetrominoContainer::moveRight()
-{
-    for (int i = 0; i < Tetromino::blockCount; i++)
-    {
-        int x = m_active.tetromino->blockPosition[i].x + m_active.offset.x;
-        if (x + 2 > m_blockCount_x)
-            return;
-    }
-    clearActive();
-    m_active.offset.x += 1;
-    placeActive();
-}
-
-void GameEntity::TetrominoContainer::moveLeft()
-{
-    for (int i = 0; i < Tetromino::blockCount; i++)
-    {
-        int x = m_active.tetromino->blockPosition[i].x + m_active.offset.x;
-        if (x - 1 < 0)
-            return;
-    }
-    clearActive();
-    m_active.offset.x -= 1;
-    placeActive();
-}
-
-void GameEntity::TetrominoContainer::moveDown()
-{
-    for (int i = 0; i < Tetromino::blockCount; i++)
-    {
-        int y = m_active.tetromino->blockPosition[i].y + m_active.offset.y;
-        if (y + 2 > m_blockCount_y)
-            return;
-    }
-    clearActive();
-    m_active.offset.y += 1;
-    placeActive();
-}
-
-void GameEntity::TetrominoContainer::drop()
-{
-    int offset = 0;
-    while (true)
-    {
-        int curr_offset = m_active.offset.y + offset + 1;
-        for (int i = 0; i < Tetromino::blockCount; i++)
-        {
-            if (m_active.tetromino->blockPosition[i].y + curr_offset > m_blockCount_y - 1)
-            {
-                clearActive();
-                m_active.offset.y += offset;
-                placeActive();
-                return;
-            }
-        }
-        ++offset;
-    }
-}
-
-void GameEntity::TetrominoContainer::rotateTeromino()
+void GameEntity::TetrominoContainer::rotateTetromino()
 {
     const Vector *blocks = m_active.tetromino->peek();
     for (int i = 0; i < Tetromino::blockCount; i++)
@@ -116,6 +62,7 @@ void GameEntity::TetrominoContainer::rotateTeromino()
     
     int offset_x = 0;
     int offset_y = 0;
+
     // Offset x
     if (m_active.offset.x + ActiveTetromino::Offset_size > m_blockCount_x)
     {
@@ -188,10 +135,78 @@ void GameEntity::TetrominoContainer::rotateTeromino()
         }
     }
     clearActive();
-    m_active.offset.x += offset_x;
-    m_active.offset.y += offset_y;
-    m_active.tetromino->rotate();
-    placeActive();
+    placeActive({offset_x, offset_y}, Direction::Clockwise);
+}
+
+void GameEntity::TetrominoContainer::moveRight()
+{
+    for (int i = 0; i < Tetromino::blockCount; i++)
+    {
+        // new x
+        int x = m_active.tetromino->blockPosition[i].x + m_active.offset.x + 1;
+        if (x > m_blockCount_x - 1)
+            return;
+    }
+    clearActive();
+    placeActive({1, 0}, Direction::None);
+}
+
+void GameEntity::TetrominoContainer::moveLeft()
+{
+    for (int i = 0; i < Tetromino::blockCount; i++)
+    {
+        // new x
+        int x = m_active.tetromino->blockPosition[i].x + m_active.offset.x - 1;
+        if (x < 0)
+            return;
+    }
+    clearActive();
+    placeActive({-1, 0}, Direction::None);
+}
+
+void GameEntity::TetrominoContainer::moveDown()
+{
+    for (int i = 0; i < Tetromino::blockCount; i++)
+    {
+        // new y
+        int y = m_active.tetromino->blockPosition[i].y + m_active.offset.y + 1;
+        if (y > m_blockCount_y - 1)
+            return;
+    }
+    clearActive();
+    placeActive({0, 1}, Direction::None);
+}
+
+void GameEntity::TetrominoContainer::drop()
+{
+    int offset = 0;
+    while (true)
+    {
+        int curr_offset = m_active.offset.y + offset + 1;
+        for (int i = 0; i < Tetromino::blockCount; i++)
+        {
+            if (m_active.tetromino->blockPosition[i].y + curr_offset > m_blockCount_y - 1)
+            {
+                clearActive();
+                placeActive({0, offset}, Direction::None);
+                nextActive();
+                return;
+            }
+        }
+        ++offset;
+    }
+}
+
+
+
+void GameEntity::TetrominoContainer::nextActive()
+{
+    delete(m_active.tetromino);
+    m_active = ActiveTetromino{
+        m_tetrominoFactory.generateTetromino(),
+        {INIT_POS_X, INIT_POS_Y}
+    };
+    placeActive({0, 0}, Direction::None);
 }
 
 void GameEntity::TetrominoContainer::drawBlocks()
