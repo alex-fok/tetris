@@ -43,7 +43,7 @@ namespace GameEntity
         ~TetrominoContainer();
 
     private:
-        void placeActive(Vector, Direction);
+        void placeActive(Vector, Rotation);
         void clearActive();
         
         void drawBlocks();

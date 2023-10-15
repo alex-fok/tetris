@@ -4,7 +4,7 @@
 
 namespace GameEntity
 {
-    enum Direction
+    enum Rotation
     {
         None = 0, Clockwise, CounterClockwise
     };
@@ -81,6 +81,6 @@ namespace GameEntity
         const Vector *blockPosition;
         Tetromino(int id, BlockType type);
         const Vector * peek();
-        void rotate(Direction);
+        void rotate(Rotation);
     };
 };

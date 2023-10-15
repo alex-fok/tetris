@@ -10,10 +10,10 @@ const GameEntity::Vector * GameEntity::Tetromino::peek()
     return TetrominoType[type][(m_rotation + 1) % 4];
 }
 
-void GameEntity::Tetromino::rotate(Direction dir)
+void GameEntity::Tetromino::rotate(Rotation dir)
 {
-    if (dir == Direction::Clockwise)
+    if (dir == Rotation::Clockwise)
         blockPosition = TetrominoType[type][++m_rotation % 4];
-    else if (dir == Direction::CounterClockwise)
+    else if (dir == Rotation::CounterClockwise)
         blockPosition = TetrominoType[type][--m_rotation % 4];
 }
