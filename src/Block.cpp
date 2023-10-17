@@ -21,11 +21,14 @@ void GameEntity::Block::setTetromino(int id, BlockType type)
 {
     t_id = id;
     content.setFillColor(BlockColor[type]);
+    content.setOutlineThickness(-1.f);
     content.setOutlineColor(OutlineColor_Default);
 }
 
 void GameEntity::Block::setGhost(BlockType type)
 {
+    t_id = -2;
+    content.setOutlineThickness(-2.f);
     content.setOutlineColor(BlockColor[type]);
 }
 

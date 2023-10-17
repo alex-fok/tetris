@@ -7,8 +7,8 @@ GameEntity::TetrominoContainer::TetrominoContainer(sf::RenderWindow *window, flo
     m_pos_x(pos_x), m_pos_y(pos_y),
     m_window(window),
     m_container(sf::RectangleShape(sf::Vector2(
-       blockSize * m_blockCount_x + borderWidth * 2.f,
-       blockSize * m_blockCount_y + borderWidth * 2.f 
+       blockSize * m_blockCount_x + borderWidth * 2.f - m_blockCount_x + 1,
+       blockSize * m_blockCount_y + borderWidth * 2.f - m_blockCount_y + 1 
     ))),
     m_tetrominoFactory(TetrominoFactory()),
     m_active(ActiveTetromino{m_tetrominoFactory.generateTetromino(), {INIT_POS_X, INIT_POS_Y}})
@@ -22,15 +22,16 @@ GameEntity::TetrominoContainer::TetrominoContainer(sf::RenderWindow *window, flo
         for (int x = 0; x < m_blockCount_x; x++)
         {
             m_arr[y][x].setTetromino(-1, EMPTY);
-            m_arr[y][x].setPosition(m_pos_x + m_borderWidth + x * m_blockSize, m_pos_y + m_borderWidth + y * m_blockSize);
+            m_arr[y][x].setPosition(m_pos_x + m_borderWidth + x * m_blockSize - x, m_pos_y + m_borderWidth + y * m_blockSize - y);
         }
+        
     placeActive({0, 0}, Rotation::None);
 }
 
 bool GameEntity::TetrominoContainer::isStaticBlock(Vector v)
 {
     Block b = m_arr[v.y][v.x];
-    return b.t_id != -1 && b.t_id != m_active.tetromino->id;
+    return b.t_id > -1 && b.t_id != m_active.tetromino->id;
 }
 
 void GameEntity::TetrominoContainer::placeActive(Vector offset, Rotation dir)
@@ -126,8 +127,7 @@ void GameEntity::TetrominoContainer::rotate()
             int offset = m_active.offset.x + tmp_offset;
             for (int i = 0; i < Tetromino::blockCount; i++)
             {
-                int tmp_x = blocks[i].x + offset;
-                if (tmp_x < 0)
+                if (blocks[i].x + offset < 0)
                 {
                     isRotatable = false;
                     break;
@@ -231,9 +231,22 @@ void GameEntity::TetrominoContainer::nextActive()
 
 void GameEntity::TetrominoContainer::drawBlocks()
 {
+    // Space
     for (int y = 0; y < m_blockCount_y; y++)
         for (int x = 0; x < m_blockCount_x; x++)
-            m_window->draw(m_arr[y][x].content);
+            if (m_arr[y][x].t_id == -1)
+                m_window->draw(m_arr[y][x].content);
+    // Solid blocks
+    for (int y = 0; y < m_blockCount_y; y++)
+        for (int x = 0; x < m_blockCount_x; x++)
+            if (m_arr[y][x].t_id > -1)
+                m_window->draw(m_arr[y][x].content);
+    // Ghost
+    for (int i = 0; i < Tetromino::blockCount; i++)
+    {
+        const Vector v = m_active.tetromino->position[i];
+        m_window->draw(m_arr[v.y + m_active.offset.y + m_active.ghost_y][v.x + m_active.offset.x].content);
+    }
 }
 void GameEntity::TetrominoContainer::drawContent()
 {
