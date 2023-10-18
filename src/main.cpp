@@ -1,12 +1,12 @@
 #include <SFML/Graphics.hpp>
 #include "Block.hpp"
+#include "Tetromino.hpp"
 #include "TetrominoContainer.hpp"
-#include <iostream>
 
 void handleKeyEvents(GameEntity::TetrominoContainer *container)
 {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-        container->rotate();
+        container->rotate(GameEntity::Tetromino::Rotation::Clockwise);
      else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         container->moveRight();
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))

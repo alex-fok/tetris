@@ -2,7 +2,9 @@
 #include <SFML/Graphics.hpp>
 #include "Vector.hpp"
 #include "Block.hpp"
+#include "Tetromino.hpp"
 #include "TetrominoFactory.hpp"
+
 namespace GameEntity
 {
     struct ActiveTetromino
@@ -17,10 +19,10 @@ namespace GameEntity
     class TetrominoContainer
     {
     private:
-        static const int INIT_POS_X = 3;
-        static const int INIT_POS_Y = 0;
-        static const int m_blockCount_x = 10;
-        static const int m_blockCount_y = 20;
+        static const int InitPos_X = 3;
+        static const int InitPos_Y = 0;
+        static const int BlockCount_x = 10;
+        static const int BlockCount_y = 20;
 
         float m_blockSize, m_borderWidth;
         float m_pos_x, m_pos_y;
@@ -30,22 +32,22 @@ namespace GameEntity
 
         TetrominoFactory m_tetrominoFactory;
         ActiveTetromino m_active;
-        Block m_arr[m_blockCount_y][m_blockCount_x];
+        Block m_arr[BlockCount_y][BlockCount_x];
 
     public:
         TetrominoContainer(sf::RenderWindow *w, float blockSize, float borderWidth, float pos_x, float pos_y);
-        bool isStaticBlock(Vector v);
+        bool isBlocked(Vector v);
         void moveRight();
         void moveLeft();
         void moveDown();
         void drop();
-        void rotate();
+        void rotate(Tetromino::Rotation);
         void nextActive();
         void render();
         ~TetrominoContainer();
 
     private:
-        void placeActive(Vector v, Rotation r);
+        void update();
         void clearActive();
         
         void drawBlocks();

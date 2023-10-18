@@ -1,19 +1,133 @@
 #include "Tetromino.hpp"
+const GameEntity::Vector GameEntity::Tetromino::Type[TypeCount][RotationCount][BlockCount] =
+{
+    // I
+    {
+        {{0, 1}, {1, 1}, {2, 1}, {3, 1}},
+        {{2, 0}, {2, 1}, {2, 2}, {2, 3}},
+        {{0, 2}, {1, 2}, {2, 2}, {3, 2}},
+        {{1, 0}, {1, 1}, {1, 2}, {1, 3}}
+    },
+    // O
+    {
+        {{1, 0}, {2, 0}, {1, 1}, {2, 1}},
+        {{1, 0}, {2, 0}, {1, 1}, {2, 1}},
+        {{1, 0}, {2, 0}, {1, 1}, {2, 1}},
+        {{1, 0}, {2, 0}, {1, 1}, {2, 1}}
+    },
+    // T
+    {
+        {{1, 0}, {0, 1}, {1, 1}, {2, 1}},
+        {{1, 0}, {1, 1}, {2, 1}, {1, 2}},
+        {{0, 1}, {1, 1}, {2, 1}, {1, 2}},
+        {{1, 0}, {0, 1}, {1, 1}, {1, 2}}
+    },
+    // J
+    {
+        {{0, 0}, {0, 1}, {1, 1}, {2, 1}},
+        {{1, 0}, {2, 0}, {1, 1}, {1, 2}},
+        {{0, 1}, {1, 1}, {2, 1}, {2, 2}},
+        {{1, 0}, {1, 1}, {1, 2}, {0, 2}}
+    },
+    // L
+    {
+        {{2, 0}, {0, 1}, {1, 1}, {2, 1}},
+        {{1, 0}, {1, 1}, {1, 2}, {2, 2}},
+        {{0, 1}, {1, 1}, {2, 1}, {0, 2}},
+        {{1, 0}, {2, 0}, {2, 1}, {2, 2}}
+    },
+    // S
+    {
+        {{1, 0}, {2, 0}, {0, 1}, {1, 1}},
+        {{1, 0}, {1, 1}, {2, 1}, {2, 2}},
+        {{1, 1}, {2, 1}, {0, 2}, {1, 2}},
+        {{0, 0}, {0, 1}, {1, 1}, {1, 2}}
+    },
+    // Z
+    {
+        {{0, 0}, {1, 0}, {1, 1}, {2, 1}},
+        {{2, 0}, {1, 1}, {2, 1}, {1, 2}},
+        {{0, 1}, {1, 1}, {1, 2}, {2, 2}},
+        {{1, 0}, {0, 1}, {1, 1}, {0, 2}},
+    }
+};
 
-GameEntity::Tetromino::Tetromino(int i, GameEntity::BlockType type) :
-    m_rotation(0), type(type), id(i), position(TetrominoType[type][0])
+const GameEntity::Vector GameEntity::Tetromino::WallKick_Offset[RotationCount][DirectionCount][TestCount] =
+{   // Rotation tests for all Tetrominoes except I
+    // 0 = 0 degree, 1 = 90 degree, 2 = 180 degree, 3 = 270 degree, clockwise
+    // 1 >> 2 implies a clockwise rotation from 90 to 180 degree; Likewise,
+    // 3 >> 2 implies a counter clockwise rotation from 270 to 180 degree
+    {
+        // 0 >> 1
+        {{0, 0}, {-1, 0}, {-1, -1}, {0, 2}, {-1, 2}},
+        // 0 >> 3
+        {{0, 0}, {1, 0}, {1, -1}, {0, 2}, {1, 2}}
+    },
+    {   
+        // 1 >> 2
+        {{0, 0}, {1, 0}, {1, 1}, {0, -2}, {1, -2}},
+        // 1 >> 0
+        {{0, 0}, {1, 0}, {1, 1}, {0, -2}, {1, -2}},
+    },
+    {
+        // 2 >> 3
+        {{0, 0}, {1, 0}, {1, -1}, {0, 2}, {1, 2}},
+        // 2 >> 1
+        {{0, 0}, {-1, 0}, {-1, -1}, {0, 2}, {-1, 2}}
+    },
+    {
+        // 3 >> 0
+        {{0, 0}, {-1, 0}, {-1, 1}, {0, -2}, {-1, -2}},
+        // 3 >> 2
+        {{0, 0}, {-1, 0}, {-1, -1}, {0, -2}, {-1, -2}}
+    }
+};
+
+const GameEntity::Vector GameEntity::Tetromino::WallKick_Offset_I[RotationCount][DirectionCount][TestCount] =
+{   // Rotation tests for I only
+    {
+        // 0 >> 1
+        {{0, 0}, {-2, 0}, {1, 0}, {-2, 1}, {1, -2}},
+        // 0 >> 3
+        {{0, 0}, {-1, 0}, {2, 0}, {-1, -2}, {2, 1}}
+    },
+    {
+        // 1 >> 2
+        {{0, 0}, {-1, 0}, {2, 0}, {-1, -2}, {2, 1}},
+        // 1 >> 0
+        {{0, 0}, {2, 0}, {-1, 0}, {2, -1}, {-1, 2}}
+    },
+    {
+        // 2 >> 3
+        {{0, 0}, {2, 0}, {-1, 0}, {2, -1}, {-1, 2}},
+        // 2 >> 1
+        {{0, 0}, {1, 0}, {-2, 0}, {1, 2}, {-2, -1}}
+    },
+    {
+        // 3 >> 0
+        {{0, 0}, {1, 0}, {-2, 0}, {1, 2}, {-2, -1}},
+        // 3 >> 2
+        {{0, 0}, {-1, 0}, {2, 0}, {-1, -2}, {2, 1}}
+    }
+};
+
+GameEntity::Tetromino::Tetromino(int id, BlockType b_type) :
+    m_rotation(0), type(b_type), id(id), position(Type[b_type][0])
 {
 }
 
-const GameEntity::Vector * GameEntity::Tetromino::peek()
+const GameEntity::Vector * GameEntity::Tetromino::getWallKickOffsets(Rotation r)
 {
-    return TetrominoType[type][(m_rotation + 1) % 4];
+    return type != I ? WallKick_Offset[m_rotation][r] : WallKick_Offset_I[m_rotation][r];
 }
 
-void GameEntity::Tetromino::rotate(Rotation dir)
+const GameEntity::Vector * GameEntity::Tetromino::peek(Rotation r)
 {
-    if (dir == Rotation::Clockwise)
-        position = TetrominoType[type][++m_rotation % 4];
-    else if (dir == Rotation::CounterClockwise)
-        position = TetrominoType[type][--m_rotation % 4];
+    return Tetromino::Type[type][(r == Clockwise ? m_rotation + 1 : m_rotation - 1) % 4];
+}
+
+void GameEntity::Tetromino::rotate(Rotation r)
+{
+    m_rotation = r == Clockwise ? (m_rotation + 1) % 4 : (m_rotation - 1) % 4;
+    position = Tetromino::Type[type][m_rotation]; 
 }
