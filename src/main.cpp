@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
-#include "Block.hpp"
-#include "Tetromino.hpp"
-#include "TetrominoContainer.hpp"
+#include "GameEntity/Block.hpp"
+#include "GameEntity/Tetromino.hpp"
+#include "GameEntity/TetrominoContainer.hpp"
 
 void handleKeyEvents(GameEntity::TetrominoContainer *container)
 {
