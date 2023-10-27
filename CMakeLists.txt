@@ -9,7 +9,7 @@ FetchContent_Declare(SFML
     GIT_TAG 2.6.x)
 FetchContent_MakeAvailable(SFML)
 
-add_executable(Tetris src/main.cpp src/GameEntity/TetrominoContainer.cpp src/GameEntity/TetrominoFactory.cpp src/GameEntity/Tetromino.cpp src/GameEntity/Block.cpp)
+add_executable(Tetris src/main.cpp src/GameUI/UI.cpp src/GameEntity/TetrominoContainer.cpp src/GameEntity/TetrominoFactory.cpp src/GameEntity/Tetromino.cpp src/GameEntity/Block.cpp)
 target_link_libraries(Tetris PRIVATE sfml-graphics)
 target_compile_features(Tetris PRIVATE cxx_std_17)
 
