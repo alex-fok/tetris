@@ -6,42 +6,54 @@ GameUI::UI::UI():
 {
 }
 
-void GameUI::UI::handleKeyEvents()
-{
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-        m_container.rotate(GameEntity::Tetromino::Rotation::Clockwise);
-     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-        m_container.moveRight();
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-        m_container.moveLeft();
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-        m_container.moveDown();
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-        m_container.drop();
-}
-
 void GameUI::UI::run()
 {
+    bool isPaused = false;
+    sf::Keyboard::Key inputs[5] =
+    {
+        sf::Keyboard::Up,
+        sf::Keyboard::Right,
+        sf::Keyboard::Down,
+        sf::Keyboard::Left,
+        sf::Keyboard::Space,  
+    };
+    sf::Clock delta;
+    sf::Int32 cummulative_time = 0;
+
     while (m_window.isOpen())
     {
-        sf::Event event;
-        
-        while (m_window.pollEvent(event))
+        if (isPaused || !m_container.nextStep())
         {
-            switch (event.type)
+            sf::Event event;
+            
+            while (m_window.pollEvent(event))
             {
-                case sf::Event::Closed:
-                    m_window.close();
-                    break;
-                case sf::Event::KeyPressed:
-                    handleKeyEvents();
-                    break;
-                default:
-                    break;
-            };
+                switch (event.type)
+                {
+                    case sf::Event::Closed:
+                        m_window.close();
+                        break;
+                    case sf::Event::KeyPressed:
+                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+                            isPaused = !isPaused;
+                        else if (!isPaused)
+                            for (sf::Keyboard::Key k: inputs)
+                                if (sf::Keyboard::isKeyPressed(k))
+                                {
+                                    m_container.handle(k);
+                                    break;
+                                }
+                        break;
+                    default:
+                        break;
+                };
+            }
         }
-        m_window.clear(sf::Color::Black);
-        m_container.render();
-        m_window.display();
+        if (!isPaused)
+        {
+            m_window.clear(sf::Color::Black);
+            m_container.render();
+            m_window.display();
+        }
     }
 }

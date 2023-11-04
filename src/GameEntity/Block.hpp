@@ -42,6 +42,7 @@ namespace GameEntity {
         sf::RectangleShape content;
         Block(int id, BlockType type);
         Block();
+        void copy(Block &other);
         void setTetromino(int id, GameEntity::BlockType);
         void setGhost(GameEntity::BlockType);
         void reset();

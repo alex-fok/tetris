@@ -16,6 +16,15 @@ GameEntity::Block::Block() :
 {
 };
 
+void GameEntity::Block::copy(GameEntity::Block &other)
+{
+    t_id = other.t_id;
+    type = other.type;
+    content.setFillColor(other.content.getFillColor());
+    content.setOutlineThickness(other.content.getOutlineThickness());
+    content.setOutlineColor(other.content.getOutlineColor());
+}
+
 void GameEntity::Block::setTetromino(int id, BlockType type)
 {
     t_id = id;

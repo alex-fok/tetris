@@ -1,27 +1,32 @@
 #pragma once
+#include <iostream>
+#include <unordered_map>
 #include "TetrominoContainer.hpp"
+
+#include <chrono>
+#include <thread>
 
 GameEntity::TetrominoContainer::TetrominoContainer(sf::RenderWindow *window, float blockSize, float borderWidth, float pos_x, float pos_y) :
     m_blockSize(blockSize), m_borderWidth(borderWidth),
     m_pos_x(pos_x), m_pos_y(pos_y),
     m_window(window),
-    m_container(sf::RectangleShape(sf::Vector2(
+    m_frame(sf::RectangleShape(sf::Vector2(
        blockSize * BlockCount_x + borderWidth * 2.f - BlockCount_x + 1,
        blockSize * BlockCount_y + borderWidth * 2.f - BlockCount_y + 1 
     ))),
     m_tetrominoFactory(TetrominoFactory()),
-    m_active(ActiveTetromino{m_tetrominoFactory.generateTetromino(), {InitPos_X, InitPos_Y}})
+    m_active(ActiveTetromino{m_tetrominoFactory.generateTetromino(), {InitPos_x, InitPos_y}})
 {
-    m_container.setFillColor(sf::Color::Transparent);
-    m_container.setOutlineThickness(borderWidth * -1.f);
-    m_container.setOutlineColor(sf::Color(255, 255, 255));
-    m_container.setPosition(pos_x, pos_y);
+    m_frame.setFillColor(sf::Color::Transparent);
+    m_frame.setOutlineThickness(borderWidth * -1.f);
+    m_frame.setOutlineColor(sf::Color(255, 255, 255));
+    m_frame.setPosition(pos_x, pos_y);
 
-    for (int y = 0; y < BlockCount_y; y++)
-        for (int x = 0; x < BlockCount_x; x++)
+    for (int y = 0; y < BlockCount_y; ++y)
+        for (int x = 0; x < BlockCount_x; ++x)
             m_arr[y][x].setPosition(m_pos_x + m_borderWidth + x * m_blockSize - x, m_pos_y + m_borderWidth + y * m_blockSize - y);
         
-    update();
+    updateActive();
 }
 
 bool GameEntity::TetrominoContainer::isBlocked(Vector v)
@@ -36,7 +41,7 @@ bool GameEntity::TetrominoContainer::isBlocked(Vector v)
     return b.t_id > -1 && b.t_id != m_active.tetromino->id;
 }
 
-void GameEntity::TetrominoContainer::update()
+void GameEntity::TetrominoContainer::updateActive()
 {
     // Update Ghost
     int ghost_offset = -1;
@@ -49,7 +54,7 @@ void GameEntity::TetrominoContainer::update()
         
         Tetromino *active = m_active.tetromino;
         
-        for (int i = 0; i < Tetromino::BlockCount; i++)
+        for (int i = 0; i < Tetromino::BlockCount; ++i)
         {
             int y = active->position[i].y + offset_y;
             int x = active->position[i].x + offset_x;
@@ -64,26 +69,29 @@ void GameEntity::TetrominoContainer::update()
     m_active.ghost_y = ghost_offset;
 
     // Set Tetromino and Ghost
-    for (int i = 0; i < Tetromino::BlockCount; i++)
+    for (int i = 0; i < Tetromino::BlockCount; ++i)
     {
         const Vector v = m_active.tetromino->position[i];
         m_arr[v.y + m_active.offset.y][v.x + m_active.offset.x]
             .setTetromino(m_active.tetromino->id, m_active.tetromino->type);
 
         if (ghost_offset)
-            m_arr[v.y + m_active.offset.y + m_active.ghost_y][v.x + m_active.offset.x]
-                .setGhost(m_active.tetromino->type);
+        {
+            m_arr[v.y + m_active.offset.y + m_active.ghost_y][v.x + m_active.offset.x].setGhost(m_active.tetromino->type);
+            m_active.updateStat(ActiveTetromino::ActiveStat::Active);
+        } else
+            m_active.updateStat(ActiveTetromino::ActiveStat::CountDown);
     }
 }
 
 void GameEntity::TetrominoContainer::clearActive()
 {
-    for (int i = 0; i < Tetromino::BlockCount; i++)
+    for (int i = 0; i < Tetromino::BlockCount; ++i)
     {
         const Vector v = m_active.tetromino->position[i];
         m_arr[v.y + m_active.offset.y][v.x + m_active.offset.x].reset();
         m_arr[v.y + m_active.offset.y + m_active.ghost_y][v.x + m_active.offset.x].reset();
-    }    
+    }
 }
 
 void GameEntity::TetrominoContainer::rotate(Tetromino::Rotation r)
@@ -91,7 +99,7 @@ void GameEntity::TetrominoContainer::rotate(Tetromino::Rotation r)
     const Vector *next = m_active.tetromino->peek(r);
     const Vector *testOffsets = m_active.tetromino->getWallKickOffsets(r); 
 
-    for (int i = 0; i < Tetromino::TestCount; i++)
+    for (int i = 0; i < Tetromino::TestCount; ++i)
     {
         bool success = true;
         for (int j = 0; j < Tetromino::BlockCount; j++)
@@ -110,107 +118,158 @@ void GameEntity::TetrominoContainer::rotate(Tetromino::Rotation r)
             m_active.offset.x += testOffsets[i].x;
             m_active.offset.y += testOffsets[i].y;
             m_active.tetromino->rotate(r);
-            update();
+            updateActive();
             break;
         }
     }
 }
 
-void GameEntity::TetrominoContainer::moveRight()
+void GameEntity::TetrominoContainer::move(Vector v)
 {
-    for (int i = 0; i < Tetromino::BlockCount; i++)
+    bool isLanded = false;
+    for (int i = 0; i < Tetromino::BlockCount; ++i)
     {
         // new x
-        int x = m_active.tetromino->position[i].x + m_active.offset.x + 1;
-        int y = m_active.tetromino->position[i].y + m_active.offset.y;
+        int x = m_active.tetromino->position[i].x + m_active.offset.x + v.x;
+        int y = m_active.tetromino->position[i].y + m_active.offset.y + v.y;
         if (isBlocked({x, y}))
             return;
+        if (isBlocked({x, y + 1}))
+            isLanded = true;
     }
     clearActive();
-    m_active.offset.x += 1;
-    update();
-}
-
-void GameEntity::TetrominoContainer::moveLeft()
-{
-    for (int i = 0; i < Tetromino::BlockCount; i++)
+    m_active.offset.x += v.x;
+    m_active.offset.y += v.y;
+    if (isLanded)
     {
-        // new x
-        int x = m_active.tetromino->position[i].x + m_active.offset.x - 1;
-        int y = m_active.tetromino->position[i].y + m_active.offset.y;
-        if (isBlocked({x, y}))
-            return;
+        m_active.stat = ActiveTetromino::ActiveStat::CountDown;
+        m_active.elapsed.restart();
     }
-    clearActive();
-    m_active.offset.x -= 1;
-    update();
-}
-
-void GameEntity::TetrominoContainer::moveDown()
-{
-    for (int i = 0; i < Tetromino::BlockCount; i++)
-    {
-        int x = m_active.tetromino->position[i].x + m_active.offset.x;
-        // new y
-        int y = m_active.tetromino->position[i].y + m_active.offset.y + 1;
-        
-        if (isBlocked({x, y}))
-            return;
-    }
-    clearActive();
-    m_active.offset.y += 1;
-    update();
+    updateActive();
 }
 
 void GameEntity::TetrominoContainer::drop()
 {   
     clearActive();
     m_active.offset.y += m_active.ghost_y;
-    nextActive();
+    m_active.ghost_y = 0;
+    settleActive();
 }
 
-void GameEntity::TetrominoContainer::nextActive()
+void GameEntity::TetrominoContainer::settleActive()
 {
-    for (int i = 0; i < Tetromino::BlockCount; i++)
+    std::unordered_map<int, bool> map;
+    for (int i = 0; i < Tetromino::BlockCount; ++i)
     {
         const Vector v = m_active.tetromino->position[i];
-        m_arr[v.y + m_active.offset.y][v.x + m_active.offset.x]
-            .setTetromino(m_active.tetromino->id, m_active.tetromino->type);
+        int x = m_active.offset.x + v.x;
+        int y = m_active.offset.y + v.y;
+        m_arr[y][x].setTetromino(m_active.tetromino->id, m_active.tetromino->type);
+        
+        // Check if line should be cleared
+        if (!map.count(y))
+        {
+            bool isFilled = true;
+            for (int xi = 0; xi < BlockCount_x; ++xi)
+                if (m_arr[y][xi].t_id < 0)
+                {
+                    isFilled = false;
+                    break;
+                }
+            if (isFilled)
+            {
+                map[y] = true;
+                TetrominoContainer::linesToClear.push_back(y);   
+            }
+        }
     }
-    delete(m_active.tetromino);
-    m_active = ActiveTetromino{m_tetrominoFactory.generateTetromino(), {InitPos_X, InitPos_Y}};
-    update();
+    m_active.updateStat(ActiveTetromino::Settled);
+}
+
+void GameEntity::TetrominoContainer::clearLines()
+{
+    for (std::vector<int>::iterator it = linesToClear.begin(); it != linesToClear.end(); ++it)
+        for (int yi = *it; yi > 0; --yi)
+            for (int xi = 0; xi < BlockCount_x; ++xi)
+                m_arr[yi][xi].copy(m_arr[yi - 1][xi]);
+    linesToClear.clear();
 }
 
 void GameEntity::TetrominoContainer::drawBlocks()
 {
     // Space
-    for (int y = 0; y < BlockCount_y; y++)
-        for (int x = 0; x < BlockCount_x; x++)
+    for (int y = 0; y < BlockCount_y; ++y)
+        for (int x = 0; x < BlockCount_x; ++x)
             if (m_arr[y][x].t_id == -1)
                 m_window->draw(m_arr[y][x].content);
+    
     // Solid blocks
-    for (int y = 0; y < BlockCount_y; y++)
-        for (int x = 0; x < BlockCount_x; x++)
+    for (int y = 0; y < BlockCount_y; ++y)
+        for (int x = 0; x < BlockCount_x; ++x)
             if (m_arr[y][x].t_id > -1)
                 m_window->draw(m_arr[y][x].content);
-    // Ghost
-    for (int i = 0; i < Tetromino::BlockCount; i++)
-    {
-        const Vector v = m_active.tetromino->position[i];
-        m_window->draw(m_arr[v.y + m_active.offset.y + m_active.ghost_y][v.x + m_active.offset.x].content);
-    }
+    
+    // Ghost if active is not settled
+    if (m_active.stat != ActiveTetromino::Settled)
+        for (int i = 0; i < Tetromino::BlockCount; ++i)
+        {
+            const Vector v = m_active.tetromino->position[i];
+            m_window->draw(m_arr[v.y + m_active.offset.y + m_active.ghost_y][v.x + m_active.offset.x].content);
+        }
 }
-void GameEntity::TetrominoContainer::drawContent()
+
+bool GameEntity::TetrominoContainer::nextStep()
 {
-    drawBlocks();
+    bool isStepped = true;
+    if (m_active.isSettled())
+    {
+        if (!linesToClear.empty())
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));    
+            clearLines();
+        }
+        delete(m_active.tetromino);
+        m_active = ActiveTetromino{m_tetrominoFactory.generateTetromino(), {InitPos_x, InitPos_y}};
+        updateActive();
+    }
+    else if (m_active.shouldSettle())
+        settleActive();
+    else if (m_active.shouldDrop())
+        move({0, 1});
+    else
+        isStepped = false;
+
+    return isStepped;
+}
+
+void GameEntity::TetrominoContainer::handle(sf::Keyboard::Key input)
+{
+    switch(input)
+    {
+        case sf::Keyboard::Up:
+            rotate(Tetromino::Rotation::Clockwise);
+            break;
+        case sf::Keyboard::Right:
+            move({1, 0});
+            break;
+        case sf::Keyboard::Down:
+            move({0, 1});
+            break;
+        case sf::Keyboard::Left:
+            move({-1, 0});
+            break;
+        case sf::Keyboard::Space:
+            drop();
+            break;
+    }
 }
 
 void GameEntity::TetrominoContainer::render()
 {
-    m_window->draw(m_container);
-    drawContent();
+    m_window->draw(m_frame);
+    drawBlocks();
 }
+
 GameEntity::TetrominoContainer::~TetrominoContainer()
 {
 }
