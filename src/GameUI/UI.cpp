@@ -17,8 +17,6 @@ void GameUI::UI::run()
         sf::Keyboard::Left,
         sf::Keyboard::Space,  
     };
-    sf::Clock delta;
-    sf::Int32 cummulative_time = 0;
 
     while (m_window.isOpen())
     {
@@ -27,7 +25,6 @@ void GameUI::UI::run()
             sf::Event event;
             
             while (m_window.pollEvent(event))
-            {
                 switch (event.type)
                 {
                     case sf::Event::Closed:
@@ -47,13 +44,9 @@ void GameUI::UI::run()
                     default:
                         break;
                 };
-            }
         }
-        if (!isPaused)
-        {
-            m_window.clear(sf::Color::Black);
-            m_container.render();
-            m_window.display();
-        }
+        m_window.clear(sf::Color::Black);
+        m_container.render();
+        m_window.display();
     }
 }
