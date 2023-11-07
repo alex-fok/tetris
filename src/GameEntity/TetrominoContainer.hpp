@@ -11,10 +11,10 @@ namespace GameEntity
     class TetrominoContainer
     {
     private:
-        static const int InitPos_x = 3;
-        static const int InitPos_y = 0;
         static const int BlockCount_x = 10;
         static const int BlockCount_y = 20;
+        static const int InitPos_x = 3;
+        static const int InitPos_y = BlockCount_y - ActiveTetromino::Offset_size;
         std::vector<int> linesToClear;
 
         float m_blockSize, m_borderWidth;

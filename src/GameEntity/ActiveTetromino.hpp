@@ -10,7 +10,6 @@ namespace GameEntity
         };
         static const int Offset_size = 4;
         GameEntity::Tetromino *tetromino;
-        // offset[] = {x, y}
         Vector offset;
         int ghost_y;
         static const sf::Int32 SettleTimeLimit = 1000;

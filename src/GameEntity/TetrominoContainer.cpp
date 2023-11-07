@@ -1,10 +1,8 @@
-#pragma once
-#include <iostream>
 #include <unordered_map>
-#include "TetrominoContainer.hpp"
-
 #include <chrono>
 #include <thread>
+
+#include "TetrominoContainer.hpp"
 
 GameEntity::TetrominoContainer::TetrominoContainer(sf::RenderWindow *window, float blockSize, float borderWidth, float pos_x, float pos_y) :
     m_blockSize(blockSize), m_borderWidth(borderWidth),
@@ -24,7 +22,11 @@ GameEntity::TetrominoContainer::TetrominoContainer(sf::RenderWindow *window, flo
 
     for (int y = 0; y < BlockCount_y; ++y)
         for (int x = 0; x < BlockCount_x; ++x)
-            m_arr[y][x].setPosition(m_pos_x + m_borderWidth + x * m_blockSize - x, m_pos_y + m_borderWidth + y * m_blockSize - y);
+        {
+            // Note: reverse_y + y = BlockCount_y - 1. Ex: (0, 19), (1, 18), ..., (19, 0)
+            int reverse_y = BlockCount_y - 1 - y;
+            m_arr[y][x].setPosition(m_pos_x + m_borderWidth + x * m_blockSize - x, m_pos_y + m_borderWidth + reverse_y * m_blockSize - reverse_y);
+        }
         
     updateActive();
 }
@@ -37,20 +39,19 @@ bool GameEntity::TetrominoContainer::isBlocked(Vector v)
     )
         return true;
     
-    Block b = m_arr[v.y][v.x];
-    return b.t_id > -1 && b.t_id != m_active.tetromino->id;
+    return m_arr[v.y][v.x].t_id > -1 && m_arr[v.y][v.x].t_id != m_active.tetromino->id;
 }
 
 void GameEntity::TetrominoContainer::updateActive()
 {
     // Update Ghost
-    int ghost_offset = -1;
+    int ghost_offset = 1;
     bool ghostFound = false;
     while (ghostFound == false)
     {
-        ++ghost_offset;
+        --ghost_offset;
         int offset_x = m_active.offset.x;
-        int offset_y = m_active.offset.y + ghost_offset + 1;
+        int offset_y = m_active.offset.y + ghost_offset - 1;
         
         Tetromino *active = m_active.tetromino;
         
@@ -134,7 +135,7 @@ void GameEntity::TetrominoContainer::move(Vector v)
         int y = m_active.tetromino->position[i].y + m_active.offset.y + v.y;
         if (isBlocked({x, y}))
             return;
-        if (isBlocked({x, y + 1}))
+        if (isBlocked({x, y - 1}))
             isLanded = true;
     }
     clearActive();
@@ -188,10 +189,11 @@ void GameEntity::TetrominoContainer::settleActive()
 
 void GameEntity::TetrominoContainer::clearLines()
 {
-    for (std::vector<int>::iterator it = linesToClear.begin(); it != linesToClear.end(); ++it)
-        for (int yi = *it; yi > 0; --yi)
+    for (std::vector<int>::reverse_iterator it = linesToClear.rbegin(); it != linesToClear.rend(); ++it)
+        for (int yi = *it; yi < BlockCount_y - 1; ++yi)
             for (int xi = 0; xi < BlockCount_x; ++xi)
-                m_arr[yi][xi].copy(m_arr[yi - 1][xi]);
+                m_arr[yi][xi].copy(m_arr[yi + 1][xi]);
+     
     linesToClear.clear();
 }
 
@@ -235,7 +237,7 @@ bool GameEntity::TetrominoContainer::nextStep()
     else if (m_active.shouldSettle())
         settleActive();
     else if (m_active.shouldDrop())
-        move({0, 1});
+        move({0, -1});
     else
         isStepped = false;
 
@@ -253,7 +255,7 @@ void GameEntity::TetrominoContainer::handle(sf::Keyboard::Key input)
             move({1, 0});
             break;
         case sf::Keyboard::Down:
-            move({0, 1});
+            move({0, -1});
             break;
         case sf::Keyboard::Left:
             move({-1, 0});
