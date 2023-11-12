@@ -25,11 +25,12 @@ namespace GameEntity
 
         TetrominoFactory m_tetrominoFactory;
         ActiveTetromino m_active;
-        Block m_arr[BlockCount_y][BlockCount_x];
+        Block m_arr[BlockCount_y + ActiveTetromino::Offset_size][BlockCount_x];
 
     public:
         TetrominoContainer(sf::RenderWindow *w, float blockSize, float borderWidth, float pos_x, float pos_y);
-        bool nextStep();
+        bool isGameOver;
+        void nextStep();
         void handle(sf::Keyboard::Key);
         void render();
         ~TetrominoContainer();
@@ -40,6 +41,7 @@ namespace GameEntity
         void move(Vector v);
         void drop();
         void clearLines();
+        void placeNewActive();
         void settleActive();        
         void updateActive();
         void clearActive();

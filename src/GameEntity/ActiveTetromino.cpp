@@ -1,5 +1,10 @@
 #include "ActiveTetromino.hpp"
 
+GameEntity::ActiveTetromino::ActiveTetromino(GameEntity::Tetromino *tetromino, Vector offset):
+tetromino(tetromino),
+offset(offset)
+{
+}
 void GameEntity::ActiveTetromino::updateStat(ActiveStat s)
 {
     elapsed.restart();
