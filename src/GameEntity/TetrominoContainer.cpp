@@ -281,7 +281,9 @@ void GameEntity::TetrominoContainer::drawBlocks()
         for (int i = 0; i < Tetromino::BlockCount; ++i)
         {
             const Vector v = m_active.tetromino->position[i];
-            m_window->draw(m_arr[v.y + m_active.offset.y + m_active.ghost_y][v.x + m_active.offset.x].content);
+            int y = v.y + m_active.offset.y + m_active.ghost_y;
+            if (y < BlockCount_y)
+                m_window->draw(m_arr[y][v.x + m_active.offset.x].content);
         }
 }
 
