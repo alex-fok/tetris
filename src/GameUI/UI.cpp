@@ -1,8 +1,11 @@
 #include "UI.hpp"
+#include "../Menu/GameOver.hpp"
+
 #include <iostream>
 GameUI::UI::UI():
     m_window(sf::VideoMode(800, 600), "Tetris"),
-    m_container(&m_window, GameEntity::BlockSize, 10.f, 250.f, 0.f)
+    m_container(&m_window, GameEntity::BlockSize, 10.f, 250.f, 0.f),
+    m_gameOver_menu(Menu::GameOver(&m_window))
 {
 }
 
@@ -49,6 +52,8 @@ void GameUI::UI::run()
             };
         m_window.clear(sf::Color::Black);
         m_container.render();
+        if (m_container.isGameOver)
+            m_gameOver_menu.render();
         m_window.display();
     }
 }
