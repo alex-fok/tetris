@@ -1,9 +1,10 @@
 #include "Block.hpp"
+#include "../GameUI/Config.hpp"
 
 GameEntity::Block::Block(int id, BlockType type) :
     t_id(id),
     type(type),
-    content(sf::RectangleShape(sf::Vector2(BlockSize, BlockSize)))
+    content(sf::RectangleShape(sf::Vector2(GameUI::Config::Block::Size, GameUI::Config::Block::Size)))
 {
     content.setFillColor(type == EMPTY ? sf::Color::Transparent : BlockColor[type]);
     content.setOutlineThickness(-1.f);

@@ -17,5 +17,9 @@ namespace GameUI
             static constexpr Position Window_Offset = {250.f, 0.f};
             static constexpr float BorderWidth = 10.f;
         }
+        namespace Block
+        {
+            static constexpr float Size = 29.f;
+        }
     };
 }

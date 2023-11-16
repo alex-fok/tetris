@@ -4,7 +4,7 @@
 
 GameUI::UI::UI():
     m_window(sf::VideoMode((unsigned int)Config::Window::Width, (unsigned int)Config::Window::Height), "Tetris"),
-    m_container(&m_window, GameEntity::BlockSize, Config::TetrominoContainer::BorderWidth, Config::TetrominoContainer::Window_Offset),
+    m_container(&m_window, Config::Block::Size, Config::TetrominoContainer::BorderWidth, Config::TetrominoContainer::Window_Offset),
     m_gameOver_menu(Menu::GameOver(&m_window))
 {
 }

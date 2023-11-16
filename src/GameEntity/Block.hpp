@@ -3,8 +3,6 @@
 #include "Vector.hpp"
 
 namespace GameEntity {
-    const static float BlockSize = 29.f;
-    
     enum BlockType
     {
         EMPTY = -1, I, O, T, J, L, S, Z
