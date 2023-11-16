@@ -1,10 +1,10 @@
 #include "UI.hpp"
+#include "Config.hpp"
 #include "../Menu/GameOver.hpp"
 
-#include <iostream>
 GameUI::UI::UI():
-    m_window(sf::VideoMode(800, 600), "Tetris"),
-    m_container(&m_window, GameEntity::BlockSize, 10.f, 250.f, 0.f),
+    m_window(sf::VideoMode((unsigned int)Config::Window::Width, (unsigned int)Config::Window::Height), "Tetris"),
+    m_container(&m_window, GameEntity::BlockSize, Config::TetrominoContainer::BorderWidth, Config::TetrominoContainer::Window_Offset),
     m_gameOver_menu(Menu::GameOver(&m_window))
 {
 }

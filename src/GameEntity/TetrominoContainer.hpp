@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "../GameUI/Config.hpp"
 #include "Vector.hpp"
 #include "Block.hpp"
 #include "ActiveTetromino.hpp"
@@ -18,7 +19,6 @@ namespace GameEntity
         std::vector<int> linesToClear;
 
         float m_blockSize, m_borderWidth;
-        float m_pos_x, m_pos_y;
 
         sf::RenderWindow *m_window;
         sf::RectangleShape m_frame;
@@ -28,7 +28,7 @@ namespace GameEntity
         Block m_arr[BlockCount_y + ActiveTetromino::Offset_size][BlockCount_x];
 
     public:
-        TetrominoContainer(sf::RenderWindow *w, float blockSize, float borderWidth, float pos_x, float pos_y);
+        TetrominoContainer(sf::RenderWindow *w, float blockSize, float borderWidth, GameUI::Position v);
         bool isGameOver;
         void nextStep();
         void handle(sf::Keyboard::Key);

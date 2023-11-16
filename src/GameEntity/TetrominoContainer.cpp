@@ -3,9 +3,8 @@
 #include <thread>
 #include "TetrominoContainer.hpp"
 
-GameEntity::TetrominoContainer::TetrominoContainer(sf::RenderWindow *window, float blockSize, float borderWidth, float pos_x, float pos_y) :
+GameEntity::TetrominoContainer::TetrominoContainer(sf::RenderWindow *window, float blockSize, float borderWidth, GameUI::Position offset) :
     m_blockSize(blockSize), m_borderWidth(borderWidth),
-    m_pos_x(pos_x), m_pos_y(pos_y),
     m_window(window),
     m_frame(sf::RectangleShape(sf::Vector2(
        blockSize * BlockCount_x + borderWidth * 2.f - BlockCount_x + 1,
@@ -18,14 +17,14 @@ GameEntity::TetrominoContainer::TetrominoContainer(sf::RenderWindow *window, flo
     m_frame.setFillColor(sf::Color::Transparent);
     m_frame.setOutlineThickness(borderWidth * -1.f);
     m_frame.setOutlineColor(sf::Color(255, 255, 255));
-    m_frame.setPosition(pos_x, pos_y);
+    m_frame.setPosition(offset.x, offset.y);
 
     for (int y = 0; y < BlockCount_y; ++y)
         for (int x = 0; x < BlockCount_x; ++x)
         {
             // Note: reverse_y + y = BlockCount_y - 1. Ex: (0, 19), (1, 18), ..., (19, 0)
             int reverse_y = BlockCount_y - 1 - y;
-            m_arr[y][x].setPosition(m_pos_x + m_borderWidth + x * m_blockSize - x, m_pos_y + m_borderWidth + reverse_y * (m_blockSize - 1));
+            m_arr[y][x].setPosition(offset.x + m_borderWidth + x * m_blockSize - x, offset.y + m_borderWidth + reverse_y * (m_blockSize - 1));
         }
     updateActive();
 }
