@@ -1,4 +1,3 @@
-#include <SFML/Graphics.hpp>
 #include "Block.hpp"
 
 GameEntity::Block::Block(int id, BlockType type) :
