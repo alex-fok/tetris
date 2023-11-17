@@ -12,6 +12,10 @@ namespace GameUI
             static constexpr float Width = 800.f;
             static constexpr float Height = 600.f;
         }
+        namespace Menu
+        {
+            static constexpr float BorderWidth = 1.f;
+        }
         namespace TetrominoContainer
         {
             static constexpr Position Window_Offset = {250.f, 0.f};
