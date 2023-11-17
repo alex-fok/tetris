@@ -9,7 +9,9 @@ FetchContent_Declare(SFML
     GIT_TAG 2.6.x)
 FetchContent_MakeAvailable(SFML)
 
-add_executable(Tetris src/Menu/Base.cpp src/Menu/GameOver.cpp src/main.cpp src/GameUI/UI.cpp src/GameEntity/TetrominoContainer.cpp src/GameEntity/ActiveTetromino.cpp src/GameEntity/TetrominoFactory.cpp src/GameEntity/Tetromino.cpp src/GameEntity/Block.cpp)
+add_custom_target(copy_assets COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/assets ${CMAKE_BINARY_DIR}/assets)
+add_executable(Tetris src/Resources/FontCollection.cpp src/Menu/Base.cpp src/Menu/GameOver.cpp src/main.cpp src/GameUI/UI.cpp src/GameEntity/TetrominoContainer.cpp src/GameEntity/ActiveTetromino.cpp src/GameEntity/TetrominoFactory.cpp src/GameEntity/Tetromino.cpp src/GameEntity/Block.cpp)
+add_dependencies(Tetris copy_assets)
 target_link_libraries(Tetris PRIVATE sfml-graphics)
 target_compile_features(Tetris PRIVATE cxx_std_17)
 
