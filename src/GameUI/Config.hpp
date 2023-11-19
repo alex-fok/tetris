@@ -15,6 +15,11 @@ namespace GameUI
         namespace Menu
         {
             static constexpr float BorderWidth = 1.f;
+            namespace GameOver
+            {
+                static constexpr float Width = 250.f;
+                static constexpr float Height = 400.f;
+            }
         }
         namespace TetrominoContainer
         {

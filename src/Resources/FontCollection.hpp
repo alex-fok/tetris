@@ -5,8 +5,13 @@ namespace Resources
 {
     class FontCollection
     {
-    public:
+    private:
+        static FontCollection *fc_ptr;
         FontCollection();
+        
+    public:
+        FontCollection(FontCollection &fc) = delete;
+        static FontCollection *getInstance();
         sf::Font RobotoRegular;
     };
 }
