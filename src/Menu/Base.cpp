@@ -2,8 +2,8 @@
 #include "../GameUI/Config.hpp"
 
 Menu::Base::Base(sf::RenderWindow *w, sf::Vector2f size, const char *title):
+    Drawable(w),
     fontCollection(Resources::FontCollection::getInstance()),
-    m_window(w),
     m_size(size),
     m_offset({
         GameUI::Config::Window::Height/2.f - size.y/2.f, // Top
@@ -44,8 +44,8 @@ void Menu::Base::setButtonPositions(std::vector<Utils::Button *> btns)
 
 void Menu::Base::renderBase()
 {
-    m_window->draw(m_container);
-    m_window->draw(m_title);
+    draw(m_container);
+    draw(m_title);
 }
 
 void Menu::Base::render()

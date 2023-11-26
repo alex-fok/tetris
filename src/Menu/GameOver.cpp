@@ -6,8 +6,6 @@ Menu::GameOver::GameOver(sf::RenderWindow *w):
 {
     m_buttons.push_back(new Utils::Button("Retry", fontCollection));
     setButtonPositions(m_buttons);
-    for (Utils::Button *b : m_buttons)
-        sf::Vector2f position = b->content.getPosition();
 }
 
 void Menu::GameOver::retry()
@@ -20,6 +18,6 @@ void Menu::GameOver::render()
     renderBase();
     for (Utils::Button *b: m_buttons)
     {
-        m_window->draw(b->content);
+        draw(b->content);
     }
 }

@@ -1,6 +1,10 @@
 #pragma once
+#include <functional>
 #include <SFML/Graphics.hpp>
+#include "../Utils/Drawable.hpp"
 #include "../GameUI/Config.hpp"
+#include "../GameUI/Status.hpp"
+#include "../GameUI/UI.hpp"
 #include "Vector.hpp"
 #include "Block.hpp"
 #include "ActiveTetromino.hpp"
@@ -9,7 +13,7 @@
 
 namespace GameEntity
 {
-    class TetrominoContainer
+    class TetrominoContainer : public Utils::Drawable
     {
     private:
         static const int BlockCount_x = 10;
@@ -17,7 +21,7 @@ namespace GameEntity
         static const int InitPos_x = 3;
         static const int InitPos_y = BlockCount_y - ActiveTetromino::Offset_size;
         std::vector<int> linesToClear;
-
+        
         float m_blockSize, m_borderWidth;
 
         sf::RenderWindow *m_window;
@@ -26,10 +30,14 @@ namespace GameEntity
         TetrominoFactory m_tetrominoFactory;
         ActiveTetromino m_active;
         Block m_arr[BlockCount_y + ActiveTetromino::Offset_size][BlockCount_x];
-
+        std::function<void(GameUI::Status)> m_setStatus;
     public:
-        TetrominoContainer(sf::RenderWindow *w, float blockSize, float borderWidth, GameUI::Position v);
-        bool isGameOver;
+        TetrominoContainer(
+            sf::RenderWindow *w,
+            float blockSize, float borderWidth,
+            GameUI::Position v,
+            std::function<void(GameUI::Status)> statusSetter
+        );
         void nextStep();
         void handle(sf::Keyboard::Key);
         void render();
@@ -42,7 +50,7 @@ namespace GameEntity
         void drop();
         void clearLines();
         void placeNewActive();
-        void settleActive();        
+        void settleActive();
         void updateActive();
         void clearActive();
         

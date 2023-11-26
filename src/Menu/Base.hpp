@@ -2,6 +2,7 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include "../Resources/FontCollection.hpp"
+#include "../Utils/Drawable.hpp"
 #include "../Utils/Button.hpp"
 
 namespace Menu
@@ -13,7 +14,7 @@ namespace Menu
         float down;
         float left;
     };
-    class Base
+    class Base : public Utils::Drawable
     {
     private:
         Offset m_offset;

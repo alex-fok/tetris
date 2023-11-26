@@ -1,10 +1,11 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "Clickable.hpp"
 #include "../Resources/FontCollection.hpp"
 
 namespace Utils
 {
-    class Button
+    class Button : Clickable
     {
     private:
         void (*m_fn)();
