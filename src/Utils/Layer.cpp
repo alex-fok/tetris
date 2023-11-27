@@ -36,10 +36,5 @@ void Utils::Layer::render()
 Utils::Layer::~Layer()
 {
     for (Drawable *d : m_drawables)
-    {
-        std::vector<Clickable *> clickables = d->getClickables();
-        for (Clickable *c: clickables)
-            delete(c);
         delete(d);
-    }
 }

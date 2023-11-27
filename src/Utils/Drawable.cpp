@@ -23,3 +23,9 @@ void Utils::Drawable::draw(const sf::Drawable &d)
 void Utils::Drawable::render()
 {
 }
+
+Utils::Drawable::~Drawable()
+{
+    for (Clickable *c : m_clickables)
+        delete(c);
+}

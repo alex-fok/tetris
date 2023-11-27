@@ -17,5 +17,6 @@ namespace Utils
         std::vector<Clickable *> getClickables();
         virtual void render();
         void draw(const sf::Drawable &d);
+        ~Drawable();
     };
 }
