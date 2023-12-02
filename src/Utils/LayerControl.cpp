@@ -12,7 +12,7 @@ void Utils::LayerControl::addTop(Layer *l)
     m_topLayer = l;
 }
 
-void Utils::LayerControl::removeTop(Layer *l)
+void Utils::LayerControl::remove(Layer *l)
 {
     m_layers.erase(std::remove(m_layers.begin(), m_layers.end(), l));
     m_topLayer = m_layers.back();

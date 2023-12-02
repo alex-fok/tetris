@@ -15,7 +15,7 @@ namespace Utils
     public:
         LayerControl(sf::RenderWindow *w);
         void addTop(Utils::Layer *l);
-        void removeTop(Utils::Layer *l);
+        void remove(Utils::Layer *l);
         Layer *top();
         void handleClick(sf::Vector2i mousePos);
         void render();

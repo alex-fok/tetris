@@ -21,7 +21,7 @@ void GameUI::UI::setGameOver()
 
 void GameUI::UI::setPaused()
 {
-
+    std::cout << "Status is set to Paused" << std::endl;
 }
 
 void GameUI::UI::setStatus(Status s)
@@ -30,7 +30,7 @@ void GameUI::UI::setStatus(Status s)
         return;
     
     if (m_status == GameOver)// || m_status == Paused)
-       m_layerControl.removeTop(m_layerControl.top());
+       m_layerControl.remove(m_layerControl.top());
     
     m_status = s;
     
@@ -44,7 +44,7 @@ void GameUI::UI::setStatus(Status s)
             setPaused();
             break;
         case Running:
-
+            break;
         default:
             break;
     }
@@ -81,12 +81,12 @@ void GameUI::UI::run()
         sf::Keyboard::Right,
         sf::Keyboard::Down,
         sf::Keyboard::Left,
-        sf::Keyboard::Space,  
+        sf::Keyboard::Space,
     };
     int iteration = 0;
     while (m_window.isOpen())
     {
-        if (m_status != Paused && m_status != GameOver)
+        if (m_status == Running)
             tetroContainer.nextStep();
 
         sf::Event event;
@@ -100,15 +100,21 @@ void GameUI::UI::run()
                 case sf::Event::KeyPressed:
                     if (m_status == GameOver)
                         break;
+                    
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-                        isPaused = !isPaused;
-                    else if (!isPaused)
+                        setStatus(m_status == Paused ? Running : Paused);
+                        
+                    else if (m_status != Paused)
                         for (sf::Keyboard::Key k: inputs)
                             if (sf::Keyboard::isKeyPressed(k))
                             {
                                 tetroContainer.handle(k);
                                 break;
                             }
+                    break;
+                case sf::Event::MouseButtonReleased:
+                    if (event.mouseButton.button == sf::Mouse::Left)
+                        m_layerControl.handleClick({event.mouseButton.x, event.mouseButton.y});
                     break;
                 default:
                     break;
