@@ -1,24 +1,30 @@
 #include "Base.hpp"
 #include "../GameUI/Config.hpp"
 
-Menu::Base::Base(sf::RenderWindow *w, sf::Vector2f size, const char *title):
+Menu::Base::Base(sf::RenderWindow *w) :
     Drawable(w),
-    fontCollection(Resources::FontCollection::getInstance()),
-    m_size(size),
-    m_offset({
-        GameUI::Config::Window::Height/2.f - size.y/2.f, // Top
-        GameUI::Config::Window::Width/2.f + size.x/2.f, // Right
-        GameUI::Config::Window::Height/2.f + size.y/2.f, // Bottom
-        GameUI::Config::Window::Width/2.f - size.x/2.f // Left
-    }),
-    m_container(sf::RectangleShape(size))
+    fontCollection(Resources::FontCollection::getInstance())
 {
-    float width_ctr = GameUI::Config::Window::Width / 2.f;
-    float height_ctr = GameUI::Config::Window::Height / 2.f;
+}
+
+void Menu::Base::setup(float width, float height, const char *title)
+{
+    m_offset = {
+        GameUI::Config::Window::Height/2.f - height/2.f, // Top
+        GameUI::Config::Window::Width/2.f + width/2.f, // Right
+        GameUI::Config::Window::Height/2.f + height/2.f, // Bottom
+        GameUI::Config::Window::Width/2.f - width/2.f // Left
+    };
+
+    m_container = sf::RectangleShape({width, height});
+
+    float window_width_ctr = GameUI::Config::Window::Width / 2.f;
+    float window_height_ctr = GameUI::Config::Window::Height / 2.f;
     
     // Container
-    m_container.setOrigin({size.x/2.f, size.y/2.f});
-    m_container.setPosition({width_ctr, height_ctr});
+    m_container = sf::RectangleShape({width, height});
+    m_container.setOrigin({width/2.f, height/2.f});
+    m_container.setPosition({window_width_ctr, window_height_ctr});
     m_container.setFillColor(sf::Color::Black);
     m_container.setOutlineColor(sf::Color::White);
     m_container.setOutlineThickness(-1.0f);
@@ -29,7 +35,7 @@ Menu::Base::Base(sf::RenderWindow *w, sf::Vector2f size, const char *title):
     m_title.setCharacterSize(36);
     sf::FloatRect bounds = m_title.getLocalBounds();
     m_title.setOrigin({bounds.width / 2, bounds.height / 2});
-    m_title.setPosition({width_ctr, m_size.y * 0.1f + m_offset.top});
+    m_title.setPosition({window_width_ctr, height * 0.1f + m_offset.top});
 }
 
 void Menu::Base::setButtonPositions(std::vector<Utils::Button *> btns)
@@ -39,7 +45,7 @@ void Menu::Base::setButtonPositions(std::vector<Utils::Button *> btns)
     float x = m_container.getPosition().x; // centered
     
     for (std::size_t i = 0; i < size; ++i)
-        btns[i]->setPosition({x, m_size.y * 0.1f * (i + start) + m_offset.top});
+        btns[i]->setPosition({x, height * 0.1f * (i + start) + m_offset.top});
 }
 
 void Menu::Base::renderBase()

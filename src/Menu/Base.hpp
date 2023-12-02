@@ -18,15 +18,16 @@ namespace Menu
     {
     private:
         Offset m_offset;
-        sf::Vector2f m_size;
     protected:
         Resources::FontCollection *fontCollection;
         sf::RenderWindow *m_window;
         sf::RectangleShape m_container;
         sf::Text m_title;
+        std::vector<Utils::Button *> buttonsVector;
 
     public:
-        Base(sf::RenderWindow *w, sf::Vector2f v, const char *title);
+        Base(sf::RenderWindow *w);
+        void setup(float width, float height, const char *title);
         void setButtonPositions(std::vector<Utils::Button *> btns);
         void renderBase();
         virtual void render();

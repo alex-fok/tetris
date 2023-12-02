@@ -8,6 +8,9 @@ namespace Utils
     private:
         sf::Vector2i m_top_left;
         sf::Vector2i m_bottom_right;
+    protected:
+        float width;
+        float height;
     public:
         Area();
         void setArea(sf::Vector2i tl, sf::Vector2i br);
