@@ -12,6 +12,7 @@ namespace Menu
     public:
         GameOver(sf::RenderWindow *w);
         void retry();
+        static void forwarder_retry(Menu::GameOver *self);
         void render();
     };
 }

@@ -1,5 +1,4 @@
 #include "Layer.hpp"
-
 Utils::Layer::Layer()
 {
 }
@@ -19,7 +18,7 @@ void Utils::Layer::handleClick(sf::Vector2i mousePos)
             {
                 if (c->isInArea(mousePos))
                 {
-                    c->handleClick(mousePos);
+                    c->handleClick();
                     break;
                 }   
             }

@@ -2,29 +2,20 @@
 
 Utils::Button::Button(const char *name, Resources::FontCollection *fc)
 {
-    content.setString(name);
-    content.setFont(fc->RobotoRegular);
-    content.setCharacterSize(18);
-    sf::FloatRect bounds = content.getLocalBounds();
-    content.setOrigin({bounds.width / 2, bounds.height / 2});
+    m_content.setString(name);
+    m_content.setFont(fc->RobotoRegular);
+    m_content.setCharacterSize(18);
+    sf::FloatRect bounds = m_content.getLocalBounds();
+    width = bounds.width;
+    height = bounds.height;
+    m_content.setOrigin({bounds.width / 2, bounds.height / 2});
 }
 
 void Utils::Button::setPosition(sf::Vector2f position)
 {
-    content.setPosition(position);
-}
-
-sf::Text const Utils::Button::getButton()
-{
-    return content;
-}
-
-void Utils::Button::setFn(void (* fn)())
-{
-    m_fn = fn;
-}
-
-void Utils::Button::handleClick()
-{
-    m_fn();
+   m_content.setPosition(position);
+   setArea(
+    { position.x - width /2.f, position.y - width/2.f },
+    { position.x + width/2.f, position.y + width/2.f }
+   );
 }

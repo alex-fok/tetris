@@ -4,10 +4,10 @@ Utils::Area::Area()
 {
 }
 
-void Utils::Area::setArea(sf::Vector2i tl, sf::Vector2i br)
+void Utils::Area::setArea(sf::Vector2f topLeft, sf::Vector2f bottomRight)
 {
-    m_top_left = tl;
-    m_bottom_right = br;
+    m_top_left = topLeft;
+    m_bottom_right = bottomRight;
 }
 
 bool Utils::Area::isInArea(sf::Vector2i position)

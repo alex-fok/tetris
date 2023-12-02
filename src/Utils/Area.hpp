@@ -6,14 +6,14 @@ namespace Utils
     class Area
     {
     private:
-        sf::Vector2i m_top_left;
-        sf::Vector2i m_bottom_right;
+        sf::Vector2f m_top_left;
+        sf::Vector2f m_bottom_right;
     protected:
         float width;
         float height;
     public:
         Area();
-        void setArea(sf::Vector2i tl, sf::Vector2i br);
+        void setArea(sf::Vector2f topLeft, sf::Vector2f bottomRight);
         bool isInArea(sf::Vector2i position);
     };
 }

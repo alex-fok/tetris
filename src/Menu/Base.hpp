@@ -23,12 +23,11 @@ namespace Menu
         sf::RenderWindow *m_window;
         sf::RectangleShape m_container;
         sf::Text m_title;
-        std::vector<Utils::Button *> buttonsVector;
 
     public:
         Base(sf::RenderWindow *w);
         void setup(float width, float height, const char *title);
-        void setButtonPositions(std::vector<Utils::Button *> btns);
+        void setButtonPositions();
         void renderBase();
         virtual void render();
     };
