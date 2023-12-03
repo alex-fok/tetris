@@ -2,7 +2,7 @@
 #include <functional>
 #include "GameOver.hpp"
 
-Menu::GameOver::GameOver(sf::RenderWindow *w, std::function<void()> retryFn) :
+Menu::GameOver::GameOver(sf::RenderWindow *w, std::function<void()>retryFn, std::function<void()>quitFn) :
     Base(w),
     m_resetFn(retryFn)
 {
@@ -14,7 +14,11 @@ Menu::GameOver::GameOver(sf::RenderWindow *w, std::function<void()> retryFn) :
     Utils::Button *retry = new Utils::Button("Retry", fontCollection);
     retry->setFn(retryFn);
 
+    Utils::Button *quit = new Utils::Button("Quit", fontCollection);
+    quit->setFn(quitFn);
+
     m_clickables.push_back(retry);
+    m_clickables.push_back(quit);
 
     setButtonPositions();
 }

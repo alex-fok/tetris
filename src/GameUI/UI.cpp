@@ -16,7 +16,11 @@ GameUI::UI::UI():
         Config::TetrominoContainer::Window_Offset,
         std::bind(GameUI::UI::forwarder_setStatus, this, std::placeholders::_1)
     ),
-    m_gameOverMenu(Menu::GameOver(&m_window, std::bind(GameUI::UI::forwarder_retry, this)))
+    m_gameOverMenu(Menu::GameOver(
+        &m_window,
+        std::bind(GameUI::UI::forwarder_retry, this),
+        std::bind(GameUI::UI::forwarder_close, this)
+    ))
 {
 }
 
@@ -49,30 +53,31 @@ void GameUI::UI::setStatus(Status s)
     if (m_status == s)
         return;
     
-    if (m_status == GameOver){// || m_status == Paused)
-        std::cout << "GameUI::UI >> Removing GameOver Menu" << std::endl;
+    if (m_status == GameOver)// || m_status == Paused)
        m_layerControl.remove(m_layerControl.top());
-       std::cout << "GameUI::UI >> Finish removing GameOver Menu" << std::endl;
-    }
     
     m_status = s;
     
     switch (m_status)
     {
         case GameOver:
-            std::cout << "GAME OVER" << std::endl;
             setGameOver();
             break;
         case Paused:
             setPaused();
             break;
         case Running:
+            setRunning();
             break;
         default:
             break;
     }
 }
 
+void GameUI::UI::close()
+{
+    m_window.close();
+}
 
 void GameUI::UI::forwarder_setStatus(GameUI::UI *self, Status s)
 {
@@ -82,6 +87,11 @@ void GameUI::UI::forwarder_setStatus(GameUI::UI *self, Status s)
 void GameUI::UI::forwarder_retry(GameUI::UI *self)
 {
     self->retry();
+}
+
+void GameUI::UI::forwarder_close(GameUI::UI *self)
+{
+    self->close();
 }
 
 void GameUI::UI::run()

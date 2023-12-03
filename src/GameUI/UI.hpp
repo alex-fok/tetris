@@ -16,12 +16,14 @@ namespace GameUI
         GameEntity::TetrominoContainer m_tetroContainer;
         Menu::GameOver m_gameOverMenu;
         void retry();
+        void close();
         void setGameOver();
         void setPaused();
         void setRunning();
         
         static void forwarder_setStatus(GameUI::UI *, Status s);
         static void forwarder_retry(GameUI::UI *);
+        static void forwarder_close(GameUI::UI *);
     public:
         UI();
         void run();
