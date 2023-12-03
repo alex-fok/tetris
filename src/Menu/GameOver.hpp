@@ -1,4 +1,5 @@
 #pragma once
+#include <functional>
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include "../GameUI/Config.hpp"
@@ -9,10 +10,10 @@ namespace Menu
 {
     class GameOver : public Base
     {
+    private:
+        std::function<void()> m_resetFn;
     public:
-        GameOver(sf::RenderWindow *w);
-        void retry();
-        static void forwarder_retry(Menu::GameOver *self);
+        GameOver(sf::RenderWindow *w, std::function<void()> retryFn);
         void render();
     };
 }

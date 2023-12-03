@@ -29,6 +29,17 @@ GameEntity::TetrominoContainer::TetrominoContainer(sf::RenderWindow *window, flo
     updateActive();
 }
 
+void GameEntity::TetrominoContainer::reset()
+{
+    m_tetrominoFactory.reset();
+    m_active = ActiveTetromino(m_tetrominoFactory.generateTetromino(), {InitPos_x, InitPos_y});
+    for (int y = 0; y < BlockCount_y + ActiveTetromino::Offset_size; ++y)
+        for (int x = 0; x < BlockCount_x; ++x)
+            m_arr[y][x].reset();
+
+    updateActive();
+}
+
 bool GameEntity::TetrominoContainer::isBlocked(Vector v)
 {    
     if ( v.x < 0 || v.y < 0 || v.x > BlockCount_x - 1 )

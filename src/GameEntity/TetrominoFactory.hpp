@@ -10,5 +10,6 @@ namespace GameEntity
     public:
         TetrominoFactory();
         Tetromino *generateTetromino();
+        void reset();
     };
 }

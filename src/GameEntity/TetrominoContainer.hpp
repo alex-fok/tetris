@@ -4,7 +4,6 @@
 #include "../Utils/Drawable.hpp"
 #include "../GameUI/Config.hpp"
 #include "../GameUI/Status.hpp"
-#include "../GameUI/UI.hpp"
 #include "Vector.hpp"
 #include "Block.hpp"
 #include "ActiveTetromino.hpp"
@@ -37,9 +36,10 @@ namespace GameEntity
             float blockSize, float borderWidth,
             GameUI::Position v,
             std::function<void(GameUI::Status)> statusSetter
-        );
+        );        
         void nextStep();
         void handle(sf::Keyboard::Key);
+        void reset();
         void render();
         ~TetrominoContainer();
 

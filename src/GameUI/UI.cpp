@@ -8,29 +8,52 @@
 GameUI::UI::UI():
     m_window(sf::VideoMode((unsigned int)Config::Window::Width, (unsigned int)Config::Window::Height), "Tetris"),
     m_layerControl(&m_window),
-    m_gameOverMenu(Menu::GameOver(&m_window)),
-    m_status(Running)
+    m_status(Running),
+    m_tetroContainer(
+        &m_window,
+        Config::Block::Size,
+        Config::TetrominoContainer::BorderWidth,
+        Config::TetrominoContainer::Window_Offset,
+        std::bind(GameUI::UI::forwarder_setStatus, this, std::placeholders::_1)
+    ),
+    m_gameOverMenu(Menu::GameOver(&m_window, std::bind(GameUI::UI::forwarder_retry, this)))
 {
 }
+
+void GameUI::UI::retry()
+{
+    m_tetroContainer.reset();
+    setStatus(GameUI::Status::Running);
+}
+
 void GameUI::UI::setGameOver()
 {
     Utils::Layer *l = new Utils::Layer();
-    l->addDrawable(new Menu::GameOver(&m_window));
+    l->addDrawable(&m_gameOverMenu);
     m_layerControl.addTop(l);
 }
 
 void GameUI::UI::setPaused()
 {
-    std::cout << "Status is set to Paused" << std::endl;
+    std::cout << "GameUI::UI >> Status is set to Paused" << std::endl;
+}
+
+void GameUI::UI::setRunning()
+{
+    std::cout << "GameUI::UI >> Status is set to Running" << std::endl;
 }
 
 void GameUI::UI::setStatus(Status s)
 {
+    std::cout << "GAMEUI::UI >> setStatus " << s << std::endl;
     if (m_status == s)
         return;
     
-    if (m_status == GameOver)// || m_status == Paused)
+    if (m_status == GameOver){// || m_status == Paused)
+        std::cout << "GameUI::UI >> Removing GameOver Menu" << std::endl;
        m_layerControl.remove(m_layerControl.top());
+       std::cout << "GameUI::UI >> Finish removing GameOver Menu" << std::endl;
+    }
     
     m_status = s;
     
@@ -50,9 +73,15 @@ void GameUI::UI::setStatus(Status s)
     }
 }
 
+
 void GameUI::UI::forwarder_setStatus(GameUI::UI *self, Status s)
 {
     self->setStatus(s);
+}
+
+void GameUI::UI::forwarder_retry(GameUI::UI *self)
+{
+    self->retry();
 }
 
 void GameUI::UI::run()
@@ -61,20 +90,10 @@ void GameUI::UI::run()
     int loop = 0;
     // Base layer
     Utils::Layer *baseLayer = &Utils::Layer();
-    std::function<void(Status)> statusSetter = std::bind(GameUI::UI::forwarder_setStatus, this, std::placeholders::_1);
-
-    GameEntity::TetrominoContainer tetroContainer(
-        &m_window,
-        Config::Block::Size,
-        Config::TetrominoContainer::BorderWidth,
-        Config::TetrominoContainer::Window_Offset,
-        statusSetter
-    );
     
-    baseLayer->addDrawable(&tetroContainer);
+    baseLayer->addDrawable(&m_tetroContainer);
     m_layerControl.addTop(baseLayer);
     
-    bool isPaused = false;
     sf::Keyboard::Key inputs[5] =
     {
         sf::Keyboard::Up,
@@ -83,11 +102,11 @@ void GameUI::UI::run()
         sf::Keyboard::Left,
         sf::Keyboard::Space,
     };
-    int iteration = 0;
+    
     while (m_window.isOpen())
     {
         if (m_status == Running)
-            tetroContainer.nextStep();
+            m_tetroContainer.nextStep();
 
         sf::Event event;
         
@@ -108,7 +127,7 @@ void GameUI::UI::run()
                         for (sf::Keyboard::Key k: inputs)
                             if (sf::Keyboard::isKeyPressed(k))
                             {
-                                tetroContainer.handle(k);
+                                m_tetroContainer.handle(k);
                                 break;
                             }
                     break;

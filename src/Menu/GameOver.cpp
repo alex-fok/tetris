@@ -2,8 +2,9 @@
 #include <functional>
 #include "GameOver.hpp"
 
-Menu::GameOver::GameOver(sf::RenderWindow *w) :
-    Base(w)
+Menu::GameOver::GameOver(sf::RenderWindow *w, std::function<void()> retryFn) :
+    Base(w),
+    m_resetFn(retryFn)
 {
     width = GameUI::Config::Menu::GameOver::Width;
     height = GameUI::Config::Menu::GameOver::Height;
@@ -11,21 +12,11 @@ Menu::GameOver::GameOver(sf::RenderWindow *w) :
     setup(width, height, "Game Over");
     // Retry button
     Utils::Button *retry = new Utils::Button("Retry", fontCollection);
-    retry->setFn(std::bind(this->forwarder_retry, this));
+    retry->setFn(retryFn);
 
     m_clickables.push_back(retry);
-    
+
     setButtonPositions();
-}
-
-void Menu::GameOver::retry()
-{
-    std::cout << "Attempting to retry" << std::endl;
-}
-
-void Menu::GameOver::forwarder_retry(Menu::GameOver *self)
-{
-    self->retry();
 }
 
 void Menu::GameOver::render()

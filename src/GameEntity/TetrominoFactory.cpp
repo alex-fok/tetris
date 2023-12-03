@@ -15,3 +15,8 @@ GameEntity::Tetromino * GameEntity::TetrominoFactory::generateTetromino()
     m_currIdx = (m_currIdx + 1) % 256;
     return new Tetromino(m_currIdx, type);
 }
+
+void GameEntity::TetrominoFactory::reset()
+{
+    m_currIdx = 0;
+}
