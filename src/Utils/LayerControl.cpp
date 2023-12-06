@@ -1,8 +1,7 @@
 #include <algorithm>
 #include "LayerControl.hpp"
 
-Utils::LayerControl::LayerControl(sf::RenderWindow *w) :
-m_window(w)
+Utils::LayerControl::LayerControl()
 {
 }
 

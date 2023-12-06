@@ -9,11 +9,10 @@ namespace Utils
     class LayerControl
     {
     private:
-        sf::RenderWindow *m_window;
         std::vector<Utils::Layer *> m_layers;
         Layer *m_topLayer;
     public:
-        LayerControl(sf::RenderWindow *w);
+        LayerControl();
         void addTop(Utils::Layer *l);
         void remove(Utils::Layer *l);
         Layer *top();

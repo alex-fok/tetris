@@ -7,7 +7,7 @@
 
 GameUI::UI::UI():
     m_window(sf::VideoMode((unsigned int)Config::Window::Width, (unsigned int)Config::Window::Height), "Tetris"),
-    m_layerControl(&m_window),
+    m_layerControl(),
     m_status(Running),
     m_tetroContainer(
         &m_window,
@@ -32,7 +32,7 @@ void GameUI::UI::retry()
 
 void GameUI::UI::setGameOver()
 {
-    Utils::Layer *l = new Utils::Layer();
+    Utils::Layer *l = new Utils::Layer(&m_window);
     l->addDrawable(&m_gameOverMenu);
     m_layerControl.addTop(l);
 }
@@ -97,7 +97,7 @@ void GameUI::UI::forwarder_close(GameUI::UI *self)
 void GameUI::UI::run()
 {
     // Base layer
-    Utils::Layer *baseLayer = &Utils::Layer();
+    Utils::Layer *baseLayer = &Utils::Layer(&m_window);
     
     baseLayer->addDrawable(&m_tetroContainer);
     m_layerControl.addTop(baseLayer);

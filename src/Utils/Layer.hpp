@@ -8,12 +8,13 @@ namespace Utils
     class Layer
     {
     private:
+        sf::RenderWindow *m_window;
         std::vector<Drawable *> m_drawables;
     public:
-        static enum MouseEvent {
+        enum MouseEvent {
             Click = 0, Hover
         };
-        Layer();
+        Layer(sf::RenderWindow *w);
         void addDrawable(Drawable *d);
         void handleMouseEvent(MouseEvent event, sf::Vector2i mousePos);
         virtual void render();

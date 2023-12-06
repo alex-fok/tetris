@@ -1,5 +1,6 @@
 #include "Layer.hpp"
-Utils::Layer::Layer()
+Utils::Layer::Layer(sf::RenderWindow *w) :
+m_window(w)
 {
 }
 
@@ -10,6 +11,7 @@ void Utils::Layer::addDrawable(Drawable *d)
 
 void Utils::Layer::handleMouseEvent(Utils::Layer::MouseEvent event, sf::Vector2i mousePos)
 {
+    sf::Cursor cursor;
     for (Drawable *d : m_drawables)
         if (d->isInArea(mousePos))
         {
@@ -18,6 +20,9 @@ void Utils::Layer::handleMouseEvent(Utils::Layer::MouseEvent event, sf::Vector2i
             {
                 if (c->isInArea(mousePos))
                 {
+                    if (cursor.loadFromSystem(sf::Cursor::Hand))
+                        m_window->setMouseCursor(cursor);
+                
                     switch(event)
                     {
                         case Click:
@@ -27,7 +32,11 @@ void Utils::Layer::handleMouseEvent(Utils::Layer::MouseEvent event, sf::Vector2i
                             c->handleHover();
                             break;
                     }
+                    break;
                 }
+                else
+                    if (cursor.loadFromSystem(sf::Cursor::Arrow))
+                        m_window->setMouseCursor(cursor);
             }
             break;
         }
