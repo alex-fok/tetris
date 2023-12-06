@@ -3,8 +3,12 @@
 
 Menu::Base::Base(sf::RenderWindow *w) :
     Drawable(w),
-    fontCollection(Resources::FontCollection::getInstance())
+    fontCollection(Resources::FontCollection::getInstance()),
+    m_cursor(sf::CircleShape(7.5f, 3))
 {
+    sf::FloatRect fr = m_cursor.getLocalBounds();
+    m_cursor.setOrigin(fr.width/2, fr.height/2);
+    m_cursor.rotate(90);
 }
 
 void Menu::Base::setup(float width, float height, const char *title)
@@ -57,10 +61,23 @@ void Menu::Base::setButtonPositions()
         m_clickables[i]->setPosition({x, height * 0.1f * (i + start) + m_offset.top});
 }
 
+void Menu::Base::setSelected(Utils::Button *selected)
+{
+    if (m_selected == selected)
+        return;
+    
+    m_selected = selected;
+    auto fr = m_cursor.getLocalBounds();
+    auto selected_pos = m_selected->getPosition();
+
+    m_cursor.setPosition(selected_pos.x - m_selected->width - fr.width/2, selected_pos.y);
+}
+
 void Menu::Base::renderBase()
 {
     draw(m_container);
     draw(m_title);
+    draw(m_cursor);
 }
 
 void Menu::Base::render()

@@ -15,7 +15,12 @@ void Utils::Button::setPosition(sf::Vector2f position)
 {
    m_content.setPosition(position);
    setArea(
-    { position.x - width /2.f, position.y - width/2.f },
+    { position.x - width/2.f, position.y - width/2.f },
     { position.x + width/2.f, position.y + width/2.f }
    );
+}
+
+sf::Vector2f Utils::Button::getPosition()
+{
+    return m_content.getPosition();
 }

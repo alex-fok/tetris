@@ -8,7 +8,7 @@ namespace Utils
     private:
         sf::Vector2f m_top_left;
         sf::Vector2f m_bottom_right;
-    protected:
+    public:
         float width;
         float height;
     public:

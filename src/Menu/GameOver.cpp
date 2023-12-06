@@ -13,7 +13,7 @@ Menu::GameOver::GameOver(sf::RenderWindow *w, std::function<void()>retryFn, std:
     // Retry button
     Utils::Button *retry = new Utils::Button("Retry", fontCollection);
     retry->setFn(retryFn);
-
+    // Quit button
     Utils::Button *quit = new Utils::Button("Quit", fontCollection);
     quit->setFn(quitFn);
 
@@ -21,6 +21,7 @@ Menu::GameOver::GameOver(sf::RenderWindow *w, std::function<void()>retryFn, std:
     m_clickables.push_back(quit);
 
     setButtonPositions();
+    setSelected(retry);
 }
 
 void Menu::GameOver::render()

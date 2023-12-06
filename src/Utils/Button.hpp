@@ -10,5 +10,6 @@ namespace Utils
     public:
         Button(const char *name, Resources::FontCollection *fc);
         void setPosition(sf::Vector2f position);
+        sf::Vector2f getPosition();
     };
 }

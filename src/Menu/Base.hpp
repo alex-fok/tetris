@@ -18,6 +18,8 @@ namespace Menu
     {
     private:
         Offset m_offset;
+        Utils::Button *m_selected;
+        sf::CircleShape m_cursor;
     protected:
         Resources::FontCollection *fontCollection;
         sf::RenderWindow *m_window;
@@ -28,6 +30,7 @@ namespace Menu
         Base(sf::RenderWindow *w);
         void setup(float width, float height, const char *title);
         void setButtonPositions();
+        void setSelected(Utils::Button *selected);
         void renderBase();
         virtual void render();
     };
