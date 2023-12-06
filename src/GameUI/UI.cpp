@@ -96,8 +96,6 @@ void GameUI::UI::forwarder_close(GameUI::UI *self)
 
 void GameUI::UI::run()
 {
-    // counter
-    int loop = 0;
     // Base layer
     Utils::Layer *baseLayer = &Utils::Layer();
     
