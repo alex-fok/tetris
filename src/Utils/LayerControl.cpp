@@ -25,7 +25,12 @@ Utils::Layer *Utils::LayerControl::top()
 
 void Utils::LayerControl::handleClick(sf::Vector2i mousePos)
 {
-    m_topLayer->handleClick(mousePos);
+    m_topLayer->handleMouseEvent(Utils::Layer::MouseEvent::Click, mousePos);
+}
+
+void Utils::LayerControl::handleMouseMove(sf::Vector2i mousePos)
+{
+    m_topLayer->handleMouseEvent(Utils::Layer::MouseEvent::Hover, mousePos);
 }
 
 void Utils::LayerControl::render()

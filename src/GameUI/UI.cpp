@@ -143,6 +143,8 @@ void GameUI::UI::run()
                     if (event.mouseButton.button == sf::Mouse::Left)
                         m_layerControl.handleClick({event.mouseButton.x, event.mouseButton.y});
                     break;
+                case sf::Event::MouseMoved:
+                    m_layerControl.handleMouseMove({event.mouseMove.x, event.mouseMove.y});
                 default:
                     break;
             };

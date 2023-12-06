@@ -18,6 +18,7 @@ namespace Utils
         void remove(Utils::Layer *l);
         Layer *top();
         void handleClick(sf::Vector2i mousePos);
+        void handleMouseMove(sf::Vector2i mousePos);
         void render();
     };
 }

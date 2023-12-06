@@ -33,5 +33,6 @@ namespace Menu
         void setSelected(Utils::Button *selected);
         void renderBase();
         virtual void render();
+        static void forwarder_setSelected(Menu::Base *self, Utils::Button *selected);
     };
 }

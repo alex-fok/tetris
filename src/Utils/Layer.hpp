@@ -10,9 +10,12 @@ namespace Utils
     private:
         std::vector<Drawable *> m_drawables;
     public:
+        static enum MouseEvent {
+            Click = 0, Hover
+        };
         Layer();
         void addDrawable(Drawable *d);
-        void handleClick(sf::Vector2i mousePos);
+        void handleMouseEvent(MouseEvent event, sf::Vector2i mousePos);
         virtual void render();
         ~Layer();
     };

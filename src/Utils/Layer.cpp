@@ -8,7 +8,7 @@ void Utils::Layer::addDrawable(Drawable *d)
     m_drawables.push_back(d);
 }
 
-void Utils::Layer::handleClick(sf::Vector2i mousePos)
+void Utils::Layer::handleMouseEvent(Utils::Layer::MouseEvent event, sf::Vector2i mousePos)
 {
     for (Drawable *d : m_drawables)
         if (d->isInArea(mousePos))
@@ -18,9 +18,16 @@ void Utils::Layer::handleClick(sf::Vector2i mousePos)
             {
                 if (c->isInArea(mousePos))
                 {
-                    c->handleClick();
-                    break;
-                }   
+                    switch(event)
+                    {
+                        case Click:
+                            c->handleClick();
+                            break;
+                        default:
+                            c->handleHover();
+                            break;
+                    }
+                }
             }
             break;
         }

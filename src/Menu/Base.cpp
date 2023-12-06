@@ -84,3 +84,8 @@ void Menu::Base::render()
 {
     renderBase();
 }
+
+void Menu::Base::forwarder_setSelected(Menu::Base *self, Utils::Button *selected)
+{
+    self->setSelected(selected);
+}
