@@ -9,8 +9,8 @@ namespace Utils
         sf::Vector2f m_top_left;
         sf::Vector2f m_bottom_right;
     public:
-        float width;
-        float height;
+        float m_width;
+        float m_height;
     public:
         Area();
         void setArea(sf::Vector2f topLeft, sf::Vector2f bottomRight);

@@ -4,6 +4,7 @@
 #include "../Utils/Layer.hpp"
 #include "../GameEntity/TetrominoContainer.hpp"
 #include "../Menu/GameOver.hpp"
+#include "../Menu/Pause.hpp"
 
 namespace GameUI
 {
@@ -15,6 +16,8 @@ namespace GameUI
         Utils::LayerControl m_layerControl;
         GameEntity::TetrominoContainer m_tetroContainer;
         Menu::GameOver m_gameOverMenu;
+        Menu::Pause m_pauseMenu;
+        
         void retry();
         void close();
         void setGameOver();

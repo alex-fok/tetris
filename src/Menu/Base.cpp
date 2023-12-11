@@ -11,7 +11,7 @@ Menu::Base::Base(sf::RenderWindow *w) :
     m_cursor.rotate(90);
 }
 
-void Menu::Base::setup(float width, float height, const char *title)
+void Menu::Base::m_setup(float width, float height, const char *title)
 {
     m_offset = {
         GameUI::Config::Window::Height/2.f - height/2.f, // Top
@@ -51,14 +51,14 @@ void Menu::Base::setup(float width, float height, const char *title)
     m_title.setPosition({window_width_ctr, height * 0.1f + m_offset.top});
 }
 
-void Menu::Base::setButtonPositions()
+void Menu::Base::m_setButtonPositions()
 {
     std::size_t size = m_clickables.size();
     float start = ceil(5.f + (5.f - float(size)) / 2.f);
     float x = m_container.getPosition().x; // centered
     
     for (std::size_t i = 0; i < size; ++i)
-        m_clickables[i]->setPosition({x, height * 0.1f * (i + start) + m_offset.top});
+        m_clickables[i]->setPosition({x, m_height * 0.1f * (i + start) + m_offset.top});
 }
 
 void Menu::Base::setSelected(Utils::Button *selected)
@@ -70,10 +70,10 @@ void Menu::Base::setSelected(Utils::Button *selected)
     auto fr = m_cursor.getLocalBounds();
     auto selected_pos = m_selected->getPosition();
 
-    m_cursor.setPosition(selected_pos.x - m_selected->width - fr.width/2, selected_pos.y);
+    m_cursor.setPosition(selected_pos.x - m_selected->m_width - fr.width/2, selected_pos.y);
 }
 
-void Menu::Base::renderBase()
+void Menu::Base::m_renderBase()
 {
     draw(m_container);
     draw(m_title);
@@ -82,7 +82,9 @@ void Menu::Base::renderBase()
 
 void Menu::Base::render()
 {
-    renderBase();
+    m_renderBase();
+    for (Utils::Clickable *c: m_clickables)
+        draw(c->getClickable());
 }
 
 void Menu::Base::forwarder_setSelected(Menu::Base *self, Utils::Button *selected)

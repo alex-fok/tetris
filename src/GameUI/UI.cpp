@@ -1,8 +1,6 @@
 #include <functional>
 #include "UI.hpp"
 #include "Config.hpp"
-#include "../Utils/LayerControl.hpp"
-#include "../Menu/GameOver.hpp"
 #include <iostream>
 
 GameUI::UI::UI():
@@ -20,6 +18,10 @@ GameUI::UI::UI():
         &m_window,
         std::bind(GameUI::UI::forwarder_retry, this),
         std::bind(GameUI::UI::forwarder_close, this)
+    )),
+    m_pauseMenu(Menu::Pause(
+        &m_window,
+        std::bind(GameUI::UI::forwarder_setStatus, this, Status::Running)
     ))
 {
 }
@@ -39,7 +41,9 @@ void GameUI::UI::setGameOver()
 
 void GameUI::UI::setPaused()
 {
-    std::cout << "GameUI::UI >> Status is set to Paused" << std::endl;
+    Utils::Layer *l = new Utils::Layer(&m_window);
+    l->addDrawable(&m_pauseMenu);
+    m_layerControl.addTop(l);
 }
 
 void GameUI::UI::setRunning()
@@ -53,9 +57,9 @@ void GameUI::UI::setStatus(Status s)
     if (m_status == s)
         return;
     
-    if (m_status == GameOver)// || m_status == Paused)
-       m_layerControl.remove(m_layerControl.top());
-    
+    if (m_status == GameOver || m_status == Paused)
+        m_layerControl.remove(m_layerControl.top());
+
     m_status = s;
     
     switch (m_status)

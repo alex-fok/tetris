@@ -25,13 +25,12 @@ namespace Menu
         sf::RenderWindow *m_window;
         sf::RectangleShape m_container;
         sf::Text m_title;
-
+        void m_setup(float width, float height, const char *title);
+        void m_setButtonPositions();
+        void m_renderBase();
     public:
         Base(sf::RenderWindow *w);
-        void setup(float width, float height, const char *title);
-        void setButtonPositions();
         void setSelected(Utils::Button *selected);
-        void renderBase();
         virtual void render();
         static void forwarder_setSelected(Menu::Base *self, Utils::Button *selected);
     };

@@ -20,6 +20,11 @@ namespace GameUI
                 static constexpr float Width = 250.f;
                 static constexpr float Height = 400.f;
             }
+            namespace Pause
+            {
+                static constexpr float Width = 250.f;
+                static constexpr float Height = 400.f;
+            }
         }
         namespace TetrominoContainer
         {

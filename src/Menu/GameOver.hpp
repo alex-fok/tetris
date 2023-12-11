@@ -14,6 +14,5 @@ namespace Menu
         std::function<void()> m_resetFn;
     public:
         GameOver(sf::RenderWindow *w, std::function<void()> retryFn, std::function<void()> quitFn);
-        void render();
     };
 }
