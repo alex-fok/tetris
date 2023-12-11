@@ -13,33 +13,34 @@ void Utils::Layer::handleMouseEvent(Utils::Layer::MouseEvent event, sf::Vector2i
 {
     sf::Cursor cursor;
     for (Drawable *d : m_drawables)
-        if (d->isInArea(mousePos))
+    {
+        if (!d->isInArea(mousePos))
+            continue;
+        
+        std::vector<Clickable *> clickables = d->getClickables();
+        for (Clickable *c: clickables)
         {
-            std::vector<Clickable *> clickables = d->getClickables();
-            for (Clickable *c: clickables)
+            if (c->isInArea(mousePos))
             {
-                if (c->isInArea(mousePos))
+                if (cursor.loadFromSystem(sf::Cursor::Hand))
+                    m_window->setMouseCursor(cursor);
+            
+                switch(event)
                 {
-                    if (cursor.loadFromSystem(sf::Cursor::Hand))
-                        m_window->setMouseCursor(cursor);
-                
-                    switch(event)
-                    {
-                        case Click:
-                            c->handleClick();
-                            break;
-                        default:
-                            c->handleHover();
-                            break;
-                    }
-                    break;
+                    case Click:
+                        c->handleClick();
+                        break;
+                    default:
+                        c->handleHover();
+                        break;
                 }
-                else
-                    if (cursor.loadFromSystem(sf::Cursor::Arrow))
-                        m_window->setMouseCursor(cursor);
+                break;
             }
-            break;
+            else if (cursor.loadFromSystem(sf::Cursor::Arrow))
+                m_window->setMouseCursor(cursor);
         }
+        break;
+    }
 }
 
 void Utils::Layer::render()
