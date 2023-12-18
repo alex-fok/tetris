@@ -12,7 +12,7 @@ GameEntity::TetrominoContainer::TetrominoContainer(sf::RenderWindow *window, flo
        blockSize * BlockCount_y + borderWidth * 2.f - BlockCount_y + 1 
     ))),
     m_tetrominoFactory(TetrominoFactory()),
-    m_active(ActiveTetromino(m_tetrominoFactory.generateTetromino(), {InitPos_x, InitPos_y})),
+    m_active(ActiveTetromino(m_tetrominoFactory.getNext(), {InitPos_x, InitPos_y})),
     m_setStatus(statusSetter)
 {
     m_frame.setFillColor(sf::Color::Transparent);
@@ -32,7 +32,7 @@ GameEntity::TetrominoContainer::TetrominoContainer(sf::RenderWindow *window, flo
 void GameEntity::TetrominoContainer::reset()
 {
     m_tetrominoFactory.reset();
-    m_active = ActiveTetromino(m_tetrominoFactory.generateTetromino(), {InitPos_x, InitPos_y});
+    m_active = ActiveTetromino(m_tetrominoFactory.getNext(), {InitPos_x, InitPos_y});
     for (int y = 0; y < BlockCount_y + ActiveTetromino::Offset_size; ++y)
         for (int x = 0; x < BlockCount_x; ++x)
             m_arr[y][x].reset();
@@ -189,7 +189,7 @@ void GameEntity::TetrominoContainer::placeNewActive()
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));    
         clearLines();
     }
-    Tetromino *t = m_tetrominoFactory.generateTetromino();
+    Tetromino *t = m_tetrominoFactory.getNext();
     // Find new start position
     int startPos_y = BlockCount_y;
     bool isLifted = false;
