@@ -44,12 +44,22 @@ int *GameEntity::TetrominoFactory::getBag()
     return bag;
 }
 
+void GameEntity::TetrominoFactory::peek(size_t count, Tetromino **array)
+{
+    size_t counter = 0;
+    for (auto it = m_tetros.begin(); counter < count; ++it)
+        array[counter++] = *it;
+}
+
 GameEntity::Tetromino * GameEntity::TetrominoFactory::getNext()
 {
     Tetromino *front = m_tetros.front();
     m_tetros.pop_front();
     if (m_tetros.size() < m_bag_size + 1)
         addTetros(getBag());
+    
+    for (auto fn: m_subscribed_fns)
+        fn();
     
     return front;
 }
@@ -63,4 +73,12 @@ void GameEntity::TetrominoFactory::reset()
     m_currIdx = 0;
 
     init();
+
+    for (auto fn: m_subscribed_fns)
+        fn();
+}
+
+void GameEntity::TetrominoFactory::addSubscription(std::function<void()> fn)
+{
+    m_subscribed_fns.push_back(fn);
 }

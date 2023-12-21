@@ -1,5 +1,6 @@
 #include <functional>
 #include "UI.hpp"
+#include "../GameEntity/PreviewList.hpp"
 #include "Config.hpp"
 #include <iostream>
 
@@ -7,11 +8,14 @@ GameUI::UI::UI():
     m_window(sf::VideoMode((unsigned int)Config::Window::Width, (unsigned int)Config::Window::Height), "Tetris"),
     m_layerControl(),
     m_status(Running),
+    m_tetroFactory(GameEntity::TetrominoFactory()),
+    m_previewList(GameEntity::PreviewList(&m_tetroFactory)),
     m_tetroContainer(
         &m_window,
         Config::Block::Size,
         Config::TetrominoContainer::BorderWidth,
         Config::TetrominoContainer::Window_Offset,
+        &m_tetroFactory,
         std::bind(GameUI::UI::forwarder_setStatus, this, std::placeholders::_1)
     ),
     m_gameOverMenu(Menu::GameOver(

@@ -2,6 +2,8 @@
 #include <SFML/Graphics.hpp>
 #include "../Utils/LayerControl.hpp"
 #include "../Utils/Layer.hpp"
+#include "../GameEntity/TetrominoFactory.hpp"
+#include "../GameEntity/PreviewList.hpp"
 #include "../GameEntity/TetrominoContainer.hpp"
 #include "../Menu/GameOver.hpp"
 #include "../Menu/Pause.hpp"
@@ -14,6 +16,8 @@ namespace GameUI
         sf::RenderWindow m_window;
         Status m_status;
         Utils::LayerControl m_layerControl;
+        GameEntity::TetrominoFactory m_tetroFactory;
+        GameEntity::PreviewList m_previewList;
         GameEntity::TetrominoContainer m_tetroContainer;
         Menu::GameOver m_gameOverMenu;
         Menu::Pause m_pauseMenu;

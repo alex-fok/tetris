@@ -26,6 +26,10 @@ namespace GameUI
                 static constexpr float Height = 400.f;
             }
         }
+        namespace PreviewList
+        {
+            static constexpr size_t Count = 4;
+        }
         namespace TetrominoContainer
         {
             static constexpr Position Window_Offset = {250.f, 0.f};

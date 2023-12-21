@@ -26,7 +26,7 @@ namespace GameEntity
         sf::RenderWindow *m_window;
         sf::RectangleShape m_frame;
 
-        TetrominoFactory m_tetrominoFactory;
+        TetrominoFactory *m_tetrominoFactory;
         ActiveTetromino m_active;
         Block m_arr[BlockCount_y + ActiveTetromino::Offset_size][BlockCount_x];
         std::function<void(GameUI::Status)> m_setStatus;
@@ -35,6 +35,7 @@ namespace GameEntity
             sf::RenderWindow *w,
             float blockSize, float borderWidth,
             GameUI::Position v,
+            TetrominoFactory *tetroFactory,
             std::function<void(GameUI::Status)> statusSetter
         );        
         void nextStep();
