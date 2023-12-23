@@ -3,7 +3,8 @@
 #include <iostream>
 
 GameEntity::PreviewList::PreviewList(TetrominoFactory *tetroFactory) :
-    m_tetroFactory(tetroFactory)
+    m_tetroFactory(tetroFactory),
+    m_tetros(new Tetromino *[GameUI::Config::PreviewList::Count])
 {
     tetroFactory->peek(GameUI::Config::PreviewList::Count, m_tetros);
     m_tetroFactory->addSubscription(std::bind(forwarder_update, this));
