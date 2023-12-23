@@ -4,27 +4,31 @@
 #include "TetrominoContainer.hpp"
 #include <iostream>
 
-GameEntity::TetrominoContainer::TetrominoContainer(sf::RenderWindow *window, float blockSize, float borderWidth, GameUI::Position offset, GameEntity::TetrominoFactory *tetroFactory, std::function<void(GameUI::Status)> statusSetter) :
+GameEntity::TetrominoContainer::TetrominoContainer(sf::RenderWindow *window, GameEntity::TetrominoFactory *tetroFactory, std::function<void(GameUI::Status)> statusSetter) :
     Drawable(window),
-    m_blockSize(blockSize), m_borderWidth(borderWidth),
     m_frame(sf::RectangleShape(sf::Vector2(
-       blockSize * BlockCount_x + borderWidth * 2.f - BlockCount_x + 1,
-       blockSize * BlockCount_y + borderWidth * 2.f - BlockCount_y + 1 
+        GameUI::Config::TetrominoContainer::Width, 
+        GameUI::Config::TetrominoContainer::Height
     ))),
     m_tetrominoFactory(tetroFactory),
-    m_active(ActiveTetromino(m_tetrominoFactory->getNext(), {InitPos_x, InitPos_y})),
+    m_active(ActiveTetromino(m_tetrominoFactory->getNext(), {m_initPos.x, m_initPos.y})),
     m_setStatus(statusSetter)
 {
+    auto blockSize = GameUI::Config::Block::Size;
+    auto borderWidth = GameUI::Config::TetrominoContainer::BorderWidth;
+    auto offset = GameUI::Config::TetrominoContainer::Offset;
+
     m_frame.setFillColor(sf::Color::Transparent);
     m_frame.setOutlineThickness(borderWidth * -1.f);
     m_frame.setOutlineColor(sf::Color(255, 255, 255));
     m_frame.setPosition(offset.x, offset.y);
-    for (int y = 0; y < BlockCount_y; ++y)
-        for (int x = 0; x < BlockCount_x; ++x)
+
+    for (int y = 0; y < m_blockCount.y; ++y)
+        for (int x = 0; x < m_blockCount.x; ++x)
         {
-            // Note: reverse_y + y = BlockCount_y - 1. Ex: (0, 19), (1, 18), ..., (19, 0)
-            int reverse_y = BlockCount_y - 1 - y;
-            m_arr[y][x].setPosition(offset.x + m_borderWidth + x * m_blockSize - x, offset.y + m_borderWidth + reverse_y * (m_blockSize - 1));
+            // Note: reverse_y + y = BlockCount.y - 1. Ex: (0, 19), (1, 18), ..., (19, 0)
+            int reverse_y = m_blockCount.y - 1 - y;
+            m_arr[y][x].setPosition(offset.x + borderWidth + x * blockSize - x, offset.y + borderWidth + reverse_y * (blockSize - 1));
         }
     updateActive();
 }
@@ -32,9 +36,9 @@ GameEntity::TetrominoContainer::TetrominoContainer(sf::RenderWindow *window, flo
 void GameEntity::TetrominoContainer::reset()
 {
     m_tetrominoFactory->reset();
-    m_active = ActiveTetromino(m_tetrominoFactory->getNext(), {InitPos_x, InitPos_y});
-    for (int y = 0; y < BlockCount_y + ActiveTetromino::Offset_size; ++y)
-        for (int x = 0; x < BlockCount_x; ++x)
+    m_active = ActiveTetromino(m_tetrominoFactory->getNext(), {m_initPos.x, m_initPos.y});
+    for (int y = 0; y < m_blockCount.y + ActiveTetromino::Offset_size; ++y)
+        for (int x = 0; x < m_blockCount.x; ++x)
             m_arr[y][x].reset();
 
     updateActive();
@@ -42,7 +46,7 @@ void GameEntity::TetrominoContainer::reset()
 
 bool GameEntity::TetrominoContainer::isBlocked(Vector v)
 {    
-    if ( v.x < 0 || v.y < 0 || v.x > BlockCount_x - 1 )
+    if ( v.x < 0 || v.y < 0 || v.x > m_blockCount.x - 1 )
         return true;
     
     return m_arr[v.y][v.x].t_id > -1 && m_arr[v.y][v.x].t_id != m_active.tetromino->id;
@@ -166,8 +170,8 @@ void GameEntity::TetrominoContainer::drop()
 void GameEntity::TetrominoContainer::clearLines()
 {
     for (std::vector<int>::reverse_iterator it = linesToClear.rbegin(); it != linesToClear.rend(); ++it)
-        for (int yi = *it; yi < BlockCount_y - 1; ++yi)
-            for (int xi = 0; xi < BlockCount_x; ++xi)
+        for (int yi = *it; yi < m_blockCount.y - 1; ++yi)
+            for (int xi = 0; xi < m_blockCount.x; ++xi)
                 m_arr[yi][xi].copy(m_arr[yi + 1][xi]);
      
     linesToClear.clear();
@@ -177,7 +181,7 @@ void GameEntity::TetrominoContainer::placeNewActive()
 {
     // Set GameOver to true if active piece is settled above the top line
     for (int i = 0; i < Tetromino::BlockCount; ++i)
-        if (m_active.tetromino->position[i].y + m_active.offset.y > BlockCount_y - 1)
+        if (m_active.tetromino->position[i].y + m_active.offset.y > m_blockCount.y - 1)
         {
             m_setStatus(GameUI::Status::GameOver);
             delete(m_active.tetromino);
@@ -191,12 +195,12 @@ void GameEntity::TetrominoContainer::placeNewActive()
     }
     Tetromino *t = m_tetrominoFactory->getNext();
     // Find new start position
-    int startPos_y = BlockCount_y;
+    int startPos_y = m_blockCount.y;
     bool isLifted = false;
-    for (bool isLifted = false; !isLifted && startPos_y > InitPos_y; --startPos_y)
+    for (bool isLifted = false; !isLifted && startPos_y > m_initPos.y; --startPos_y)
     {
         for (int i = 0; i < Tetromino::BlockCount; ++i)
-            if (isBlocked({t->position[i].x + InitPos_x, t->position[i].y + startPos_y - 1}))
+            if (isBlocked({t->position[i].x + m_initPos.x, t->position[i].y + startPos_y - 1}))
             {
                 isLifted = true;
                 break;
@@ -204,7 +208,7 @@ void GameEntity::TetrominoContainer::placeNewActive()
         if (isLifted)
             break;
     }
-    m_active = ActiveTetromino(t, {InitPos_x, startPos_y});
+    m_active = ActiveTetromino(t, {m_initPos.x, startPos_y});
     updateActive();
 }
 
@@ -222,7 +226,7 @@ void GameEntity::TetrominoContainer::settleActive()
         if (!map.count(y))
         {
             bool isFilled = true;
-            for (int xi = 0; xi < BlockCount_x; ++xi)
+            for (int xi = 0; xi < m_blockCount.x; ++xi)
                 if (m_arr[y][xi].t_id < 0)
                 {
                     isFilled = false;
@@ -273,13 +277,13 @@ void GameEntity::TetrominoContainer::handle(sf::Keyboard::Key input)
 void GameEntity::TetrominoContainer::drawBlocks()
 {
     // Space
-    for (int y = 0; y < BlockCount_y; ++y)
-        for (int x = 0; x < BlockCount_x; ++x)
+    for (int y = 0; y < m_blockCount.y; ++y)
+        for (int x = 0; x < m_blockCount.x; ++x)
             if (m_arr[y][x].t_id == -1)
                 draw(m_arr[y][x].content);
     // Solid blocks
-    for (int y = 0; y < BlockCount_y; ++y)
-        for (int x = 0; x < BlockCount_x; ++x)
+    for (int y = 0; y < m_blockCount.y; ++y)
+        for (int x = 0; x < m_blockCount.x; ++x)
             if (m_arr[y][x].t_id > -1)
                 draw(m_arr[y][x].content);
     // Ghost if active is not settled
@@ -288,7 +292,7 @@ void GameEntity::TetrominoContainer::drawBlocks()
         {
             const Vector v = m_active.tetromino->position[i];
             int y = v.y + m_active.offset.y + m_active.ghost_y;
-            if (y < BlockCount_y)
+            if (y < m_blockCount.y)
                 draw(m_arr[y][v.x + m_active.offset.x].content);
         }
 }

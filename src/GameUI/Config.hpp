@@ -5,6 +5,9 @@ namespace GameUI
     struct Position {
         float x, y;
     };
+    struct Count {
+        int x, y;
+    };
     namespace Config
     {
         namespace Window
@@ -30,14 +33,17 @@ namespace GameUI
         {
             static constexpr size_t Count = 4;
         }
-        namespace TetrominoContainer
-        {
-            static constexpr Position Window_Offset = {250.f, 0.f};
-            static constexpr float BorderWidth = 10.f;
-        }
         namespace Block
         {
             static constexpr float Size = 29.f;
+        }
+        namespace TetrominoContainer
+        {
+            static constexpr Position Offset = {250.f, 0.f};
+            static constexpr Count BlockCount = {10, 20};
+            static constexpr float BorderWidth = 10.f;
+            static constexpr float Width = (Block::Size - 1) * BlockCount.x + BorderWidth * 2.f + 1;
+            static constexpr float Height = (Block::Size - 1) * BlockCount.y + BorderWidth * 2.f + 1;
         }
     };
 }

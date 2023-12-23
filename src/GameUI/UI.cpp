@@ -12,9 +12,6 @@ GameUI::UI::UI():
     m_previewList(GameEntity::PreviewList(&m_tetroFactory)),
     m_tetroContainer(
         &m_window,
-        Config::Block::Size,
-        Config::TetrominoContainer::BorderWidth,
-        Config::TetrominoContainer::Window_Offset,
         &m_tetroFactory,
         std::bind(GameUI::UI::forwarder_setStatus, this, std::placeholders::_1)
     ),

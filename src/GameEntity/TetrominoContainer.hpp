@@ -15,10 +15,9 @@ namespace GameEntity
     class TetrominoContainer : public Utils::Drawable
     {
     private:
-        static const int BlockCount_x = 10;
-        static const int BlockCount_y = 20;
-        static const int InitPos_x = 3;
-        static const int InitPos_y = BlockCount_y - ActiveTetromino::Offset_size;
+        static constexpr GameUI::Count m_blockCount = GameUI::Config::TetrominoContainer::BlockCount;
+        static constexpr GameUI::Count m_initPos = { 3, m_blockCount.y - ActiveTetromino::Offset_size };
+        
         std::vector<int> linesToClear;
         
         float m_blockSize, m_borderWidth;
@@ -28,13 +27,11 @@ namespace GameEntity
 
         TetrominoFactory *m_tetrominoFactory;
         ActiveTetromino m_active;
-        Block m_arr[BlockCount_y + ActiveTetromino::Offset_size][BlockCount_x];
+        Block m_arr[m_blockCount.y + ActiveTetromino::Offset_size][m_blockCount.x];
         std::function<void(GameUI::Status)> m_setStatus;
     public:
         TetrominoContainer(
             sf::RenderWindow *w,
-            float blockSize, float borderWidth,
-            GameUI::Position v,
             TetrominoFactory *tetroFactory,
             std::function<void(GameUI::Status)> statusSetter
         );        
