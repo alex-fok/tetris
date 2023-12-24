@@ -9,7 +9,7 @@ GameUI::UI::UI():
     m_layerControl(),
     m_status(Running),
     m_tetroFactory(GameEntity::TetrominoFactory()),
-    m_previewList(GameEntity::PreviewList(&m_tetroFactory)),
+    m_previewList(GameEntity::PreviewList(&m_window, &m_tetroFactory)),
     m_tetroContainer(
         &m_window,
         &m_tetroFactory,
@@ -105,6 +105,7 @@ void GameUI::UI::run()
     Utils::Layer *baseLayer = &Utils::Layer(&m_window);
     
     baseLayer->addDrawable(&m_tetroContainer);
+    baseLayer->addDrawable(&m_previewList);
     m_layerControl.addTop(baseLayer);
     
     sf::Keyboard::Key inputs[5] =
