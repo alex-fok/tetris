@@ -79,6 +79,26 @@ GameEntity::PreviewList::PreviewList(sf::RenderWindow *window, TetrominoFactory 
 void GameEntity::PreviewList::update()
 {
     m_tetroFactory->peek(GameUI::Config::PreviewList::Count, m_tetros);
+    // Reset
+    for (size_t i = 0; i < 4; ++i)
+        for (size_t j = 0; j < 4; ++j)
+            for (size_t k = 0; k < 3; ++k)
+            {
+                m_next_blocks[i][j].reset();
+                m_inLine_blocks[k][i][j].reset();
+            }
+    
+    // Place Tetromino
+    for (size_t i = 0; i < 4; ++i)
+    {
+        auto nextVector = Tetromino::Type[m_tetros[0]->type][0][i];
+        m_next_blocks[nextVector.y - 1][nextVector.x].setTetromino(-1, m_tetros[0]->type);
+        for (size_t j = 0; j < 3; ++j)
+        {
+            auto inLineVector = Tetromino::Type[m_tetros[j + 1]->type][0][i];
+            m_inLine_blocks[j][inLineVector.y - 1][inLineVector.x].setTetromino(-1, m_tetros[j + 1]->type);
+        }
+    }
 }
 
 void GameEntity::PreviewList::forwarder_update(PreviewList *self)
