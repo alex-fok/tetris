@@ -48,15 +48,15 @@ namespace GameUI
             namespace Next
             {
                 static constexpr float Margin_Top = 10.f;
-                static constexpr float ContainerSize = 125.f;
-                static constexpr float OutlineThickness = -3.f;
+                static constexpr float ContainerSize = 117.f;
+                static constexpr float OutlineThickness = 3.f;
                 static constexpr float BlockSize = 29.f;
             }
             namespace InLine
             {
                 static constexpr float Margin_Top = 10.f;
-                static constexpr float ContainerSize = 80.f;
-                static constexpr float OutlineThickness = -1.f;
+                static constexpr float ContainerSize = 79.f;
+                static constexpr float OutlineThickness = 1.f;
                 static constexpr float BlockSize = 0.f;
             }
         }

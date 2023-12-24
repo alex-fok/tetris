@@ -1,10 +1,10 @@
 #include "Block.hpp"
 #include "../GameUI/Config.hpp"
 
-GameEntity::Block::Block(int id, BlockType type) :
+GameEntity::Block::Block(int id, BlockType type, float size) :
     t_id(id),
     type(type),
-    content(sf::RectangleShape(sf::Vector2(GameUI::Config::Block::Size, GameUI::Config::Block::Size)))
+    content(sf::RectangleShape(sf::Vector2(size, size)))
 {
     content.setFillColor(type == EMPTY ? sf::Color::Transparent : BlockColor[type]);
     content.setOutlineThickness(-1.f);
@@ -12,7 +12,7 @@ GameEntity::Block::Block(int id, BlockType type) :
 }
 
 GameEntity::Block::Block() :
-    Block::Block(-1, EMPTY)
+    Block::Block(-1, EMPTY, GameUI::Config::Block::Size)
 {
 };
 
@@ -41,6 +41,11 @@ void GameEntity::Block::setGhost(BlockType type)
 void GameEntity::Block::reset()
 {
     setTetromino(-1, EMPTY);
+}
+
+void GameEntity::Block::setSize(sf::Vector2f v)
+{
+    content.setSize(v);
 }
 
 void GameEntity::Block::setPosition(float x, float y)
