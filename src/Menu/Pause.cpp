@@ -6,7 +6,7 @@ Menu::Pause::Pause(sf::RenderWindow *w, std::function<void()>resumeFn) :
     m_width = GameUI::Config::Menu::Pause::Width;
     m_height = GameUI::Config::Menu::Pause::Height;
 
-    m_setup(m_width, m_height, "Game Over");
+    m_setup(m_width, m_height, "Pause");
     
     // Retry button
     Utils::Button *resume = new Utils::Button("Resume", fontCollection);
