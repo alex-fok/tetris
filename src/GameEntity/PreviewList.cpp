@@ -4,6 +4,23 @@
 
 #include <iostream>
 
+const sf::Vector2f GameEntity::PreviewList::relativePos[Tetromino::TypeCount][Tetromino::BlockCount] = {
+    // I
+    {{-2, -.5}, {-1, -.5}, {0, -.5}, {1, -.5}},
+    // O
+    {{-1, -1}, {0, -1}, {-1, 0}, {0, 0}},
+    // T
+    {{-1.5, 0}, {-.5, 0}, {.5, 0}, {-.5, -1}},
+    // J
+    {{-1.5, 0}, {-1.5, -1}, {-.5, 0}, {.5, 0}},
+    // L
+    {{-1.5, 0}, {-.5, 0}, {.5, 0}, {.5, -1}},
+    // S
+    {{-1.5, 0}, {-.5, 0}, {-.5, -1}, {.5, -1}},
+    // Z
+    {{-1.5, -1}, {-.5, 0}, {-.5, -1}, {.5, 0}}
+};
+
 GameEntity::PreviewList::PreviewList(sf::RenderWindow *window, TetrominoFactory *tetroFactory) :
     Drawable(window),
     m_tetroFactory(tetroFactory),
@@ -15,64 +32,38 @@ GameEntity::PreviewList::PreviewList(sf::RenderWindow *window, TetrominoFactory 
     namespace Next = GameUI::Config::PreviewList::Next;
     auto offset = GameUI::Config::PreviewList::Offset;
     // m_next
-    m_next.setSize({Next::ContainerSize, Next::ContainerSize});
-    m_next.setOrigin({Next::ContainerSize / 2, Next::ContainerSize / 2});
-    m_next.setPosition({offset.x + (GameUI::Config::Window::Width - offset.x) / 2, Next::ContainerSize / 2 + Next::Margin_Top});
-    m_next.setOutlineThickness(Next::OutlineThickness * -1.f);
-    m_next.setOutlineColor(sf::Color::White);
-    m_next.setFillColor(sf::Color::Transparent);
+    m_nextContainer.setSize({Next::ContainerSize, Next::ContainerSize});
+    m_nextContainer.setOrigin({Next::ContainerSize / 2, Next::ContainerSize / 2});
+    m_nextContainer.setPosition({
+        offset.x + (GameUI::Config::Window::Width - offset.x) / 2,
+        Next::ContainerSize / 2 + Next::Margin_Top
+    });
+    m_nextContainer.setOutlineThickness(Next::OutlineThickness * -1.f);
+    m_nextContainer.setOutlineColor(sf::Color::White);
+    m_nextContainer.setFillColor(sf::Color::Transparent);
 
-    GameUI::Position startPos = {
-        offset.x + (GameUI::Config::Window::Width - offset.x)/2 - Next::ContainerSize / 2 + Next::OutlineThickness,
-        Next::Margin_Top + Next::OutlineThickness
-    };
-
-    for (size_t i = 0; i < 4; ++i)
-    {
-        auto reverse_i = 4 - i - 1;
-        for (size_t j = 0; j < 4; ++j)
-        {
-            m_next_blocks[i][j].setSize({29.f, 29.f});
-            m_next_blocks[i][j].setPosition(
-                startPos.x + GameUI::Config::Block::Size * j - j,
-                startPos.y + GameUI::Config::Block::Size * reverse_i - reverse_i
-            );
-        }
-    }
-
+    for (size_t i = 0; i < Tetromino::BlockCount; ++i)
+        m_next_blocks[i].setSize({GameUI::Config::PreviewList::Next::BlockSize, GameUI::Config::PreviewList::Next::BlockSize});
+    
     // m_inLine
     namespace InLine = GameUI::Config::PreviewList::InLine;
     auto topContainerPosY = Next::Margin_Top + Next::ContainerSize + InLine::Margin_Top + InLine::ContainerSize / 2;
     for (size_t i = 0; i < GameUI::Config::PreviewList::Count - 1; ++i)
     {
         // Container
-        m_inLine[i].setSize({InLine::ContainerSize, InLine::ContainerSize});
-        m_inLine[i].setOrigin({InLine::ContainerSize / 2, InLine::ContainerSize / 2});
-        m_inLine[i].setPosition({
+        m_inLineContainer[i].setSize({InLine::ContainerSize, InLine::ContainerSize});
+        m_inLineContainer[i].setOrigin({InLine::ContainerSize / 2, InLine::ContainerSize / 2});
+        m_inLineContainer[i].setPosition({
             offset.x + (GameUI::Config::Window::Width - offset.x) / 2,
             topContainerPosY + InLine::ContainerSize * i + InLine::Margin_Top * i
         });
-        m_inLine[i].setOutlineThickness(InLine::OutlineThickness * -1.f);
-        m_inLine[i].setOutlineColor(sf::Color::White);
-        m_inLine[i].setFillColor(sf::Color::Transparent);
+        m_inLineContainer[i].setOutlineThickness(InLine::OutlineThickness * -1.f);
+        m_inLineContainer[i].setOutlineColor(sf::Color::White);
+        m_inLineContainer[i].setFillColor(sf::Color::Transparent);
 
         // Blocks
-        GameUI::Position topBlockPos = {
-            offset.x + (GameUI::Config::Window::Width - offset.x)/2 - InLine::ContainerSize / 2 + InLine::OutlineThickness,
-            Next::Margin_Top + Next::ContainerSize + InLine::Margin_Top + InLine::OutlineThickness
-        };
-        for (size_t j = 0; j < 4; ++j)
-        {
-            auto reverse_j = 4 - j - 1;
-            for (size_t k = 0; k < 4; ++k)
-            {
-                m_inLine_blocks[i][j][k].setSize({20.f, 20.f});
-                m_inLine_blocks[i][j][k].setPosition(
-                    topBlockPos.x + 20.f * k - k,
-                    topBlockPos.y + InLine::ContainerSize * i + 20.f * reverse_j - reverse_j + InLine::Margin_Top * i + InLine::OutlineThickness * i
-                );
-            }
-        }    
+        for (size_t j = 0; j < Tetromino::BlockCount; ++j)
+            m_inLine_blocks[i][j].setSize({GameUI::Config::PreviewList::InLine::BlockSize, GameUI::Config::PreviewList::InLine::BlockSize});
     }
 }
 
@@ -80,23 +71,37 @@ void GameEntity::PreviewList::update()
 {
     m_tetroFactory->peek(GameUI::Config::PreviewList::Count, m_tetros);
     // Reset
-    for (size_t i = 0; i < 4; ++i)
-        for (size_t j = 0; j < 4; ++j)
-            for (size_t k = 0; k < 3; ++k)
-            {
-                m_next_blocks[i][j].reset();
-                m_inLine_blocks[k][i][j].reset();
-            }
-    
-    // Place Tetromino
-    for (size_t i = 0; i < 4; ++i)
-    {
-        auto nextVector = Tetromino::Type[m_tetros[0]->type][0][i];
-        m_next_blocks[nextVector.y - 1][nextVector.x].setTetromino(-1, m_tetros[0]->type);
-        for (size_t j = 0; j < 3; ++j)
+    for (size_t i = 0; i < Tetromino::BlockCount; ++i)
+        for (size_t j = 0; j < GameUI::Config::PreviewList::Count - 1; ++j) 
         {
-            auto inLineVector = Tetromino::Type[m_tetros[j + 1]->type][0][i];
-            m_inLine_blocks[j][inLineVector.y - 1][inLineVector.x].setTetromino(-1, m_tetros[j + 1]->type);
+            m_next_blocks[i].reset();
+            m_inLine_blocks[j][i].reset();
+        }
+    // Place Tetromino
+    // Next
+    auto nextCenter = m_nextContainer.getPosition();
+    // Finish next center
+    auto nextVectors = relativePos[m_tetros[0]->type];
+    for (size_t i = 0; i < Tetromino::BlockCount; ++i)
+    {
+        m_next_blocks[i].setPosition(
+            nextCenter.x + 29.f * nextVectors[i].x,
+            nextCenter.y + 29.f * nextVectors[i].y
+        );
+        m_next_blocks[i].setTetromino(-1, m_tetros[0]->type);
+    }
+    // Tetros In line
+    for (size_t i = 0; i < GameUI::Config::PreviewList::Count - 1; ++i)
+    {
+        auto inLineCenter = m_inLineContainer[i].getPosition();
+        auto inLineVectors = relativePos[m_tetros[i + 1]->type];
+        for (size_t j = 0; j < Tetromino::BlockCount; ++j)
+        {
+            m_inLine_blocks[i][j].setPosition(
+                inLineCenter.x + 20.f * inLineVectors[j].x,
+                inLineCenter.y + 20.f * inLineVectors[j].y
+            );
+            m_inLine_blocks[i][j].setTetromino(-1, m_tetros[i + 1]->type);
         }
     }
 }
@@ -108,17 +113,15 @@ void GameEntity::PreviewList::forwarder_update(PreviewList *self)
 
 void GameEntity::PreviewList::render()
 {
-    for (size_t i = 0; i < 4; ++i)
-        for (size_t j = 0; j < 4; ++j)
-            draw(m_next_blocks[j][i].content);
+    for (size_t i = 0; i < Tetromino::BlockCount; ++i)
+        draw(m_next_blocks[i].content);
         
-    draw(m_next);
+    draw(m_nextContainer);
     for (size_t i = 0; i < GameUI::Config::PreviewList::Count - 1; ++i)
     {
-        for (size_t j = 0; j < 4; ++j)
-            for (size_t k = 0; k < 4; ++k)
-                draw(m_inLine_blocks[i][j][k].content);
-        draw(m_inLine[i]);
+        for (size_t j = 0; j < Tetromino::BlockCount; ++j)
+            draw(m_inLine_blocks[i][j].content);
+        draw(m_inLineContainer[i]);
     }
 }
 
