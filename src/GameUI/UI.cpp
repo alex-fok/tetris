@@ -108,13 +108,26 @@ void GameUI::UI::run()
     baseLayer->addDrawable(&m_previewList);
     m_layerControl.addTop(baseLayer);
     
-    sf::Keyboard::Key inputs[5] =
+    sf::Keyboard::Key gameover_input[2] =
+    {
+        sf::Keyboard::Q,
+        sf::Keyboard::R
+    };
+
+    sf::Keyboard::Key paused_input[3] =
+    {
+        sf::Keyboard::Up,
+        sf::Keyboard::Down,
+        sf::Keyboard::R
+    };
+
+    sf::Keyboard::Key running_inputs[5] =
     {
         sf::Keyboard::Up,
         sf::Keyboard::Right,
         sf::Keyboard::Down,
         sf::Keyboard::Left,
-        sf::Keyboard::Space,
+        sf::Keyboard::Space
     };
     
     while (m_window.isOpen())
@@ -131,19 +144,36 @@ void GameUI::UI::run()
                     m_window.close();
                     break;
                 case sf::Event::KeyPressed:
-                    if (m_status == GameOver)
-                        break;
-                    
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && m_status != GameOver)
                         setStatus(m_status == Paused ? Running : Paused);
-                        
-                    else if (m_status != Paused)
-                        for (sf::Keyboard::Key k: inputs)
-                            if (sf::Keyboard::isKeyPressed(k))
-                            {
-                                m_tetroContainer.handle(k);
-                                break;
-                            }
+
+                    switch (m_status)
+                    {
+                        case GameOver:
+                            for (sf::Keyboard::Key k: gameover_input)
+                                if (sf::Keyboard::isKeyPressed(k))
+                                {
+                                    m_gameOverMenu.handle(k);
+                                    break;
+                                }
+                            break;                    
+                        case Paused:
+                            for (sf::Keyboard::Key k: paused_input)
+                                if (sf::Keyboard::isKeyPressed(k))
+                                {
+                                    m_pauseMenu.handle(k);
+                                    break;
+                                }
+                            break;
+                        default: // Running
+                            for (sf::Keyboard::Key k: running_inputs)
+                                if (sf::Keyboard::isKeyPressed(k))
+                                {
+                                    m_tetroContainer.handle(k);
+                                    break;
+                                }
+                            break;
+                    }
                     break;
                 case sf::Event::MouseButtonReleased:
                     if (event.mouseButton.button == sf::Mouse::Left)

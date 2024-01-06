@@ -31,6 +31,7 @@ namespace Menu
     public:
         Base(sf::RenderWindow *w);
         void setSelected(Utils::Button *selected);
+        virtual void handle(sf::Keyboard::Key input);
         virtual void render();
         static void forwarder_setSelected(Menu::Base *self, Utils::Button *selected);
     };

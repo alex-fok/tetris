@@ -73,6 +73,11 @@ void Menu::Base::setSelected(Utils::Button *selected)
     m_cursor.setPosition(selected_pos.x - m_selected->m_width - fr.width/2, selected_pos.y);
 }
 
+void Menu::Base::handle(sf::Keyboard::Key input)
+{
+    // Handle keyboard input
+}
+
 void Menu::Base::m_renderBase()
 {
     draw(m_container);
