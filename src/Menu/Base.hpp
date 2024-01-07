@@ -30,7 +30,7 @@ namespace Menu
     public:
         Base(sf::RenderWindow *w);
         void setSelectedIdx(unsigned int idx);
-        virtual void handle(sf::Keyboard::Key input);
+        void handle(sf::Keyboard::Key input);
         virtual void render();
         static void forwarder_setSelected(Menu::Base *self, unsigned int idx);
     };

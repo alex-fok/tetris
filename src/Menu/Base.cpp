@@ -1,6 +1,6 @@
 #include "Base.hpp"
 #include "../GameUI/Config.hpp"
-
+#include <iostream>
 Menu::Base::Base(sf::RenderWindow *w) :
     Drawable(w),
     fontCollection(Resources::FontCollection::getInstance()),
@@ -65,17 +65,30 @@ void Menu::Base::setSelectedIdx(unsigned int idx)
 {
     if (m_selected == idx)
         return;
-    
+
+    m_selected = idx;
     auto selectedBtn = (Utils::Button *)clickables[idx];
     auto fr = m_cursor.getLocalBounds();
     auto selected_pos = selectedBtn->getPosition();
-
     m_cursor.setPosition(selected_pos.x - selectedBtn->m_width - fr.width/2, selected_pos.y);
 }
 
 void Menu::Base::handle(sf::Keyboard::Key input)
 {
-    // Handle keyboard input
+    switch(input)
+    {
+        case sf::Keyboard::Up:
+            setSelectedIdx(std::max(m_selected - 1, 0));
+            break;
+        case sf::Keyboard::Down:
+            setSelectedIdx(std::min(m_selected + 1, clickableCount - 1));
+            break;
+        case sf::Keyboard::Enter:
+            clickables[m_selected]->handleClick();
+            break;
+        default:
+            break;
+    }
 }
 
 void Menu::Base::m_renderBase()

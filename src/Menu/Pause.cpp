@@ -21,20 +21,18 @@ Menu::Pause::Pause(sf::RenderWindow *w, std::function<void()>resumeFn) :
     setClickables(arr, ButtonCount);
 
     m_setButtonPositions();
+    setSelectedIdx(0);
 }
 
 void Menu::Pause::handle(sf::Keyboard::Key input)
 {
     switch(input)
     {
-        case sf::Keyboard::Up:
-            break;
-        case sf::Keyboard::Down:
-            break;
         case sf::Keyboard::R:
             m_resumeFn();
             break;
         default:
+            Base::handle(input);
             break;
     }
 }

@@ -11,9 +11,9 @@ namespace Utils
         sf::RenderWindow *m_window;
     public:
         Clickable **clickables;
-        unsigned int clickableCount;
+        int clickableCount;
         Drawable(sf::RenderWindow *w);
-        void setClickables(Clickable **c, unsigned int size);
+        void setClickables(Clickable **c, int size);
         Clickable **getClickables();
         virtual void render();
         void draw(const sf::Drawable &d);

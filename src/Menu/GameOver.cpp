@@ -1,5 +1,6 @@
 #include <functional>
 #include "GameOver.hpp"
+#include "algorithm"
 
 #define ButtonCount 2
 
@@ -27,21 +28,21 @@ Menu::GameOver::GameOver(sf::RenderWindow *w, std::function<void()>retryFn, std:
     setClickables(arr, ButtonCount);
 
     m_setButtonPositions();
+    setSelectedIdx(0);
 }
 
-void Menu::GameOver::handle(sf::Keyboard::Key k)
+void Menu::GameOver::handle(sf::Keyboard::Key input)
 {
-    switch(k)
+    switch(input)
     {
-        case sf::Keyboard::Up:
-            break;
-        case sf::Keyboard::Down:
-            break;
         case sf::Keyboard::R:
             m_retryFn();
             break;
         case sf::Keyboard::Q:
             m_quitFn();
+            break;
+        default:
+            Base::handle(input);
             break;
     }
 }

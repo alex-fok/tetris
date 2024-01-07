@@ -108,17 +108,21 @@ void GameUI::UI::run()
     baseLayer->addDrawable(&m_previewList);
     m_layerControl.addTop(baseLayer);
     
-    sf::Keyboard::Key gameover_input[2] =
-    {
-        sf::Keyboard::Q,
-        sf::Keyboard::R
-    };
-
-    sf::Keyboard::Key paused_input[3] =
+    sf::Keyboard::Key gameover_input[5] =
     {
         sf::Keyboard::Up,
         sf::Keyboard::Down,
-        sf::Keyboard::R
+        sf::Keyboard::Q,
+        sf::Keyboard::R,
+        sf::Keyboard::Enter
+    };
+
+    sf::Keyboard::Key paused_input[4] =
+    {
+        sf::Keyboard::Up,
+        sf::Keyboard::Down,
+        sf::Keyboard::R,
+        sf::Keyboard::Enter
     };
 
     sf::Keyboard::Key running_inputs[5] =
@@ -150,26 +154,26 @@ void GameUI::UI::run()
                     switch (m_status)
                     {
                         case GameOver:
-                            for (sf::Keyboard::Key k: gameover_input)
-                                if (sf::Keyboard::isKeyPressed(k))
+                            for (sf::Keyboard::Key input: gameover_input)
+                                if (sf::Keyboard::isKeyPressed(input))
                                 {
-                                    m_gameOverMenu.handle(k);
+                                    m_gameOverMenu.handle(input);
                                     break;
                                 }
                             break;                    
                         case Paused:
-                            for (sf::Keyboard::Key k: paused_input)
-                                if (sf::Keyboard::isKeyPressed(k))
+                            for (sf::Keyboard::Key input: paused_input)
+                                if (sf::Keyboard::isKeyPressed(input))
                                 {
-                                    m_pauseMenu.handle(k);
+                                    m_pauseMenu.handle(input);
                                     break;
                                 }
                             break;
                         default: // Running
-                            for (sf::Keyboard::Key k: running_inputs)
-                                if (sf::Keyboard::isKeyPressed(k))
+                            for (sf::Keyboard::Key input: running_inputs)
+                                if (sf::Keyboard::isKeyPressed(input))
                                 {
-                                    m_tetroContainer.handle(k);
+                                    m_tetroContainer.handle(input);
                                     break;
                                 }
                             break;

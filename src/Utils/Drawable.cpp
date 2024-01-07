@@ -2,11 +2,11 @@
 
 Utils::Drawable::Drawable(sf::RenderWindow *w) :
 m_window(w),
-clickableCount(0)
+clickableCount(-1)
 {
 }
 
-void Utils::Drawable::setClickables(Clickable **c, unsigned int size)
+void Utils::Drawable::setClickables(Clickable **c, int size)
 {
     clickables = c;
     clickableCount = size;
