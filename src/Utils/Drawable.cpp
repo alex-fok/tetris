@@ -1,18 +1,20 @@
 #include "Drawable.hpp"
 
 Utils::Drawable::Drawable(sf::RenderWindow *w) :
-m_window(w)
+m_window(w),
+clickableCount(0)
 {
 }
 
-void Utils::Drawable::addClickable(Clickable *c)
+void Utils::Drawable::setClickables(Clickable **c, unsigned int size)
 {
-    m_clickables.push_back(c);
+    clickables = c;
+    clickableCount = size;
 }
 
-std::vector<Utils::Clickable *> Utils::Drawable::getClickables()
+Utils::Clickable ** Utils::Drawable::getClickables()
 {
-    return m_clickables;
+    return clickables;
 };
 
 void Utils::Drawable::draw(const sf::Drawable &d)
@@ -26,6 +28,10 @@ void Utils::Drawable::render()
 
 Utils::Drawable::~Drawable()
 {
-    for (Clickable *c : m_clickables)
-        delete(c);
+    if (clickableCount <= 0) return;
+    
+    for (unsigned i = 0; i < clickableCount; ++i)
+        delete clickables[i];
+    
+    delete [] clickables;
 }

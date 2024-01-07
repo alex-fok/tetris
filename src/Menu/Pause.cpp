@@ -1,5 +1,7 @@
 #include "Pause.hpp"
 
+#define ButtonCount 1
+
 Menu::Pause::Pause(sf::RenderWindow *w, std::function<void()>resumeFn) :
     Base(w),
     m_resumeFn(resumeFn)
@@ -13,12 +15,12 @@ Menu::Pause::Pause(sf::RenderWindow *w, std::function<void()>resumeFn) :
     Utils::Button *resume = new Utils::Button("Resume (R)", fontCollection);
     
     resume->setClickFn(resumeFn);
-    resume->setHoverFn(std::bind(forwarder_setSelected, this, resume));
+    resume->setHoverFn(std::bind(forwarder_setSelected, this, 0));
     
-    m_clickables.push_back(resume);
-    
+    Utils::Clickable **arr = new Utils::Clickable *[ButtonCount]{resume};
+    setClickables(arr, ButtonCount);
+
     m_setButtonPositions();
-    setSelected(resume);
 }
 
 void Menu::Pause::handle(sf::Keyboard::Key input)

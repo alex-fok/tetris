@@ -4,7 +4,8 @@
 Menu::Base::Base(sf::RenderWindow *w) :
     Drawable(w),
     fontCollection(Resources::FontCollection::getInstance()),
-    m_cursor(sf::CircleShape(7.5f, 3))
+    m_cursor(sf::CircleShape(7.5f, 3)),
+    m_selected(-1)
 {
     sf::FloatRect fr = m_cursor.getLocalBounds();
     m_cursor.setOrigin(fr.width/2, fr.height/2);
@@ -53,24 +54,23 @@ void Menu::Base::m_setup(float width, float height, const char *title)
 
 void Menu::Base::m_setButtonPositions()
 {
-    std::size_t size = m_clickables.size();
-    float start = ceil(5.f + (5.f - float(size)) / 2.f);
+    float start = ceil(5.f + (5.f - float(clickableCount)) / 2.f);
     float x = m_container.getPosition().x; // centered
     
-    for (std::size_t i = 0; i < size; ++i)
-        m_clickables[i]->setPosition({x, m_height * 0.1f * (i + start) + m_offset.top});
+    for (std::size_t i = 0; i < clickableCount; ++i)
+        clickables[i]->setPosition({x, m_height * 0.1f * (i + start) + m_offset.top});
 }
 
-void Menu::Base::setSelected(Utils::Button *selected)
+void Menu::Base::setSelectedIdx(unsigned int idx)
 {
-    if (m_selected == selected)
+    if (m_selected == idx)
         return;
     
-    m_selected = selected;
+    auto selectedBtn = (Utils::Button *)clickables[idx];
     auto fr = m_cursor.getLocalBounds();
-    auto selected_pos = m_selected->getPosition();
+    auto selected_pos = selectedBtn->getPosition();
 
-    m_cursor.setPosition(selected_pos.x - m_selected->m_width - fr.width/2, selected_pos.y);
+    m_cursor.setPosition(selected_pos.x - selectedBtn->m_width - fr.width/2, selected_pos.y);
 }
 
 void Menu::Base::handle(sf::Keyboard::Key input)
@@ -88,11 +88,11 @@ void Menu::Base::m_renderBase()
 void Menu::Base::render()
 {
     m_renderBase();
-    for (Utils::Clickable *c: m_clickables)
-        draw(c->getClickable());
+    for (size_t i = 0; i < clickableCount; ++i)
+        draw(clickables[i]->getClickable());
 }
 
-void Menu::Base::forwarder_setSelected(Menu::Base *self, Utils::Button *selected)
+void Menu::Base::forwarder_setSelected(Menu::Base *self, unsigned int idx)
 {
-    self->setSelected(selected);
+    self->setSelectedIdx(idx);
 }

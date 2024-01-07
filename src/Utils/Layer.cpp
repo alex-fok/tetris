@@ -1,4 +1,5 @@
 #include "Layer.hpp"
+
 Utils::Layer::Layer(sf::RenderWindow *w) :
 m_window(w)
 {
@@ -17,10 +18,11 @@ void Utils::Layer::handleMouseEvent(Utils::Layer::MouseEvent event, sf::Vector2i
         if (!d->isInArea(mousePos))
             continue;
         
-        std::vector<Clickable *> clickables = d->getClickables();
-        for (Clickable *c: clickables)
+        Utils::Clickable **clickables = d->clickables;
+        
+        for (size_t i = 0; i < d->clickableCount; ++i)
         {
-            if (c->isInArea(mousePos))
+            if (clickables[i]->isInArea(mousePos))
             {
                 if (cursor.loadFromSystem(sf::Cursor::Hand))
                     m_window->setMouseCursor(cursor);
@@ -28,10 +30,10 @@ void Utils::Layer::handleMouseEvent(Utils::Layer::MouseEvent event, sf::Vector2i
                 switch(event)
                 {
                     case Click:
-                        c->handleClick();
+                        clickables[i]->handleClick();
                         break;
                     default:
-                        c->handleHover();
+                        clickables[i]->handleHover();
                         break;
                 }
                 break;

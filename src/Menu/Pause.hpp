@@ -1,6 +1,5 @@
 #pragma once
 #include <functional>
-#include <vector>
 #include <SFML/Graphics.hpp>
 #include "../GameUI/Config.hpp"
 #include "Base.hpp"

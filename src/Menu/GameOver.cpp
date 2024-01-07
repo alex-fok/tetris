@@ -1,6 +1,8 @@
 #include <functional>
 #include "GameOver.hpp"
 
+#define ButtonCount 2
+
 Menu::GameOver::GameOver(sf::RenderWindow *w, std::function<void()>retryFn, std::function<void()>quitFn) :
     Base(w),
     m_retryFn(retryFn),
@@ -14,18 +16,17 @@ Menu::GameOver::GameOver(sf::RenderWindow *w, std::function<void()>retryFn, std:
     Utils::Button *retry = new Utils::Button("Retry (R)", fontCollection);
     
     retry->setClickFn(retryFn);
-    retry->setHoverFn(std::bind(forwarder_setSelected, this, retry));
+    retry->setHoverFn(std::bind(forwarder_setSelected, this, 0));
     
     // Quit button
     Utils::Button *quit = new Utils::Button("Quit (Q)", fontCollection);
     quit->setClickFn(quitFn);
-    quit->setHoverFn(std::bind(forwarder_setSelected, this, quit));
+    quit->setHoverFn(std::bind(forwarder_setSelected, this, 1));
 
-    m_clickables.push_back(retry);
-    m_clickables.push_back(quit);
+    Utils::Clickable **arr = new Utils::Clickable *[ButtonCount]{retry, quit};
+    setClickables(arr, ButtonCount);
 
     m_setButtonPositions();
-    setSelected(retry);
 }
 
 void Menu::GameOver::handle(sf::Keyboard::Key k)

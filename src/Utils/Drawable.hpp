@@ -1,5 +1,4 @@
 #pragma once
-#include <vector>
 #include <SFML/Graphics.hpp>
 #include "Area.hpp"
 #include "Clickable.hpp"
@@ -10,11 +9,12 @@ namespace Utils
     {
     protected:
         sf::RenderWindow *m_window;
-        std::vector<Clickable *> m_clickables;
     public:
+        Clickable **clickables;
+        unsigned int clickableCount;
         Drawable(sf::RenderWindow *w);
-        void addClickable(Clickable *c);
-        std::vector<Clickable *> getClickables();
+        void setClickables(Clickable **c, unsigned int size);
+        Clickable **getClickables();
         virtual void render();
         void draw(const sf::Drawable &d);
         ~Drawable();

@@ -1,5 +1,4 @@
 #pragma once
-#include <vector>
 #include <SFML/Graphics.hpp>
 #include "../Resources/FontCollection.hpp"
 #include "../Utils/Drawable.hpp"
@@ -18,7 +17,7 @@ namespace Menu
     {
     private:
         Offset m_offset;
-        Utils::Button *m_selected;
+        int m_selected;
         sf::CircleShape m_cursor;
     protected:
         Resources::FontCollection *fontCollection;
@@ -30,9 +29,9 @@ namespace Menu
         void m_renderBase();
     public:
         Base(sf::RenderWindow *w);
-        void setSelected(Utils::Button *selected);
+        void setSelectedIdx(unsigned int idx);
         virtual void handle(sf::Keyboard::Key input);
         virtual void render();
-        static void forwarder_setSelected(Menu::Base *self, Utils::Button *selected);
+        static void forwarder_setSelected(Menu::Base *self, unsigned int idx);
     };
 }
