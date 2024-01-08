@@ -10,7 +10,7 @@ FetchContent_Declare(SFML
 FetchContent_MakeAvailable(SFML)
 
 add_custom_target(copy_assets COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/assets ${CMAKE_BINARY_DIR}/assets)
-add_executable(Tetris src/Resources/FontCollection.cpp src/Utils/Area.cpp src/Utils/Clickable.cpp src/Utils/Drawable.cpp src/Utils/Button.cpp src/Utils/Layer.cpp src/Utils/LayerControl.cpp src/Menu/Base.cpp src/Menu/GameOver.cpp src/Menu/Pause.cpp src/GameEntity/Block.cpp src/GameEntity/ActiveTetromino.cpp src/GameEntity/TetrominoFactory.cpp src/GameEntity/PreviewList.cpp src/GameEntity/Tetromino.cpp src/GameEntity/TetrominoContainer.cpp src/main.cpp src/GameUI/UI.cpp)
+add_executable(Tetris src/Resources/FontCollection.cpp src/Utils/Area.cpp src/Utils/Clickable.cpp src/Utils/Drawable.cpp src/Utils/Button.cpp src/Utils/Layer.cpp src/Utils/LayerControl.cpp src/Menu/Base.cpp src/Menu/GameOver.cpp src/Menu/Pause.cpp src/GameEntity/Block.cpp src/GameEntity/ActiveTetromino.cpp src/GameEntity/TetrominoFactory.cpp src/GameEntity/SingleTetroBox.cpp src/GameEntity/PreviewList.cpp src/GameEntity/Tetromino.cpp src/GameEntity/TetrominoContainer.cpp src/main.cpp src/GameUI/UI.cpp)
 add_dependencies(Tetris copy_assets)
 target_link_libraries(Tetris PRIVATE sfml-graphics)
 target_compile_features(Tetris PRIVATE cxx_std_17)

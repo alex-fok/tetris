@@ -1,5 +1,9 @@
 #include "Drawable.hpp"
 
+Utils::Drawable::Drawable()
+{
+}
+
 Utils::Drawable::Drawable(sf::RenderWindow *w) :
 m_window(w),
 clickableCount(-1)

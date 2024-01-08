@@ -7,6 +7,7 @@
 #include "TetrominoFactory.hpp"
 #include "Vector.hpp"
 #include "Block.hpp"
+#include "SingleTetroBox.hpp"
 
 namespace GameEntity
 {
@@ -16,6 +17,8 @@ namespace GameEntity
         static const sf::Vector2f relativePos[Tetromino::TypeCount][Tetromino::BlockCount];
         sf::RenderWindow *m_window;
         TetrominoFactory *m_tetroFactory;
+        GameEntity::SingleTetroBox m_next;
+        GameEntity::SingleTetroBox m_inLine[GameUI::Config::PreviewList::Count - 1];
         sf::RectangleShape m_nextContainer;
         sf::RectangleShape m_inLineContainer[GameUI::Config::PreviewList::Count - 1];
         GameEntity::Block m_next_blocks[Tetromino::BlockCount];

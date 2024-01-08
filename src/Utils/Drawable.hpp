@@ -12,6 +12,7 @@ namespace Utils
     public:
         Clickable **clickables;
         int clickableCount;
+        Drawable();
         Drawable(sf::RenderWindow *w);
         void setClickables(Clickable **c, int size);
         Clickable **getClickables();
