@@ -170,7 +170,7 @@ void GameEntity::TetrominoContainer::drop()
 void GameEntity::TetrominoContainer::clearLines()
 {
     for (std::vector<int>::reverse_iterator it = linesToClear.rbegin(); it != linesToClear.rend(); ++it)
-        for (int yi = *it; yi < m_blockCount.y - 1; ++yi)
+        for (int yi = *it; yi < m_blockCount.y; ++yi)
             for (int xi = 0; xi < m_blockCount.x; ++xi)
                 m_arr[yi][xi].copy(m_arr[yi + 1][xi]);
      
@@ -235,7 +235,7 @@ void GameEntity::TetrominoContainer::settleActive()
             if (isFilled)
             {
                 map[y] = true;
-                TetrominoContainer::linesToClear.push_back(y);   
+                linesToClear.push_back(y);   
             }
         }
     }
