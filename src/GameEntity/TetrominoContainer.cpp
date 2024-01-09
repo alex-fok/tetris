@@ -16,19 +16,18 @@ GameEntity::TetrominoContainer::TetrominoContainer(sf::RenderWindow *window, Gam
 {
     auto blockSize = GameUI::Config::Block::Size;
     auto borderWidth = GameUI::Config::TetrominoContainer::BorderWidth;
-    auto offset = GameUI::Config::TetrominoContainer::Offset;
-
+    auto limit = GameUI::Config::TetrominoContainer::PosLimit;
     m_frame.setFillColor(sf::Color::Transparent);
     m_frame.setOutlineThickness(borderWidth * -1.f);
     m_frame.setOutlineColor(sf::Color(255, 255, 255));
-    m_frame.setPosition(offset.x, offset.y);
+    m_frame.setPosition(limit.Left, limit.Top);
 
     for (int y = 0; y < m_blockCount.y; ++y)
         for (int x = 0; x < m_blockCount.x; ++x)
         {
             // Note: reverse_y + y = BlockCount.y - 1. Ex: (0, 19), (1, 18), ..., (19, 0)
             int reverse_y = m_blockCount.y - 1 - y;
-            m_arr[y][x].setPosition(offset.x + borderWidth + x * blockSize - x, offset.y + borderWidth + reverse_y * (blockSize - 1));
+            m_arr[y][x].setPosition(limit.Left + borderWidth + x * blockSize - x, limit.Top + borderWidth + reverse_y * (blockSize - 1));
         }
     updateActive();
 }

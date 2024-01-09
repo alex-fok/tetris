@@ -11,11 +11,11 @@ GameEntity::PreviewList::PreviewList(sf::RenderWindow *window, TetrominoFactory 
     m_tetroFactory->addSubscription(std::bind(forwarder_update, this));
 
     namespace Next = GameUI::Config::PreviewList::Next;
-    auto offset = GameUI::Config::PreviewList::Offset;
+    auto limit = GameUI::Config::PreviewList::PosLimit;
     
     m_next.init(
         Next::ContainerSize,
-        { offset.x + (GameUI::Config::Window::Width - offset.x) / 2, Next::ContainerSize / 2 + Next::Margin_Top },
+        { limit.Left + (GameUI::Config::Window::Width - limit.Left) / 2, Next::ContainerSize / 2 + Next::Margin_Top },
         Next::OutlineThickness,
         Next::BlockSize
     );
@@ -27,7 +27,7 @@ GameEntity::PreviewList::PreviewList(sf::RenderWindow *window, TetrominoFactory 
         m_inLine[i] = GameEntity::SingleTetroBox(window);
         m_inLine[i].init(
             InLine::ContainerSize,
-            { offset.x + (GameUI::Config::Window::Width - offset.x) / 2, topContainerPosY + InLine::ContainerSize * i + InLine::Margin_Top * i },
+            { limit.Left + (GameUI::Config::Window::Width - limit.Left) / 2, topContainerPosY + InLine::ContainerSize * i + InLine::Margin_Top * i },
             InLine::OutlineThickness,
             InLine::BlockSize
         );
