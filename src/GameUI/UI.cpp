@@ -10,9 +10,11 @@ GameUI::UI::UI():
     m_status(Running),
     m_tetroFactory(GameEntity::TetrominoFactory()),
     m_previewList(GameEntity::PreviewList(&m_window, &m_tetroFactory)),
+    m_hold(&m_window),
     m_tetroContainer(
         &m_window,
         &m_tetroFactory,
+        std::bind(GameEntity::Hold::forwarder_switchTetro, &m_hold, std::placeholders::_1),
         std::bind(GameUI::UI::forwarder_setStatus, this, std::placeholders::_1)
     ),
     m_gameOverMenu(Menu::GameOver(
@@ -105,6 +107,7 @@ void GameUI::UI::run()
     Utils::Layer *baseLayer = &Utils::Layer(&m_window);
     
     baseLayer->addDrawable(&m_tetroContainer);
+    baseLayer->addDrawable(&m_hold);
     baseLayer->addDrawable(&m_previewList);
     m_layerControl.addTop(baseLayer);
     
@@ -125,13 +128,14 @@ void GameUI::UI::run()
         sf::Keyboard::Enter
     };
 
-    sf::Keyboard::Key running_inputs[5] =
+    sf::Keyboard::Key running_inputs[6] =
     {
         sf::Keyboard::Up,
         sf::Keyboard::Right,
         sf::Keyboard::Down,
         sf::Keyboard::Left,
-        sf::Keyboard::Space
+        sf::Keyboard::Space,
+        sf::Keyboard::LShift
     };
     
     while (m_window.isOpen())

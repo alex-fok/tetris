@@ -39,7 +39,10 @@ void GameEntity::SingleTetroBox::init(float size, sf::Vector2f pos, float outlin
     m_box.setFillColor(sf::Color::Transparent);
 
     for (size_t i = 0; i < Tetromino::BlockCount; ++i)
+    {
         m_blocks[i].setSize({tetroBlockSize, tetroBlockSize});
+        m_blocks[i].setOutline({BlockType::EMPTY});
+    }
 }
 
 void GameEntity::SingleTetroBox::updateTetromino(GameEntity::BlockType type)

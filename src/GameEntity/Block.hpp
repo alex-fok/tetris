@@ -42,7 +42,7 @@ namespace GameEntity {
         Block();
         void copy(Block &other);
         void setTetromino(int id, GameEntity::BlockType);
-        void setGhost(GameEntity::BlockType);
+        void setOutline(GameEntity::BlockType);
         void reset();
         void setSize(sf::Vector2f v);
         void setPosition(float x, float y);

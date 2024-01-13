@@ -4,6 +4,7 @@
 #include "../Utils/Layer.hpp"
 #include "../GameEntity/TetrominoFactory.hpp"
 #include "../GameEntity/PreviewList.hpp"
+#include "../GameEntity/Hold.hpp"
 #include "../GameEntity/TetrominoContainer.hpp"
 #include "../Menu/GameOver.hpp"
 #include "../Menu/Pause.hpp"
@@ -18,6 +19,7 @@ namespace GameUI
         Utils::LayerControl m_layerControl;
         GameEntity::TetrominoFactory m_tetroFactory;
         GameEntity::PreviewList m_previewList;
+        GameEntity::Hold m_hold;
         GameEntity::TetrominoContainer m_tetroContainer;
         Menu::GameOver m_gameOverMenu;
         Menu::Pause m_pauseMenu;

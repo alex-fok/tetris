@@ -28,11 +28,13 @@ namespace GameEntity
         TetrominoFactory *m_tetrominoFactory;
         ActiveTetromino m_active;
         Block m_arr[m_blockCount.y + ActiveTetromino::Offset_size][m_blockCount.x];
+        std::function<Tetromino *(Tetromino *)> m_setHold;
         std::function<void(GameUI::Status)> m_setStatus;
     public:
         TetrominoContainer(
             sf::RenderWindow *w,
             TetrominoFactory *tetroFactory,
+            std::function<Tetromino *(Tetromino *)>setHold,
             std::function<void(GameUI::Status)> statusSetter
         );        
         void nextStep();
@@ -47,11 +49,13 @@ namespace GameEntity
         void move(Vector v);
         void drop();
         void clearLines();
+        Vector getStartPos(Tetromino *t);
+        bool isGameOver();
         void placeNewActive();
         void settleActive();
         void updateActive();
         void clearActive();
-        
+        void switchTetro();
         void drawBlocks();
     };
 };

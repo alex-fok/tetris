@@ -4,14 +4,20 @@
 #include "TetrominoContainer.hpp"
 #include <iostream>
 
-GameEntity::TetrominoContainer::TetrominoContainer(sf::RenderWindow *window, GameEntity::TetrominoFactory *tetroFactory, std::function<void(GameUI::Status)> statusSetter) :
+GameEntity::TetrominoContainer::TetrominoContainer(
+    sf::RenderWindow *window,
+    GameEntity::TetrominoFactory *tetroFactory,
+    std::function<Tetromino *(Tetromino *)> setHold,
+    std::function<void(GameUI::Status)> statusSetter
+) :
     Drawable(window),
     m_frame(sf::RectangleShape(sf::Vector2(
-        GameUI::Config::TetrominoContainer::Width, 
+        GameUI::Config::TetrominoContainer::Width,
         GameUI::Config::TetrominoContainer::Height
     ))),
     m_tetrominoFactory(tetroFactory),
     m_active(ActiveTetromino(m_tetrominoFactory->getNext(), {m_initPos.x, m_initPos.y})),
+    m_setHold(setHold),
     m_setStatus(statusSetter)
 {
     auto blockSize = GameUI::Config::Block::Size;
@@ -87,7 +93,7 @@ void GameEntity::TetrominoContainer::updateActive()
 
         if (ghost_offset)
         {
-            m_arr[v.y + m_active.offset.y + m_active.ghost_y][v.x + m_active.offset.x].setGhost(m_active.tetromino->type);
+            m_arr[v.y + m_active.offset.y + m_active.ghost_y][v.x + m_active.offset.x].setOutline(m_active.tetromino->type);
             m_active.updateStat(ActiveTetromino::ActiveStat::Active);
         } else
             m_active.updateStat(ActiveTetromino::ActiveStat::CountDown);
@@ -176,26 +182,21 @@ void GameEntity::TetrominoContainer::clearLines()
     linesToClear.clear();
 }
 
-void GameEntity::TetrominoContainer::placeNewActive()
+bool GameEntity::TetrominoContainer::isGameOver()
 {
-    // Set GameOver to true if active piece is settled above the top line
     for (int i = 0; i < Tetromino::BlockCount; ++i)
         if (m_active.tetromino->position[i].y + m_active.offset.y > m_blockCount.y - 1)
         {
             m_setStatus(GameUI::Status::GameOver);
             delete(m_active.tetromino);
-            return;
+            return true;
         }
-    delete(m_active.tetromino);
-    if (!linesToClear.empty())
-    {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));    
-        clearLines();
-    }
-    Tetromino *t = m_tetrominoFactory->getNext();
-    // Find new start position
+    return false;
+}
+
+GameEntity::Vector GameEntity::TetrominoContainer::getStartPos(Tetromino *t)
+{
     int startPos_y = m_blockCount.y;
-    bool isLifted = false;
     for (bool isLifted = false; !isLifted && startPos_y > m_initPos.y; --startPos_y)
     {
         for (int i = 0; i < Tetromino::BlockCount; ++i)
@@ -204,10 +205,22 @@ void GameEntity::TetrominoContainer::placeNewActive()
                 isLifted = true;
                 break;
             }
-        if (isLifted)
-            break;
     }
-    m_active = ActiveTetromino(t, {m_initPos.x, startPos_y});
+    return {m_initPos.x, startPos_y};
+}
+
+void GameEntity::TetrominoContainer::placeNewActive()
+{
+    if (m_active.tetromino)
+        delete(m_active.tetromino);
+
+    if (!linesToClear.empty())
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));    
+        clearLines();
+    }
+    Tetromino *t = m_tetrominoFactory->getNext();
+    m_active = ActiveTetromino(t, getStartPos(t));
     updateActive();
 }
 
@@ -241,10 +254,19 @@ void GameEntity::TetrominoContainer::settleActive()
     m_active.updateStat(ActiveTetromino::Settled);
 }
 
+void GameEntity::TetrominoContainer::switchTetro()
+{
+    Tetromino *heldTetro = m_setHold(m_active.tetromino);
+    if (!heldTetro) heldTetro = m_tetrominoFactory->getNext();
+    clearActive();
+    m_active = ActiveTetromino(heldTetro, getStartPos(heldTetro));
+    updateActive();
+}
+
 void GameEntity::TetrominoContainer::nextStep()
 {
-    if (m_active.isSettled())
-        placeNewActive(); 
+    if (m_active.isSettled() && !isGameOver())
+        placeNewActive();
     else if (m_active.shouldSettle())
         settleActive();
     else if (m_active.shouldDrop())
@@ -255,6 +277,9 @@ void GameEntity::TetrominoContainer::handle(sf::Keyboard::Key input)
 {
     switch(input)
     {
+        case sf::Keyboard::LShift:
+            switchTetro();
+            break;
         case sf::Keyboard::Up:
             rotate(Tetromino::Rotation::Clockwise);
             break;

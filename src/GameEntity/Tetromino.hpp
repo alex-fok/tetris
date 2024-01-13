@@ -46,5 +46,6 @@ namespace GameEntity
         const Vector * getWallKickOffsets(Rotation);
         const Vector * peek(Rotation);
         void rotate(Rotation);
+        void resetRotation();
     };
 };
