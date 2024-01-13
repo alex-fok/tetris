@@ -19,11 +19,7 @@ namespace GameEntity
         TetrominoFactory *m_tetroFactory;
         GameEntity::SingleTetroBox m_next;
         GameEntity::SingleTetroBox m_inLine[GameUI::Config::PreviewList::Count - 1];
-        sf::RectangleShape m_nextContainer;
-        sf::RectangleShape m_inLineContainer[GameUI::Config::PreviewList::Count - 1];
-        GameEntity::Block m_next_blocks[Tetromino::BlockCount];
-        GameEntity::Block m_inLine_blocks[GameUI::Config::PreviewList::Count - 1][Tetromino::BlockCount];
-    public:
+   public:
         Tetromino **m_tetros;
         PreviewList(sf::RenderWindow *window, TetrominoFactory *tetroFactory);
         void update();
