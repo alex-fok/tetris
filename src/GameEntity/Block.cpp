@@ -34,7 +34,6 @@ void GameEntity::Block::setTetromino(int id, BlockType type)
 
 void GameEntity::Block::setOutline(BlockType type)
 {
-    t_id = -2;
     content.setOutlineColor(BlockColor[type]);
 }
 
