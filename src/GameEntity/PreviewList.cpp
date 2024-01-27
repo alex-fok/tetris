@@ -1,27 +1,37 @@
 #include "PreviewList.hpp"
 #include "../GameUI/Config.hpp"
 #include "Block.hpp"
+#include "iostream"
 
 GameEntity::PreviewList::PreviewList(sf::RenderWindow *window, TetrominoFactory *tetroFactory) :
     Drawable(window),
     m_tetroFactory(tetroFactory),
     m_tetros(new Tetromino *[GameUI::Config::PreviewList::Count]),
-    m_next(window)
+    m_next(window),
+    m_text(sf::Text())
 {
     m_tetroFactory->addSubscription(std::bind(forwarder_update, this));
 
     namespace Next = GameUI::Config::PreviewList::Next;
     auto limit = GameUI::Config::PreviewList::PosLimit;
+
+    m_text.setFont(Resources::FontCollection::getInstance()->RobotoRegular);
+    m_text.setString("Next");
+    auto localBounds = m_text.getLocalBounds();
     
+    m_text.setOrigin(localBounds.width / 2, localBounds.height / 2);
+    m_text.setPosition((limit.Right + limit.Left) / 2, limit.Top + localBounds.height / 2);
+    m_text.setColor(sf::Color::White);
+
     m_next.init(
         Next::ContainerSize,
-        { limit.Left + (GameUI::Config::Window::Width - limit.Left) / 2, Next::ContainerSize / 2 + Next::Margin_Top },
+        { (limit.Left + limit.Right) / 2, limit.Top + localBounds.height + Next::Margin_Top + Next::ContainerSize / 2 },
         Next::OutlineThickness,
         Next::BlockSize
     );
-    
+
     namespace InLine = GameUI::Config::PreviewList::InLine;
-    auto topContainerPosY = Next::Margin_Top + Next::ContainerSize + InLine::Margin_Top + InLine::ContainerSize / 2;
+    auto topContainerPosY = limit.Top + localBounds.height + Next::Margin_Top + Next::ContainerSize + InLine::Margin_Top + InLine::ContainerSize / 2;
     for (size_t i = 0; i < GameUI::Config::PreviewList::Count - 1; ++i)
     {
         m_inLine[i] = GameEntity::SingleTetroBox(window);
@@ -56,6 +66,7 @@ void GameEntity::PreviewList::render()
     m_next.render();
     for (size_t i = 0; i < GameUI::Config::PreviewList::Count - 1; ++i)
         m_inLine[i].render();
+    draw(m_text);
 }
 
 GameEntity::PreviewList::~PreviewList()

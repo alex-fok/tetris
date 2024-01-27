@@ -1,5 +1,6 @@
 #pragma once
 #include "SFML/Graphics.hpp"
+#include "../Resources/FontCollection.hpp"
 #include "../Utils/Drawable.hpp"
 #include "SingleTetroBox.hpp"
 #include "Tetromino.hpp"
@@ -11,6 +12,7 @@ namespace GameEntity
     private:
         Tetromino *m_tetromino;
         SingleTetroBox m_hold;
+        sf::Text m_text;
     public:
         Hold(sf::RenderWindow *window);
         Tetromino *switchTetro(Tetromino *active);

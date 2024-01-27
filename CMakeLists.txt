@@ -7,6 +7,7 @@ include(FetchContent)
 FetchContent_Declare(SFML
     GIT_REPOSITORY https://github.com/SFML/SFML.git
     GIT_TAG 2.6.x)
+    # SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/../SFML/)
 FetchContent_MakeAvailable(SFML)
 
 add_custom_target(copy_assets COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/assets ${CMAKE_BINARY_DIR}/assets)

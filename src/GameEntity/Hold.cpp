@@ -5,15 +5,24 @@
 GameEntity::Hold::Hold(sf::RenderWindow *window) :
     Drawable(window),
     m_tetromino(0),
-    m_hold(window)
+    m_hold(window),
+    m_text(sf::Text())
 {
     namespace Hold = GameUI::Config::Hold;
+    namespace Box = Hold::Box;
     
+    m_text.setFont(Resources::FontCollection::getInstance()->RobotoRegular);
+    m_text.setString("Hold");
+    auto localBounds = m_text.getLocalBounds();
+    m_text.setOrigin(localBounds.width / 2, localBounds.height / 2);
+    m_text.setPosition((Hold::PosLimit.Right - Hold::PosLimit.Left) / 2, localBounds.height / 2 + Hold::PosLimit.Top);
+    m_text.setColor(sf::Color::White);
+
     m_hold.init(
-        Hold::ContainerSize,
-        { (Hold::PosLimit.Left + Hold::PosLimit.Right) / 2, Hold::ContainerSize / 2 + Hold::Margin_Top },
-        Hold::OutlineThickness,
-        Hold::BlockSize
+        Box::ContainerSize,
+        { (Box::PosLimit.Left + Box::PosLimit.Right) / 2, Box::ContainerSize / 2 + Hold::PosLimit.Top + localBounds.height + Box::PosLimit.Top },
+        Box::OutlineThickness,
+        Box::BlockSize
     );
 }
 
@@ -28,6 +37,7 @@ GameEntity::Tetromino *GameEntity::Hold::switchTetro(Tetromino *next)
 void GameEntity::Hold::render()
 {
     m_hold.render();
+    draw(m_text);
 }
 
 GameEntity::Tetromino *GameEntity::Hold::forwarder_switchTetro(Hold *hold, Tetromino *next)

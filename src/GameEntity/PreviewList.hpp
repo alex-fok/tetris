@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "SFML/Graphics.hpp"
+#include "../Resources/FontCollection.hpp"
 #include "../GameUI/Config.hpp"
 #include "../Utils/Drawable.hpp"
 #include "Tetromino.hpp"
@@ -19,6 +20,7 @@ namespace GameEntity
         TetrominoFactory *m_tetroFactory;
         GameEntity::SingleTetroBox m_next;
         GameEntity::SingleTetroBox m_inLine[GameUI::Config::PreviewList::Count - 1];
+        sf::Text m_text;
    public:
         Tetromino **m_tetros;
         PreviewList(sf::RenderWindow *window, TetrominoFactory *tetroFactory);

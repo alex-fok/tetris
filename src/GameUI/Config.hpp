@@ -41,15 +41,19 @@ namespace GameUI
         }
         namespace Hold
         {
-            static constexpr float Margin_Top = 10.f;
-            static constexpr float ContainerSize = 120.f;
-            static constexpr float OutlineThickness = 3.f;
-            static constexpr float BlockSize = 29.f;
-            static constexpr Limit PosLimit = { Limit{0.f, TetrominoContainer::PosLimit.Left, Window::Height, 0.f} };
+            static constexpr Limit PosLimit = { Limit{10.f, TetrominoContainer::PosLimit.Left, Window::Height, 0.f} };
+            namespace Box
+            {
+                static constexpr Limit PosLimit = { Limit{10.f, TetrominoContainer::PosLimit.Left, 0.f, 0.f} };
+                static constexpr float ContainerSize = 120.f;
+                static constexpr float OutlineThickness = 3.f;
+                static constexpr float BlockSize = 29.f;
+            }
         }
         namespace PreviewList
         {
             static constexpr size_t Count = 4;
+            static constexpr Limit PosLimit = { Limit{10.f, Window::Width, Window::Height, TetrominoContainer::PosLimit.Right} };
             namespace Next
             {
                 static constexpr float Margin_Top = 10.f;
@@ -64,7 +68,6 @@ namespace GameUI
                 static constexpr float OutlineThickness = 1.f;
                 static constexpr float BlockSize = 20.f;
             }
-            static constexpr Limit PosLimit = { Limit{0.f, Window::Width, Window::Height, TetrominoContainer::PosLimit.Left + TetrominoContainer::Width} };
         }
     };
 }
