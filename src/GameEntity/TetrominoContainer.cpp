@@ -198,15 +198,10 @@ GameEntity::Vector GameEntity::TetrominoContainer::getStartPos(Tetromino *t)
 {
     int startPos_y = m_blockCount.y;
     for (bool isLifted = false; !isLifted && startPos_y > m_initPos.y; --startPos_y)
-    {
         for (int i = 0; i < Tetromino::BlockCount; ++i)
             if (isBlocked({t->position[i].x + m_initPos.x, t->position[i].y + startPos_y - 1}))
-            {
-                isLifted = true;
-                break;
-            }
-    }
-    return {m_initPos.x, startPos_y};
+                return {m_initPos.x, startPos_y};
+    return {m_initPos.x, m_initPos.y};
 }
 
 void GameEntity::TetrominoContainer::placeNewActive()
