@@ -251,9 +251,9 @@ void GameEntity::TetrominoContainer::settleActive()
 
 void GameEntity::TetrominoContainer::switchTetro()
 {
+    clearActive();
     Tetromino *heldTetro = m_setHold(m_active.tetromino);
     if (!heldTetro) heldTetro = m_tetrominoFactory->getNext();
-    clearActive();
     m_active = ActiveTetromino(heldTetro, getStartPos(heldTetro));
     updateActive();
 }

@@ -135,4 +135,5 @@ void GameEntity::Tetromino::rotate(Rotation r)
 void GameEntity::Tetromino::resetRotation()
 {
     m_rotation = 0;
+    position = Tetromino::Type[type][m_rotation];
 }
