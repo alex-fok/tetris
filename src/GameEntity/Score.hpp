@@ -1,8 +1,9 @@
 #pragma once
 #include "SFML/Graphics.hpp"
 #include "../Resources/FontCollection.hpp"
-#include "../Utils/Drawable.hpp"
 #include "../GameUI/Config.hpp"
+#include "../Utils/Drawable.hpp"
+#include "ScoringSystem.hpp"
 
 namespace GameEntity
 {
@@ -10,12 +11,13 @@ namespace GameEntity
     {
     private:
         sf::RenderWindow *m_window;
-        int m_score;
+        ScoringSystem *m_scoringSystem;
         sf::Text m_text;
         sf::Text m_score_text;
     public:
-        Score(sf::RenderWindow *window);
-        void updateScore(int linesCleared);
+        Score(sf::RenderWindow *window, ScoringSystem *scoringSystem);
+        void updateScore(int score);
+        static void forwarder_updateScore(GameEntity::Score *, int score);
         void render();
     };
 }

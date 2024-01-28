@@ -3,6 +3,7 @@
 #include "../Utils/LayerControl.hpp"
 #include "../Utils/Layer.hpp"
 #include "../GameEntity/TetrominoFactory.hpp"
+#include "../GameEntity/ScoringSystem.hpp"
 #include "../GameEntity/Score.hpp"
 #include "../GameEntity/PreviewList.hpp"
 #include "../GameEntity/Hold.hpp"
@@ -19,6 +20,7 @@ namespace GameUI
         Status m_status;
         Utils::LayerControl m_layerControl;
         GameEntity::TetrominoFactory m_tetroFactory;
+        GameEntity::ScoringSystem m_scoringSystem;
         GameEntity::Score m_score;
         GameEntity::PreviewList m_previewList;
         GameEntity::Hold m_hold;

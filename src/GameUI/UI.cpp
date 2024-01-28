@@ -6,10 +6,9 @@
 
 GameUI::UI::UI():
     m_window(sf::VideoMode((unsigned int)Config::Window::Width, (unsigned int)Config::Window::Height), "Tetris"),
-    m_layerControl(),
     m_status(Running),
     m_tetroFactory(GameEntity::TetrominoFactory()),
-    m_score(&m_window),
+    m_score(&m_window, &m_scoringSystem),
     m_previewList(GameEntity::PreviewList(&m_window, &m_tetroFactory)),
     m_hold(&m_window),
     m_tetroContainer(
@@ -85,7 +84,7 @@ void GameUI::UI::setStatus(Status s)
 
 void GameUI::UI::updateScore(int linesCleared)
 {
-    m_score.updateScore(linesCleared);
+    m_scoringSystem.updateScore(linesCleared);
 }
 
 void GameUI::UI::close()
