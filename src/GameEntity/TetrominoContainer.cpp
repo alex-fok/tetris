@@ -7,6 +7,7 @@
 GameEntity::TetrominoContainer::TetrominoContainer(
     sf::RenderWindow *window,
     GameEntity::TetrominoFactory *tetroFactory,
+    std::function<void(int linesCleared)> updateScore,
     std::function<Tetromino *(Tetromino *)> setHold,
     std::function<void(GameUI::Status)> statusSetter
 ) :
@@ -16,6 +17,7 @@ GameEntity::TetrominoContainer::TetrominoContainer(
         GameUI::Config::TetrominoContainer::Height
     ))),
     m_tetrominoFactory(tetroFactory),
+    m_updateScore(updateScore),
     m_active(ActiveTetromino(m_tetrominoFactory->getNext(), {m_initPos.x, m_initPos.y})),
     m_setHold(setHold),
     m_setStatus(statusSetter)
@@ -62,25 +64,18 @@ void GameEntity::TetrominoContainer::updateActive()
     // Update Ghost
     int ghost_offset = 1;
     bool ghostFound = false;
-    while (ghostFound == false)
+    while (!ghostFound)
     {
         --ghost_offset;
         int offset_x = m_active.offset.x;
         int offset_y = m_active.offset.y + ghost_offset - 1;
         
-        Tetromino *active = m_active.tetromino;
-        
         for (int i = 0; i < Tetromino::BlockCount; ++i)
-        {
-            int y = active->position[i].y + offset_y;
-            int x = active->position[i].x + offset_x;
-            
-            if (isBlocked({x, y}))
+            if (isBlocked({m_active.tetromino->position[i].x + offset_x, m_active.tetromino->position[i].y + offset_y}))
             {
                 ghostFound = true;
                 break;
             }
-        }
     }
     m_active.ghost_y = ghost_offset;
 
@@ -211,6 +206,7 @@ void GameEntity::TetrominoContainer::placeNewActive()
 
     if (!linesToClear.empty())
     {
+        m_updateScore(linesToClear.size());
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));    
         clearLines();
     }
@@ -228,22 +224,19 @@ void GameEntity::TetrominoContainer::settleActive()
         int x = m_active.offset.x + v.x;
         int y = m_active.offset.y + v.y;
         m_arr[y][x].setTetromino(m_active.tetromino->id, m_active.tetromino->type);
-        
+
+        if (map.count(y)) continue;
+
         // Check if line should be cleared
-        if (!map.count(y))
+        bool isFilled = true;
+        for (int xi = 0; isFilled && xi < m_blockCount.x; ++xi)
+            if (m_arr[y][xi].t_id < 0)
+                isFilled = false;
+
+        if (isFilled)
         {
-            bool isFilled = true;
-            for (int xi = 0; xi < m_blockCount.x; ++xi)
-                if (m_arr[y][xi].t_id < 0)
-                {
-                    isFilled = false;
-                    break;
-                }
-            if (isFilled)
-            {
-                map[y] = true;
-                linesToClear.push_back(y);   
-            }
+            map[y] = true;
+            linesToClear.push_back(y);
         }
     }
     m_active.updateStat(ActiveTetromino::Settled);

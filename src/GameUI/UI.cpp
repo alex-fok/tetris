@@ -9,11 +9,13 @@ GameUI::UI::UI():
     m_layerControl(),
     m_status(Running),
     m_tetroFactory(GameEntity::TetrominoFactory()),
+    m_score(&m_window),
     m_previewList(GameEntity::PreviewList(&m_window, &m_tetroFactory)),
     m_hold(&m_window),
     m_tetroContainer(
         &m_window,
         &m_tetroFactory,
+        std::bind(GameUI::UI::forwarder_updateScore, this, std::placeholders::_1),
         std::bind(GameEntity::Hold::forwarder_switchTetro, &m_hold, std::placeholders::_1),
         std::bind(GameUI::UI::forwarder_setStatus, this, std::placeholders::_1)
     ),
@@ -81,9 +83,19 @@ void GameUI::UI::setStatus(Status s)
     }
 }
 
+void GameUI::UI::updateScore(int linesCleared)
+{
+    m_score.updateScore(linesCleared);
+}
+
 void GameUI::UI::close()
 {
     m_window.close();
+}
+
+void GameUI::UI::forwarder_updateScore(GameUI::UI *self, int linesCleared)
+{
+    self->updateScore(linesCleared);
 }
 
 void GameUI::UI::forwarder_setStatus(GameUI::UI *self, Status s)
@@ -107,6 +119,7 @@ void GameUI::UI::run()
     Utils::Layer *baseLayer = &Utils::Layer(&m_window);
     
     baseLayer->addDrawable(&m_tetroContainer);
+    baseLayer->addDrawable(&m_score);
     baseLayer->addDrawable(&m_hold);
     baseLayer->addDrawable(&m_previewList);
     m_layerControl.addTop(baseLayer);

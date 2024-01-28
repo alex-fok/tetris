@@ -28,12 +28,14 @@ namespace GameEntity
         TetrominoFactory *m_tetrominoFactory;
         ActiveTetromino m_active;
         Block m_arr[m_blockCount.y + ActiveTetromino::Offset_size][m_blockCount.x];
+        std::function<void(int linesCleared)> m_updateScore;
         std::function<Tetromino *(Tetromino *)> m_setHold;
         std::function<void(GameUI::Status)> m_setStatus;
     public:
         TetrominoContainer(
             sf::RenderWindow *w,
             TetrominoFactory *tetroFactory,
+            std::function<void(int linesCleared)>updateScore,
             std::function<Tetromino *(Tetromino *)>setHold,
             std::function<void(GameUI::Status)> statusSetter
         );        
