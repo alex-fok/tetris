@@ -6,8 +6,8 @@
 
 GameEntity::TetrominoContainer::TetrominoContainer(
     sf::RenderWindow *window,
-    GameEntity::TetrominoFactory *tetroFactory,
-    std::function<void(int linesCleared)> updateScore,
+    TetrominoFactory *tetroFactory,
+    ScoringSystem *scoringSystem,
     std::function<Tetromino *(Tetromino *)> setHold,
     std::function<void(GameUI::Status)> statusSetter
 ) :
@@ -17,7 +17,7 @@ GameEntity::TetrominoContainer::TetrominoContainer(
         GameUI::Config::TetrominoContainer::Height
     ))),
     m_tetrominoFactory(tetroFactory),
-    m_updateScore(updateScore),
+    m_scoringSystem(scoringSystem),
     m_active(ActiveTetromino(m_tetrominoFactory->getNext(), {m_initPos.x, m_initPos.y})),
     m_setHold(setHold),
     m_setStatus(statusSetter)
@@ -113,15 +113,12 @@ void GameEntity::TetrominoContainer::rotate(Tetromino::Rotation r)
     for (int i = 0; i < Tetromino::TestCount; ++i)
     {
         bool success = true;
-        for (int j = 0; j < Tetromino::BlockCount; j++)
+        for (int j = 0; success == false || j < Tetromino::BlockCount; j++)
         {
             int x = next[j].x + m_active.offset.x + testOffsets[i].x;
             int y = next[j].y + m_active.offset.y + testOffsets[i].y;
             if (isBlocked({x, y}))
-            {
                 success = false;
-                break;
-            }
         }
         if (success)
         {
@@ -159,10 +156,17 @@ void GameEntity::TetrominoContainer::move(Vector v)
     updateActive();
 }
 
-void GameEntity::TetrominoContainer::drop()
+void GameEntity::TetrominoContainer::softDrop()
+{
+    move({0, -1});
+    m_scoringSystem->updateDropScore(SoftDrop, 1);
+}
+
+void GameEntity::TetrominoContainer::hardDrop()
 {   
     clearActive();
     m_active.offset.y += m_active.ghost_y;
+    m_scoringSystem->updateDropScore(HardDrop, m_active.ghost_y * -1);
     m_active.ghost_y = 0;
     settleActive();
 }
@@ -206,7 +210,21 @@ void GameEntity::TetrominoContainer::placeNewActive()
 
     if (!linesToClear.empty())
     {
-        m_updateScore(linesToClear.size());
+        switch(linesToClear.size())
+        {
+            case 1:
+                m_scoringSystem->updateLineScore(Single);
+                break;
+            case 2:
+                m_scoringSystem->updateLineScore(Double);
+                break;
+            case 3:
+                m_scoringSystem->updateLineScore(Triple);
+                break;
+            case 4:
+                m_scoringSystem->updateLineScore(Tetris);
+                break;
+        }
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));    
         clearLines();
     }
@@ -258,7 +276,7 @@ void GameEntity::TetrominoContainer::nextStep()
     else if (m_active.shouldSettle())
         settleActive();
     else if (m_active.shouldDrop())
-        move({0, -1});
+        softDrop();
 }
 
 void GameEntity::TetrominoContainer::handle(sf::Keyboard::Key input)
@@ -281,7 +299,7 @@ void GameEntity::TetrominoContainer::handle(sf::Keyboard::Key input)
             move({-1, 0});
             break;
         case sf::Keyboard::Space:
-            drop();
+            hardDrop();
             break;
     }
 }

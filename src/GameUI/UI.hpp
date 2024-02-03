@@ -3,6 +3,7 @@
 #include "../Utils/LayerControl.hpp"
 #include "../Utils/Layer.hpp"
 #include "../GameEntity/TetrominoFactory.hpp"
+#include "../GameEntity/ScoreAction.hpp"
 #include "../GameEntity/ScoringSystem.hpp"
 #include "../GameEntity/Score.hpp"
 #include "../GameEntity/PreviewList.hpp"
@@ -33,8 +34,6 @@ namespace GameUI
         void setGameOver();
         void setPaused();
         void setRunning();
-        void updateScore(int linesCleared);
-        static void forwarder_updateScore(GameUI::UI *, int lineCleared);
         static void forwarder_setStatus(GameUI::UI *, Status s);
         static void forwarder_retry(GameUI::UI *);
         static void forwarder_close(GameUI::UI *);

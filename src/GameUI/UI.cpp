@@ -14,7 +14,7 @@ GameUI::UI::UI():
     m_tetroContainer(
         &m_window,
         &m_tetroFactory,
-        std::bind(GameUI::UI::forwarder_updateScore, this, std::placeholders::_1),
+        &m_scoringSystem,
         std::bind(GameEntity::Hold::forwarder_switchTetro, &m_hold, std::placeholders::_1),
         std::bind(GameUI::UI::forwarder_setStatus, this, std::placeholders::_1)
     ),
@@ -82,19 +82,9 @@ void GameUI::UI::setStatus(Status s)
     }
 }
 
-void GameUI::UI::updateScore(int linesCleared)
-{
-    m_scoringSystem.updateScore(linesCleared);
-}
-
 void GameUI::UI::close()
 {
     m_window.close();
-}
-
-void GameUI::UI::forwarder_updateScore(GameUI::UI *self, int linesCleared)
-{
-    self->updateScore(linesCleared);
 }
 
 void GameUI::UI::forwarder_setStatus(GameUI::UI *self, Status s)

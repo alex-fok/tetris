@@ -6,6 +6,8 @@
 #include "../GameUI/Status.hpp"
 #include "Vector.hpp"
 #include "Block.hpp"
+#include "ScoreAction.hpp"
+#include "ScoringSystem.hpp"
 #include "ActiveTetromino.hpp"
 #include "Tetromino.hpp"
 #include "TetrominoFactory.hpp"
@@ -28,14 +30,14 @@ namespace GameEntity
         TetrominoFactory *m_tetrominoFactory;
         ActiveTetromino m_active;
         Block m_arr[m_blockCount.y + ActiveTetromino::Offset_size][m_blockCount.x];
-        std::function<void(int linesCleared)> m_updateScore;
+        ScoringSystem *m_scoringSystem;
         std::function<Tetromino *(Tetromino *)> m_setHold;
         std::function<void(GameUI::Status)> m_setStatus;
     public:
         TetrominoContainer(
             sf::RenderWindow *w,
             TetrominoFactory *tetroFactory,
-            std::function<void(int linesCleared)>updateScore,
+            ScoringSystem *scoringSystem,
             std::function<Tetromino *(Tetromino *)>setHold,
             std::function<void(GameUI::Status)> statusSetter
         );        
@@ -49,7 +51,8 @@ namespace GameEntity
         bool isBlocked(Vector v);
         void rotate(Tetromino::Rotation);
         void move(Vector v);
-        void drop();
+        void softDrop();
+        void hardDrop();
         void clearLines();
         Vector getStartPos(Tetromino *t);
         bool isGameOver();

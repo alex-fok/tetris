@@ -10,14 +10,76 @@ GameEntity::ScoringSystem::ScoringSystem() :
 {
 }
 
-void GameEntity::ScoringSystem::updateScore(int linesCleared)
+int GameEntity::ScoringSystem::scoreSingle()
 {
-    m_score += m_level * linesClearedScoring[linesCleared];
-    m_cleared += linePoints[linesCleared];
+    return m_level * 100;
+}
+
+int GameEntity::ScoringSystem::scoreDouble()
+{
+    return m_level * 300;
+}
+
+int GameEntity::ScoringSystem::scoreTriple()
+{
+    return m_level * 500;
+}
+
+int GameEntity::ScoringSystem::scoreTetris()
+{
+    return m_level * 800;
+}
+
+int GameEntity::ScoringSystem::scoreSoftDrop(int count)
+{
+    return count;
+}
+
+int GameEntity::ScoringSystem::scoreHardDrop(int count)
+{
+    return count * 2;
+}
+
+void GameEntity::ScoringSystem::updateLineScore(LineAction action)
+{
+    switch(action)
+    {
+        case Single:
+            m_score += scoreSingle();
+            m_cleared += 1;
+            break;
+        case Double:
+            m_score += scoreDouble();
+            m_cleared += 2;
+            break;
+        case Triple:
+            m_score += scoreTriple();
+            m_cleared += 3;
+            break;
+        case Tetris:
+            m_score += scoreTetris();
+            m_cleared += 4;
+            break;
+    }
     if (m_cleared > 10)
     {
         m_cleared = 0;
         m_level++;
+    }
+    for (auto fn: m_subscribed_fns)
+        fn(m_score);
+}
+
+void GameEntity::ScoringSystem::updateDropScore(DropAction action, int count)
+{
+    switch(action)
+    {
+        case SoftDrop:
+            m_score += scoreSoftDrop(count);
+            break;
+        case HardDrop:
+            m_score += scoreHardDrop(count);
+            break;
     }
     for (auto fn: m_subscribed_fns)
         fn(m_score);
