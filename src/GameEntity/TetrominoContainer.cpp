@@ -113,7 +113,7 @@ void GameEntity::TetrominoContainer::rotate(Tetromino::Rotation r)
     for (int i = 0; i < Tetromino::TestCount; ++i)
     {
         bool success = true;
-        for (int j = 0; success == false || j < Tetromino::BlockCount; j++)
+        for (int j = 0; success == true && j < Tetromino::BlockCount; j++)
         {
             int x = next[j].x + m_active.offset.x + testOffsets[i].x;
             int y = next[j].y + m_active.offset.y + testOffsets[i].y;
