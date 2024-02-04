@@ -6,59 +6,67 @@ const int linePoints[5] = { 0, 1, 3, 5, 8 };
 GameEntity::ScoringSystem::ScoringSystem() :
     m_score(0),
     m_level(1),
-    m_cleared(0)
+    m_cleared(0),
+    m_combo(-1),
+    m_isB2BActive(false)
 {
 }
 
-int GameEntity::ScoringSystem::scoreSingle()
+void GameEntity::ScoringSystem::scoreSingle()
 {
-    return m_level * 100;
+    m_score += m_level * 100 + m_combo * comboMultiplier * m_level;
+    m_cleared += 1;
+    m_isB2BActive = false;
 }
 
-int GameEntity::ScoringSystem::scoreDouble()
+void GameEntity::ScoringSystem::scoreDouble()
 {
-    return m_level * 300;
+    m_score += m_level * 300 + m_combo * comboMultiplier * m_level;
+    m_cleared += 2;
+    m_isB2BActive = false;
 }
 
-int GameEntity::ScoringSystem::scoreTriple()
+void GameEntity::ScoringSystem::scoreTriple()
 {
-    return m_level * 500;
+    m_score += m_level * 500 + m_combo * comboMultiplier * m_level;
+    m_cleared += 3;
+    m_isB2BActive = false;
 }
 
-int GameEntity::ScoringSystem::scoreTetris()
+void GameEntity::ScoringSystem::scoreTetris()
 {
-    return m_level * 800;
+    m_score += m_level * 800 + m_combo * comboMultiplier * m_level;
+    m_cleared += 4;
+    m_isB2BActive = true;
 }
 
-int GameEntity::ScoringSystem::scoreSoftDrop(int count)
+void GameEntity::ScoringSystem::scoreSoftDrop(int count)
 {
-    return count;
+    m_score += count;
 }
 
-int GameEntity::ScoringSystem::scoreHardDrop(int count)
+void GameEntity::ScoringSystem::scoreHardDrop(int count)
 {
-    return count * 2;
+    m_score += count * 2;
 }
 
 void GameEntity::ScoringSystem::updateLineScore(LineAction action)
 {
+    m_combo++;
+
     switch(action)
     {
         case Single:
-            m_score += scoreSingle();
-            m_cleared += 1;
+            scoreSingle();
             break;
         case Double:
-            m_score += scoreDouble();
-            m_cleared += 2;
+            scoreDouble();
             break;
         case Triple:
-            m_score += scoreTriple();
-            m_cleared += 3;
+            scoreTriple();
             break;
         case Tetris:
-            m_score += scoreTetris();
-            m_cleared += 4;
+            scoreTetris();
             break;
     }
     if (m_cleared > 10)
@@ -75,14 +83,19 @@ void GameEntity::ScoringSystem::updateDropScore(DropAction action, int count)
     switch(action)
     {
         case SoftDrop:
-            m_score += scoreSoftDrop(count);
+            scoreSoftDrop(count);
             break;
         case HardDrop:
-            m_score += scoreHardDrop(count);
+            scoreHardDrop(count);
             break;
     }
     for (auto fn: m_subscribed_fns)
         fn(m_score);
+}
+
+void GameEntity::ScoringSystem::clearCombo()
+{
+    m_combo = -1;
 }
 
 void GameEntity::ScoringSystem::addSubscription(std::function<void(int)> fn)

@@ -227,7 +227,8 @@ void GameEntity::TetrominoContainer::placeNewActive()
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));    
         clearLines();
-    }
+    } else
+        m_scoringSystem->clearCombo();
     Tetromino *t = m_tetrominoFactory->getNext();
     m_active = ActiveTetromino(t, getStartPos(t));
     updateActive();
