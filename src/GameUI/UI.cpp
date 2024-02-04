@@ -130,14 +130,18 @@ void GameUI::UI::run()
         sf::Keyboard::Enter
     };
 
-    sf::Keyboard::Key running_inputs[6] =
+    sf::Keyboard::Key running_inputs[10] =
     {
         sf::Keyboard::Up,
         sf::Keyboard::Right,
         sf::Keyboard::Down,
         sf::Keyboard::Left,
         sf::Keyboard::Space,
-        sf::Keyboard::LShift
+        sf::Keyboard::LShift,
+        sf::Keyboard::Z,
+        sf::Keyboard::X,
+        sf::Keyboard::C,
+        sf::Keyboard::LControl
     };
     
     while (m_window.isOpen())

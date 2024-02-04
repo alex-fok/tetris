@@ -285,10 +285,15 @@ void GameEntity::TetrominoContainer::handle(sf::Keyboard::Key input)
     switch(input)
     {
         case sf::Keyboard::LShift:
+        case sf::Keyboard::C:
             switchTetro();
             break;
         case sf::Keyboard::Up:
+        case sf::Keyboard::X:
             rotate(Tetromino::Rotation::Clockwise);
+            break;
+        case sf::Keyboard::Z:
+            rotate(Tetromino::Rotation::CounterClockwise);
             break;
         case sf::Keyboard::Right:
             move({1, 0});

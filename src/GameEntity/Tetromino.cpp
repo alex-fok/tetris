@@ -128,8 +128,8 @@ const GameEntity::Vector * GameEntity::Tetromino::peek(Rotation r)
 
 void GameEntity::Tetromino::rotate(Rotation r)
 {
-    m_rotation = r == Clockwise ? (m_rotation + 1) % 4 : (m_rotation - 1) % 4;
-    position = Tetromino::Type[type][m_rotation]; 
+    m_rotation = r == Clockwise ? (m_rotation + 1) % 4 : (m_rotation - 1 + 4) % 4;
+    position = Tetromino::Type[type][m_rotation];
 }
 
 void GameEntity::Tetromino::resetRotation()
