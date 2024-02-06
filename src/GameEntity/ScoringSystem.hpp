@@ -2,9 +2,15 @@
 #include <vector>
 #include <functional>
 #include <map>
+#include "Vector.hpp"
+#include "Tetromino.hpp"
 #include "ScoreAction.hpp"
 
 namespace GameEntity {
+    
+    enum TSpinType {
+        None = 0, MiniType, TSpinType
+    };
     class ScoringSystem
     {
     private:
@@ -21,10 +27,18 @@ namespace GameEntity {
         void scoreTetris();
         void scoreSoftDrop(int count);
         void scoreHardDrop(int count);
+        void scoreTSpinMini();
+        void scoreTSpinMiniSingle();
+        void scoreTSpinMiniDouble();
+        void scoreTSpin();
+        void scoreTSpinSingle();
+        void scoreTSpinDouble();
+        void scoreTSpinTriple();
     public:
         ScoringSystem();
         void updateLineScore(LineAction scoreAction);
         void updateDropScore(DropAction dropAction, int count);
+        void updateTSpinScore(TSpinAction tSpinAction);
         void clearCombo();
         void addSubscription(std::function<void(int)> fn);
     };

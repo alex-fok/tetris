@@ -90,7 +90,8 @@ void GameEntity::TetrominoContainer::updateActive()
         {
             m_arr[v.y + m_active.offset.y + m_active.ghost_y][v.x + m_active.offset.x].setOutline(m_active.tetromino->type);
             m_active.updateStat(ActiveTetromino::ActiveStat::Active);
-        } else
+        }
+        else
             m_active.updateStat(ActiveTetromino::ActiveStat::CountDown);
     }
 }
@@ -103,14 +104,16 @@ void GameEntity::TetrominoContainer::clearActive()
         m_arr[v.y + m_active.offset.y][v.x + m_active.offset.x].reset();
         m_arr[v.y + m_active.offset.y + m_active.ghost_y][v.x + m_active.offset.x].reset();
     }
+    m_active.isRotated = false;
+    m_active.wallkickOffset = 0;
 }
 
-void GameEntity::TetrominoContainer::rotate(Tetromino::Rotation r)
+void GameEntity::TetrominoContainer::rotate(Tetromino::RotateDirection r)
 {
     const Vector *next = m_active.tetromino->peek(r);
     const Vector *testOffsets = m_active.tetromino->getWallKickOffsets(r); 
 
-    for (int i = 0; i < Tetromino::TestCount; ++i)
+    for (unsigned int i = 0; i < Tetromino::TestCount; ++i)
     {
         bool success = true;
         for (int j = 0; success == true && j < Tetromino::BlockCount; j++)
@@ -126,6 +129,8 @@ void GameEntity::TetrominoContainer::rotate(Tetromino::Rotation r)
             m_active.offset.x += testOffsets[i].x;
             m_active.offset.y += testOffsets[i].y;
             m_active.tetromino->rotate(r);
+            m_active.isRotated = true;
+            m_active.wallkickOffset = i;
             updateActive();
             break;
         }
@@ -148,6 +153,7 @@ void GameEntity::TetrominoContainer::move(Vector v)
     clearActive();
     m_active.offset.x += v.x;
     m_active.offset.y += v.y;
+    
     if (isLanded)
     {
         m_active.updateStat(ActiveTetromino::ActiveStat::CountDown);
@@ -205,30 +211,101 @@ GameEntity::Vector GameEntity::TetrominoContainer::getStartPos(Tetromino *t)
 
 void GameEntity::TetrominoContainer::placeNewActive()
 {
+    // T-spin
+    if (m_active.tetromino && m_active.tetromino->type == T && m_active.isRotated)
+    {
+        auto corners = m_active.tetromino->getTCorners();
+        int frontBlocked = 0;
+        int rearBlocked = 0;
+
+        for (auto corner : corners.front)
+            if (isBlocked({m_active.offset.x + corner.x, m_active.offset.y + corner.y}))
+                frontBlocked++;
+
+        for (auto corner : corners.rear)
+            if (isBlocked({m_active.offset.x + corner.x, m_active.offset.y + corner.y}))
+                rearBlocked++;
+
+        bool is3Corner = frontBlocked + rearBlocked > 2;
+        bool isTSpin = (frontBlocked == 2 && rearBlocked > 0) || m_active.wallkickOffset == Tetromino::TestCount - 1;
+        // bool isMini = frontBlocked == 1 && rearBlocked == 2 
+
+        if (linesToClear.empty())
+        {
+            m_scoringSystem->clearCombo();
+            if (is3Corner)    
+                m_scoringSystem->updateTSpinScore(isTSpin ? T_Spin : Mini);
+        }
+        else
+        {
+            if (is3Corner)
+                if (isTSpin)
+                    switch(linesToClear.size())
+                    {
+                        case 1:
+                            m_scoringSystem->updateTSpinScore(T_Spin_Single);
+                            break;
+                        case 2:
+                            m_scoringSystem->updateTSpinScore(T_Spin_Double);
+                            break;
+                        case 3:
+                            m_scoringSystem->updateTSpinScore(T_Spin_Triple);
+                            break;
+                    }
+                else
+                    switch (linesToClear.size())
+                    {
+                        case 1:
+                            m_scoringSystem->updateTSpinScore(Mini_Single);
+                            break;
+                        case 2:
+                            m_scoringSystem->updateTSpinScore(Mini_Double);
+                            break;
+                    }
+            else   
+                switch(linesToClear.size())
+                {
+                    case 1:
+                        m_scoringSystem->updateLineScore(Single);
+                        break;
+                    case 2:
+                        m_scoringSystem->updateLineScore(Double);
+                        break;
+                    case 3:
+                        m_scoringSystem->updateLineScore(Triple);
+                        break;
+                }
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));    
+            clearLines();
+        }
+    }
+    else
+    {
+        if (linesToClear.empty())
+            m_scoringSystem->clearCombo();
+        else
+        {
+            switch(linesToClear.size())
+            {
+                case 1:
+                    m_scoringSystem->updateLineScore(Single);
+                    break;
+                case 2:
+                    m_scoringSystem->updateLineScore(Double);
+                    break;
+                case 3:
+                    m_scoringSystem->updateLineScore(Triple);
+                    break;
+                case 4:
+                    m_scoringSystem->updateLineScore(Tetris);
+                    break;
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));    
+            clearLines();
+        }
+    }    
     if (m_active.tetromino)
         delete(m_active.tetromino);
-
-    if (!linesToClear.empty())
-    {
-        switch(linesToClear.size())
-        {
-            case 1:
-                m_scoringSystem->updateLineScore(Single);
-                break;
-            case 2:
-                m_scoringSystem->updateLineScore(Double);
-                break;
-            case 3:
-                m_scoringSystem->updateLineScore(Triple);
-                break;
-            case 4:
-                m_scoringSystem->updateLineScore(Tetris);
-                break;
-        }
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));    
-        clearLines();
-    } else
-        m_scoringSystem->clearCombo();
     Tetromino *t = m_tetrominoFactory->getNext();
     m_active = ActiveTetromino(t, getStartPos(t));
     updateActive();
@@ -290,10 +367,10 @@ void GameEntity::TetrominoContainer::handle(sf::Keyboard::Key input)
             break;
         case sf::Keyboard::Up:
         case sf::Keyboard::X:
-            rotate(Tetromino::Rotation::Clockwise);
+            rotate(Tetromino::RotateDirection::Clockwise);
             break;
         case sf::Keyboard::Z:
-            rotate(Tetromino::Rotation::CounterClockwise);
+            rotate(Tetromino::RotateDirection::CounterClockwise);
             break;
         case sf::Keyboard::Right:
             move({1, 0});

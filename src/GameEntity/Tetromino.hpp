@@ -9,11 +9,14 @@ namespace GameEntity
     private:
         int m_rotation;
     public:
-        enum Rotation
+        enum RotateDirection
         {
             Clockwise, CounterClockwise
         };
-
+        struct Corners {
+            Vector front[2];
+            Vector rear[2];
+        };
         // Number of types of Tetromino; I, O, T, J, L, S, Z
         static const int TypeCount = 7;
 
@@ -37,15 +40,18 @@ namespace GameEntity
 
         // Array of offsets for I's wallkick, separated by their respective rotated positions, rotate direction 
         const static Vector WallKick_Offset_I[RotationCount][DirectionCount][TestCount];
-        
+
+        // Array of corners for Tetromino T
+        const static Corners T_Corners[GameEntity::Tetromino::RotationCount];
         
         int id;
         BlockType type;
         const Vector *position;
         Tetromino(int id, BlockType b_type);
-        const Vector * getWallKickOffsets(Rotation);
-        const Vector * peek(Rotation);
-        void rotate(Rotation);
+        const Vector * getWallKickOffsets(RotateDirection);
+        const Vector * peek(RotateDirection);
+        Corners getTCorners();
+        void rotate(RotateDirection);
         void resetRotation();
     };
 };

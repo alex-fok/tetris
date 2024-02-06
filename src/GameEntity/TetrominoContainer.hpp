@@ -49,7 +49,7 @@ namespace GameEntity
 
     private:
         bool isBlocked(Vector v);
-        void rotate(Tetromino::Rotation);
+        void rotate(Tetromino::RotateDirection);
         void move(Vector v);
         void softDrop();
         void hardDrop();

@@ -111,22 +111,35 @@ const GameEntity::Vector GameEntity::Tetromino::WallKick_Offset_I[RotationCount]
     }
 };
 
+
+const GameEntity::Tetromino::Corners GameEntity::Tetromino::T_Corners[GameEntity::Tetromino::RotationCount] = { // {Front, Rear}
+    {{{0, 3}, {2, 3}}, {{0, 1}, {2, 1}}},
+    {{{2, 1}, {2, 3}}, {{0, 1}, {0, 3}}},
+    {{{0, 1}, {2, 1}}, {{0, 3}, {2, 3}}},
+    {{{0, 1}, {0, 3}}, {{2, 1}, {2, 3}}}
+};
+
 GameEntity::Tetromino::Tetromino(int id, BlockType b_type) :
     m_rotation(0), type(b_type), id(id), position(Type[b_type][0])
 {
 }
 
-const GameEntity::Vector * GameEntity::Tetromino::getWallKickOffsets(Rotation r)
+const GameEntity::Vector * GameEntity::Tetromino::getWallKickOffsets(RotateDirection r)
 {
     return type != I ? WallKick_Offset[m_rotation][r] : WallKick_Offset_I[m_rotation][r];
 }
 
-const GameEntity::Vector * GameEntity::Tetromino::peek(Rotation r)
+const GameEntity::Vector * GameEntity::Tetromino::peek(RotateDirection r)
 {
     return Tetromino::Type[type][(r == Clockwise ? m_rotation + 1 : m_rotation - 1) % 4];
 }
 
-void GameEntity::Tetromino::rotate(Rotation r)
+GameEntity::Tetromino::Corners GameEntity::Tetromino::getTCorners()
+{
+    return GameEntity::Tetromino::T_Corners[m_rotation];
+}
+
+void GameEntity::Tetromino::rotate(RotateDirection r)
 {
     m_rotation = r == Clockwise ? (m_rotation + 1) % 4 : (m_rotation - 1 + 4) % 4;
     position = Tetromino::Type[type][m_rotation];
