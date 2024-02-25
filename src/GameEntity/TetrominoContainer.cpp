@@ -179,12 +179,12 @@ void GameEntity::TetrominoContainer::hardDrop()
 
 void GameEntity::TetrominoContainer::clearLines()
 {
-    for (std::vector<int>::reverse_iterator it = linesToClear.rbegin(); it != linesToClear.rend(); ++it)
+    for (std::vector<int>::reverse_iterator it = m_linesToClear.rbegin(); it != m_linesToClear.rend(); ++it)
         for (int yi = *it; yi < m_blockCount.y; ++yi)
             for (int xi = 0; xi < m_blockCount.x; ++xi)
                 m_arr[yi][xi].copy(m_arr[yi + 1][xi]);
      
-    linesToClear.clear();
+    m_linesToClear.clear();
 }
 
 bool GameEntity::TetrominoContainer::isGameOver()
@@ -209,7 +209,7 @@ GameEntity::Vector GameEntity::TetrominoContainer::getStartPos(Tetromino *t)
     return {m_initPos.x, m_initPos.y};
 }
 
-void GameEntity::TetrominoContainer::placeNewActive()
+void GameEntity::TetrominoContainer::scoreOrContinue()
 {
     // T-spin
     if (m_active.tetromino && m_active.tetromino->type == T && m_active.isRotated)
@@ -230,17 +230,17 @@ void GameEntity::TetrominoContainer::placeNewActive()
         bool isTSpin = (frontBlocked == 2 && rearBlocked > 0) || m_active.wallkickOffset == Tetromino::TestCount - 1;
         // bool isMini = frontBlocked == 1 && rearBlocked == 2 
 
-        if (linesToClear.empty())
+        if (m_linesToClear.empty())
         {
             m_scoringSystem->clearCombo();
-            if (is3Corner)    
+            if (is3Corner)
                 m_scoringSystem->updateTSpinScore(isTSpin ? T_Spin : Mini);
         }
         else
         {
             if (is3Corner)
                 if (isTSpin)
-                    switch(linesToClear.size())
+                    switch(m_linesToClear.size())
                     {
                         case 1:
                             m_scoringSystem->updateTSpinScore(T_Spin_Single);
@@ -253,7 +253,7 @@ void GameEntity::TetrominoContainer::placeNewActive()
                             break;
                     }
                 else
-                    switch (linesToClear.size())
+                    switch (m_linesToClear.size())
                     {
                         case 1:
                             m_scoringSystem->updateTSpinScore(Mini_Single);
@@ -263,7 +263,7 @@ void GameEntity::TetrominoContainer::placeNewActive()
                             break;
                     }
             else   
-                switch(linesToClear.size())
+                switch(m_linesToClear.size())
                 {
                     case 1:
                         m_scoringSystem->updateLineScore(Single);
@@ -275,17 +275,15 @@ void GameEntity::TetrominoContainer::placeNewActive()
                         m_scoringSystem->updateLineScore(Triple);
                         break;
                 }
-            std::this_thread::sleep_for(std::chrono::milliseconds(1000));    
-            clearLines();
         }
     }
     else
     {
-        if (linesToClear.empty())
+        if (m_linesToClear.empty())
             m_scoringSystem->clearCombo();
         else
         {
-            switch(linesToClear.size())
+            switch(m_linesToClear.size())
             {
                 case 1:
                     m_scoringSystem->updateLineScore(Single);
@@ -300,12 +298,16 @@ void GameEntity::TetrominoContainer::placeNewActive()
                     m_scoringSystem->updateLineScore(Tetris);
                     break;
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(1000));    
-            clearLines();
         }
-    }    
+    }
+}
+
+void GameEntity::TetrominoContainer::placeNewActive()
+{
     if (m_active.tetromino)
         delete(m_active.tetromino);
+    if (!m_linesToClear.empty())
+        clearLines();
     Tetromino *t = m_tetrominoFactory->getNext();
     m_active = ActiveTetromino(t, getStartPos(t));
     updateActive();
@@ -327,15 +329,19 @@ void GameEntity::TetrominoContainer::settleActive()
         bool isFilled = true;
         for (int xi = 0; isFilled && xi < m_blockCount.x; ++xi)
             if (m_arr[y][xi].t_id < 0)
+            {
                 isFilled = false;
+                break;
+            }
 
         if (isFilled)
         {
             map[y] = true;
-            linesToClear.push_back(y);
+            m_linesToClear.push_back(y);
         }
     }
     m_active.updateStat(ActiveTetromino::Settled);
+    scoreOrContinue();
 }
 
 void GameEntity::TetrominoContainer::switchTetro()

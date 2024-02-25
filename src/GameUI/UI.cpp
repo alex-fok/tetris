@@ -7,6 +7,12 @@
 GameUI::UI::UI():
     m_window(sf::VideoMode((unsigned int)Config::Window::Width, (unsigned int)Config::Window::Height), "Tetris"),
     m_status(Running),
+    m_animation(
+        &m_window,
+        std::bind(GameUI::UI::forwarder_startAnimation, this),
+        std::bind(GameUI::UI::forwarder_stopAnimation, this)
+    ),
+    m_scoringSystem(&m_animation),
     m_tetroFactory(GameEntity::TetrominoFactory()),
     m_score(&m_window, &m_scoringSystem),
     m_previewList(GameEntity::PreviewList(&m_window, &m_tetroFactory)),
@@ -82,6 +88,16 @@ void GameUI::UI::setStatus(Status s)
     }
 }
 
+void GameUI::UI::startAnimation()
+{
+    m_status_before_animation = m_status;
+    m_status = AnimationPlaying;
+}
+
+void GameUI::UI::stopAnimation()
+{
+    m_status = m_status_before_animation;
+}
 void GameUI::UI::close()
 {
     m_window.close();
@@ -90,6 +106,16 @@ void GameUI::UI::close()
 void GameUI::UI::forwarder_setStatus(GameUI::UI *self, Status s)
 {
     self->setStatus(s);
+}
+
+void GameUI::UI::forwarder_startAnimation(GameUI::UI *self)
+{
+    self->startAnimation();
+}
+
+void GameUI::UI::forwarder_stopAnimation(GameUI::UI *self)
+{
+    self->stopAnimation();
 }
 
 void GameUI::UI::forwarder_retry(GameUI::UI *self)
@@ -106,12 +132,17 @@ void GameUI::UI::run()
 {
     // Base layer
     Utils::Layer *baseLayer = &Utils::Layer(&m_window);
+    Utils::Layer *animationLayer = &Utils::Layer(&m_window);
     
     baseLayer->addDrawable(&m_tetroContainer);
     baseLayer->addDrawable(&m_score);
     baseLayer->addDrawable(&m_hold);
     baseLayer->addDrawable(&m_previewList);
+
+    animationLayer->addDrawable(&m_animation);
+    
     m_layerControl.addTop(baseLayer);
+    m_layerControl.addTop(animationLayer);
     
     sf::Keyboard::Key gameover_input[5] =
     {
@@ -158,7 +189,7 @@ void GameUI::UI::run()
                     m_window.close();
                     break;
                 case sf::Event::KeyPressed:
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && m_status != GameOver)
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && m_status != GameOver && m_status != AnimationPlaying)
                         setStatus(m_status == Paused ? Running : Paused);
 
                     switch (m_status)
@@ -179,7 +210,7 @@ void GameUI::UI::run()
                                     break;
                                 }
                             break;
-                        default: // Running
+                        case Running: // Running
                             for (sf::Keyboard::Key input: running_inputs)
                                 if (sf::Keyboard::isKeyPressed(input))
                                 {

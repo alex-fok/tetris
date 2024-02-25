@@ -20,7 +20,7 @@ namespace GameEntity
         static constexpr GameUI::Count m_blockCount = GameUI::Config::TetrominoContainer::BlockCount;
         static constexpr GameUI::Count m_initPos = { 3, m_blockCount.y - ActiveTetromino::Offset_size };
         
-        std::vector<int> linesToClear;
+        std::vector<int> m_linesToClear;
         
         float m_blockSize, m_borderWidth;
 
@@ -56,6 +56,7 @@ namespace GameEntity
         void clearLines();
         Vector getStartPos(Tetromino *t);
         bool isGameOver();
+        void scoreOrContinue();
         void placeNewActive();
         void settleActive();
         void updateActive();

@@ -2,6 +2,8 @@
 #include <SFML/Graphics.hpp>
 #include "../Utils/LayerControl.hpp"
 #include "../Utils/Layer.hpp"
+#include "../GameAnimation/AnimationType.hpp"
+#include "../GameAnimation/Animation.hpp"
 #include "../GameEntity/TetrominoFactory.hpp"
 #include "../GameEntity/ScoreAction.hpp"
 #include "../GameEntity/ScoringSystem.hpp"
@@ -11,6 +13,7 @@
 #include "../GameEntity/TetrominoContainer.hpp"
 #include "../Menu/GameOver.hpp"
 #include "../Menu/Pause.hpp"
+#include "Status.hpp"
 
 namespace GameUI
 {
@@ -19,7 +22,9 @@ namespace GameUI
     private:
         sf::RenderWindow m_window;
         Status m_status;
+        Status m_status_before_animation;
         Utils::LayerControl m_layerControl;
+        GameAnimation::Animation m_animation;
         GameEntity::TetrominoFactory m_tetroFactory;
         GameEntity::ScoringSystem m_scoringSystem;
         GameEntity::Score m_score;
@@ -34,12 +39,16 @@ namespace GameUI
         void setGameOver();
         void setPaused();
         void setRunning();
+        void setStatus(Status s);
+        void startAnimation();
+        void stopAnimation();
         static void forwarder_setStatus(GameUI::UI *, Status s);
+        static void forwarder_startAnimation(GameUI::UI *);
+        static void forwarder_stopAnimation(GameUI::UI *);
         static void forwarder_retry(GameUI::UI *);
         static void forwarder_close(GameUI::UI *);
     public:
         UI();
         void run();
-        void setStatus(Status s);
     };
 }
