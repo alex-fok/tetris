@@ -11,9 +11,12 @@ namespace GameAnimation {
     {
     private:
         sf::RenderWindow *m_window;
+        sf::Clock m_startTime;
         unsigned m_frame;
         bool m_isPlaying;
         sf::Text m_text;
+        static constexpr float init_x = 400.f;
+        static constexpr float init_y = 200.f;
         std::function<void()> m_startAnimation;
         std::function<void()> m_stopAnimation;
     public:
