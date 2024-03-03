@@ -7,12 +7,12 @@
 GameUI::UI::UI():
     m_window(sf::VideoMode((unsigned int)Config::Window::Width, (unsigned int)Config::Window::Height), "Tetris"),
     m_status(Running),
-    m_animation(
+    m_scoreAnimation(
         &m_window,
         std::bind(GameUI::UI::forwarder_startAnimation, this),
         std::bind(GameUI::UI::forwarder_stopAnimation, this)
     ),
-    m_scoringSystem(&m_animation),
+    m_scoringSystem(&m_scoreAnimation),
     m_tetroFactory(GameEntity::TetrominoFactory()),
     m_score(&m_window, &m_scoringSystem),
     m_previewList(GameEntity::PreviewList(&m_window, &m_tetroFactory)),
@@ -139,7 +139,7 @@ void GameUI::UI::run()
     baseLayer->addDrawable(&m_hold);
     baseLayer->addDrawable(&m_previewList);
 
-    animationLayer->addDrawable(&m_animation);
+    animationLayer->addDrawable(&m_scoreAnimation);
     
     m_layerControl.addTop(baseLayer);
     m_layerControl.addTop(animationLayer);

@@ -2,8 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "../Utils/LayerControl.hpp"
 #include "../Utils/Layer.hpp"
-#include "../GameAnimation/AnimationType.hpp"
-#include "../GameAnimation/Animation.hpp"
+#include "../GameAnimation/Scoring.hpp"
 #include "../GameEntity/TetrominoFactory.hpp"
 #include "../GameEntity/ScoreAction.hpp"
 #include "../GameEntity/ScoringSystem.hpp"
@@ -24,7 +23,7 @@ namespace GameUI
         Status m_status;
         Status m_status_before_animation;
         Utils::LayerControl m_layerControl;
-        GameAnimation::Animation m_animation;
+        GameAnimation::Scoring m_scoreAnimation;
         GameEntity::TetrominoFactory m_tetroFactory;
         GameEntity::ScoringSystem m_scoringSystem;
         GameEntity::Score m_score;

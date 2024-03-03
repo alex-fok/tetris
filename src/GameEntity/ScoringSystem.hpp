@@ -2,8 +2,7 @@
 #include <vector>
 #include <functional>
 #include <map>
-#include "../GameAnimation/AnimationType.hpp"
-#include "../GameAnimation/Animation.hpp"
+#include "../GameAnimation/Scoring.hpp"
 #include "Vector.hpp"
 #include "Tetromino.hpp"
 #include "ScoreAction.hpp"
@@ -12,7 +11,7 @@ namespace GameEntity {
     class ScoringSystem
     {
     private:
-        GameAnimation::Animation *m_animation;
+        GameAnimation::Scoring *m_animation;
         int m_score;
         int m_level;
         int m_cleared;
@@ -34,7 +33,7 @@ namespace GameEntity {
         void scoreTSpinDouble();
         void scoreTSpinTriple();
     public:
-        ScoringSystem(GameAnimation::Animation *animation);
+        ScoringSystem(GameAnimation::Scoring *animation);
         void updateLineScore(LineAction scoreAction);
         void updateDropScore(DropAction dropAction, int count);
         void updateTSpinScore(TSpinAction tSpinAction);
