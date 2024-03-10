@@ -12,6 +12,11 @@ GameUI::UI::UI():
         std::bind(GameUI::UI::forwarder_startAnimation, this),
         std::bind(GameUI::UI::forwarder_stopAnimation, this)
     ),
+    m_clearLinesAnimation(
+        &m_window,
+        std::bind(GameUI::UI::forwarder_startAnimation, this),
+        std::bind(GameUI::UI::forwarder_stopAnimation, this)
+    ),
     m_scoringSystem(&m_scoreAnimation),
     m_tetroFactory(GameEntity::TetrominoFactory()),
     m_score(&m_window, &m_scoringSystem),
@@ -21,6 +26,7 @@ GameUI::UI::UI():
         &m_window,
         &m_tetroFactory,
         &m_scoringSystem,
+        &m_clearLinesAnimation,
         std::bind(GameEntity::Hold::forwarder_switchTetro, &m_hold, std::placeholders::_1),
         std::bind(GameUI::UI::forwarder_setStatus, this, std::placeholders::_1)
     ),
@@ -90,7 +96,8 @@ void GameUI::UI::setStatus(Status s)
 
 void GameUI::UI::startAnimation()
 {
-    m_status_before_animation = m_status;
+    if (m_status != AnimationPlaying)
+        m_status_before_animation = m_status;
     m_status = AnimationPlaying;
 }
 
@@ -140,6 +147,7 @@ void GameUI::UI::run()
     baseLayer->addDrawable(&m_previewList);
 
     animationLayer->addDrawable(&m_scoreAnimation);
+    animationLayer->addDrawable(&m_clearLinesAnimation);
     
     m_layerControl.addTop(baseLayer);
     m_layerControl.addTop(animationLayer);

@@ -1,7 +1,7 @@
 #include "Scoring.hpp"
 
-GameAnimation::Scoring::Scoring(sf::RenderWindow *window, std::function<void()> setStartPlaying, std::function<void()> setStopPlaying) :
-    Animation(window, 0.5f, setStartPlaying, setStopPlaying)
+GameAnimation::Scoring::Scoring(sf::RenderWindow *window, std::function<void()> startPlaying, std::function<void()> stopPlaying) :
+    Animation(window, GameUI::Config::Animation::Scoring::Duration, startPlaying, stopPlaying)
 {
     m_text.setFont(Resources::FontCollection::getInstance()->RobotoRegular);
 }
@@ -20,9 +20,12 @@ void GameAnimation::Scoring::play(const char *text)
 void GameAnimation::Scoring::drawFrame()
 {
     float elapsedTime = m_startTime.getElapsedTime().asSeconds();
-    m_text.setPosition(init_x, init_y - elapsedTime * 100);
-    draw(m_text);
-    if (elapsedTime >= m_playTime)
+    if (elapsedTime < m_playTime)
+    {
+        m_text.setPosition(init_x, init_y - elapsedTime * 100);
+        draw(m_text);
+    }
+    else
     {
         m_isPlaying = false;
         m_stopAnimation();

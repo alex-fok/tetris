@@ -1,4 +1,5 @@
 #pragma once
+#include "SFML/Graphics.hpp"
 
 namespace GameUI
 {
@@ -37,6 +38,7 @@ namespace GameUI
             static constexpr float BorderWidth = 10.f;
             static constexpr float Width = (Block::Size - 1) * BlockCount.x + BorderWidth * 2.f + 1;
             static constexpr float Height = (Block::Size - 1) * BlockCount.y + BorderWidth * 2.f + 1;
+            static constexpr float LineWidth = 29.f * 10 - 1.f * 9;
             static constexpr Limit PosLimit = Limit{ 0.f, 250.f + Width, Height, 250.f };
         }
         namespace Score
@@ -46,7 +48,7 @@ namespace GameUI
             {
                 static constexpr float Margin_Top = 10.f;
             }
-        }
+        }        
         namespace Hold
         {
             static constexpr Limit PosLimit = Limit{ 10.f, TetrominoContainer::PosLimit.Left, Window::Height, 0.f } ;
@@ -75,6 +77,17 @@ namespace GameUI
                 static constexpr float ContainerSize = 80.f;
                 static constexpr float OutlineThickness = 1.f;
                 static constexpr float BlockSize = 20.f;
+            }
+        }
+        namespace Animation
+        {
+            namespace ClearLines
+            {
+                static constexpr float Duration = 1.f;
+            }
+            namespace Scoring
+            {
+                static constexpr float Duration = 1.f;
             }
         }
     };

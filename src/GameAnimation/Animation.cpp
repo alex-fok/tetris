@@ -1,4 +1,3 @@
-#include <iostream>
 #include "Animation.hpp"
 
 GameAnimation::Animation::Animation(

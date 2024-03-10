@@ -8,6 +8,7 @@ GameEntity::TetrominoContainer::TetrominoContainer(
     sf::RenderWindow *window,
     TetrominoFactory *tetroFactory,
     ScoringSystem *scoringSystem,
+    GameAnimation::ClearLines *clearLinesAnimation,
     std::function<Tetromino *(Tetromino *)> setHold,
     std::function<void(GameUI::Status)> statusSetter
 ) :
@@ -18,6 +19,7 @@ GameEntity::TetrominoContainer::TetrominoContainer(
     ))),
     m_tetrominoFactory(tetroFactory),
     m_scoringSystem(scoringSystem),
+    m_clearLinesAnimation(clearLinesAnimation),
     m_active(ActiveTetromino(m_tetrominoFactory->getNext(), {m_initPos.x, m_initPos.y})),
     m_setHold(setHold),
     m_setStatus(statusSetter)
@@ -340,6 +342,9 @@ void GameEntity::TetrominoContainer::settleActive()
             m_linesToClear.push_back(y);
         }
     }
+    if (!m_linesToClear.empty())
+        m_clearLinesAnimation->play(&m_linesToClear);
+
     m_active.updateStat(ActiveTetromino::Settled);
     scoreOrContinue();
 }

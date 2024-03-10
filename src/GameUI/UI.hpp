@@ -3,6 +3,7 @@
 #include "../Utils/LayerControl.hpp"
 #include "../Utils/Layer.hpp"
 #include "../GameAnimation/Scoring.hpp"
+#include "../GameAnimation/ClearLines.hpp"
 #include "../GameEntity/TetrominoFactory.hpp"
 #include "../GameEntity/ScoreAction.hpp"
 #include "../GameEntity/ScoringSystem.hpp"
@@ -24,6 +25,7 @@ namespace GameUI
         Status m_status_before_animation;
         Utils::LayerControl m_layerControl;
         GameAnimation::Scoring m_scoreAnimation;
+        GameAnimation::ClearLines m_clearLinesAnimation;
         GameEntity::TetrominoFactory m_tetroFactory;
         GameEntity::ScoringSystem m_scoringSystem;
         GameEntity::Score m_score;

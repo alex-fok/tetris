@@ -2,6 +2,7 @@
 #include <functional>
 #include "SFML/Graphics.hpp"
 #include "../Utils/Drawable.hpp"
+#include "../GameUI/Config.hpp"
 #include "../GameUI/Status.hpp"
 
 namespace GameAnimation {
