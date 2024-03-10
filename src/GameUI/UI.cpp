@@ -17,6 +17,7 @@ GameUI::UI::UI():
         std::bind(GameUI::UI::forwarder_startAnimation, this),
         std::bind(GameUI::UI::forwarder_stopAnimation, this)
     ),
+    m_animationCount(0),
     m_scoringSystem(&m_scoreAnimation),
     m_tetroFactory(GameEntity::TetrominoFactory()),
     m_score(&m_window, &m_scoringSystem),
@@ -97,13 +98,17 @@ void GameUI::UI::setStatus(Status s)
 void GameUI::UI::startAnimation()
 {
     if (m_status != AnimationPlaying)
+    {
         m_status_before_animation = m_status;
-    m_status = AnimationPlaying;
+        m_status = AnimationPlaying;
+    }
+    m_animationCount++;
 }
 
 void GameUI::UI::stopAnimation()
 {
-    m_status = m_status_before_animation;
+    if (--m_animationCount <= 0)
+        m_status = m_status_before_animation;
 }
 void GameUI::UI::close()
 {

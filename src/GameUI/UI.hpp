@@ -26,6 +26,7 @@ namespace GameUI
         Utils::LayerControl m_layerControl;
         GameAnimation::Scoring m_scoreAnimation;
         GameAnimation::ClearLines m_clearLinesAnimation;
+        int m_animationCount;
         GameEntity::TetrominoFactory m_tetroFactory;
         GameEntity::ScoringSystem m_scoringSystem;
         GameEntity::Score m_score;
