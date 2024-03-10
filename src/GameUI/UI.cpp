@@ -51,6 +51,7 @@ void GameUI::UI::retry()
 
 void GameUI::UI::setGameOver()
 {
+    m_status = GameOver;
     Utils::Layer *l = new Utils::Layer(&m_window);
     l->addDrawable(&m_gameOverMenu);
     m_layerControl.addTop(l);
@@ -58,6 +59,7 @@ void GameUI::UI::setGameOver()
 
 void GameUI::UI::setPaused()
 {
+    m_status = Paused;
     Utils::Layer *l = new Utils::Layer(&m_window);
     l->addDrawable(&m_pauseMenu);
     m_layerControl.addTop(l);
@@ -65,7 +67,18 @@ void GameUI::UI::setPaused()
 
 void GameUI::UI::setRunning()
 {
+    m_status = Running;
     std::cout << "GameUI::UI >> Status is set to Running" << std::endl;
+}
+
+void GameUI::UI::setAnimationPlaying()
+{
+    if (m_status != AnimationPlaying)
+    {
+        m_status_before_animation = m_status;
+        m_status = AnimationPlaying;
+    }
+    m_animationCount++;
 }
 
 void GameUI::UI::setStatus(Status s)
@@ -77,9 +90,7 @@ void GameUI::UI::setStatus(Status s)
     if (m_status == GameOver || m_status == Paused)
         m_layerControl.remove(m_layerControl.top());
 
-    m_status = s;
-    
-    switch (m_status)
+    switch (s)
     {
         case GameOver:
             setGameOver();
@@ -90,6 +101,8 @@ void GameUI::UI::setStatus(Status s)
         case Running:
             setRunning();
             break;
+        case AnimationPlaying:
+            setAnimationPlaying();
         default:
             break;
     }
@@ -97,18 +110,13 @@ void GameUI::UI::setStatus(Status s)
 
 void GameUI::UI::startAnimation()
 {
-    if (m_status != AnimationPlaying)
-    {
-        m_status_before_animation = m_status;
-        m_status = AnimationPlaying;
-    }
-    m_animationCount++;
+    setStatus(AnimationPlaying);
 }
 
 void GameUI::UI::stopAnimation()
 {
     if (--m_animationCount <= 0)
-        m_status = m_status_before_animation;
+        setStatus(m_status_before_animation);
 }
 void GameUI::UI::close()
 {

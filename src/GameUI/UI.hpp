@@ -41,6 +41,7 @@ namespace GameUI
         void setGameOver();
         void setPaused();
         void setRunning();
+        void setAnimationPlaying();
         void setStatus(Status s);
         void startAnimation();
         void stopAnimation();
