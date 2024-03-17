@@ -8,11 +8,12 @@ namespace GameAnimation {
     {
     private:
         sf::Text m_text;
+        sf::Text m_subtext;
         static constexpr float init_x = 400.f;
         static constexpr float init_y = 250.f;
     public:
         Scoring(sf::RenderWindow *window, std::function<void()> setStartPlaying, std::function<void()> setStopPlaying);
-        void play(const char *text);
+        void play(const char *text, const char *subtext);
         void drawFrame();
     };
 }

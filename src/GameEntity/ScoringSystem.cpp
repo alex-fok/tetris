@@ -1,4 +1,5 @@
 #include "ScoringSystem.hpp"
+#include <sstream>
 
 GameEntity::ScoringSystem::ScoringSystem(GameAnimation::Scoring *animation) :
     m_animation(animation),
@@ -15,6 +16,13 @@ void GameEntity::ScoringSystem::scoreSoftDrop(int count)
     m_score += count;
 }
 
+void GameEntity::ScoringSystem::playAnimation(const char *type, int score)
+{
+    std::stringstream subtextStream;
+    subtextStream << "+ " << score << " pt";
+    m_animation->play(type, subtextStream.str().c_str());
+}
+
 void GameEntity::ScoringSystem::scoreHardDrop(int count)
 {
     m_score += count * 2;
@@ -22,83 +30,94 @@ void GameEntity::ScoringSystem::scoreHardDrop(int count)
 
 void GameEntity::ScoringSystem::scoreSingle()
 {
-    m_animation->play("Single");
-    m_score += m_level * 100 + (++m_combo) * comboMultiplier * m_level;
+    int score = m_level * 100 + (++m_combo) * comboMultiplier * m_level;
+    m_score += score;
     m_cleared += 1;
     m_isB2BActive = false;
+    playAnimation("Single", score);
 }
 
 void GameEntity::ScoringSystem::scoreDouble()
 {
-    m_animation->play("Double");
-    m_score += m_level * 300 + (++m_combo) * comboMultiplier * m_level;
+    int score = m_level * 300 + (++m_combo) * comboMultiplier * m_level;
+    m_score += score;
     m_cleared += 3;
     m_isB2BActive = false;
+    playAnimation("Double", score);
 }
 
 void GameEntity::ScoringSystem::scoreTriple()
 {
-    m_animation->play("Triple");
-    m_score += m_level * 500 + (++m_combo) * comboMultiplier * m_level;
+    int score = m_level * 500 + (++m_combo) * comboMultiplier * m_level;
+    m_score += score;
     m_cleared += 5;
     m_isB2BActive = false;
+    playAnimation("Triple", score);
 }
 
 void GameEntity::ScoringSystem::scoreTetris()
 {
-    m_animation->play("Tetris");
-    m_score += m_level * ((m_isB2BActive ? 1200 : 800) + (++m_combo) * comboMultiplier);
+    int score = m_level * ((m_isB2BActive ? 1200 : 800) + (++m_combo) * comboMultiplier);
+    m_score += score;
     m_cleared += 8;
     m_isB2BActive = true;
+    playAnimation("Tetris", score);
 }
 
 void GameEntity::ScoringSystem::scoreTSpinMini()
 {
-    m_animation->play("T-Spin Mini");
-    m_score += m_level * 100;
+    int score = m_level * 100;
+    m_score += score;
     m_isB2BActive = false;
+    playAnimation("T-Spin Mini", score);
 }
 
 void GameEntity::ScoringSystem::scoreTSpinMiniSingle()
 {
-    m_animation->play("T-Spin Mini Single");
-    m_score += m_level * (200 + (++m_combo) * comboMultiplier);
+    int score = m_level * (200 + (++m_combo) * comboMultiplier);
+    m_score += score;
     m_isB2BActive = true;
+    playAnimation("T-Spin Mini Single", score);
 }
 
 void GameEntity::ScoringSystem::scoreTSpinMiniDouble()
 {
-    m_animation->play("T-Spin Mini Doube");
-    m_score += m_level * ((m_isB2BActive ? 600 : 400) + (++m_combo) * comboMultiplier);
+    int score = m_level * ((m_isB2BActive ? 600 : 400) + (++m_combo) * comboMultiplier);
+    m_score += score;
     m_isB2BActive = true;
+    playAnimation("T-Spin Mini Doube", score);
 }
 
 void GameEntity::ScoringSystem::scoreTSpin()
 {
-    m_animation->play("T-Spin");
-    m_score += m_level * 400;
+    int score = m_level * 400;
+    m_score += score;
     m_isB2BActive = false;
+    playAnimation("T-Spin", score);
 }
 
 void GameEntity::ScoringSystem::scoreTSpinSingle()
 {
-    m_animation->play("T-Spin Single");
-    m_score += m_level * ((m_isB2BActive ? 1200 : 800) + (++m_combo) * comboMultiplier);
+    int score = m_level * ((m_isB2BActive ? 1200 : 800) + (++m_combo) * comboMultiplier);
+    m_score += score;
     m_isB2BActive = true;
+    playAnimation("T-Spin Single", score);
 }
 
 void GameEntity::ScoringSystem::scoreTSpinDouble()
 {
-    m_animation->play("T-Spin Double");
-    m_score += m_level * ((m_isB2BActive ? 1800 : 1200) + (++m_combo) * comboMultiplier);
+    int score = m_level * ((m_isB2BActive ? 1800 : 1200) + (++m_combo) * comboMultiplier);
+    m_score += score;
     m_isB2BActive = true;
+    playAnimation("T-Spin Double", score);
 }
 
 void GameEntity::ScoringSystem::scoreTSpinTriple()
 {
-    m_animation->play("T-Spin Triple");
-    m_score += m_level * ((m_isB2BActive ? 2400 : 1600) + (++m_combo) * comboMultiplier);
+    int score = m_level * ((m_isB2BActive ? 2400 : 1600) + (++m_combo) * comboMultiplier);
+    m_score += score;
     m_isB2BActive = true;
+    playAnimation("T-Spin Triple", score);
 }
 
 void GameEntity::ScoringSystem::updateDropScore(DropAction action, int count)

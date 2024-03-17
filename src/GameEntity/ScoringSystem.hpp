@@ -19,6 +19,7 @@ namespace GameEntity {
         bool m_isB2BActive;
         static const int comboMultiplier = 50;
         std::vector<std::function<void(int)>> m_subscribed_fns;
+        void playAnimation(const char *type, int score);
         void scoreSingle();
         void scoreDouble();
         void scoreTriple();
