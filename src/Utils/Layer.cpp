@@ -1,12 +1,19 @@
 #include "Layer.hpp"
 
+Utils::Layer::Layer() :
+    m_isEmpty(true)
+{
+}
+
 Utils::Layer::Layer(sf::RenderWindow *w) :
-m_window(w)
+    m_window(w),
+    m_isEmpty(false)
 {
 }
 
 void Utils::Layer::addDrawable(Drawable *d)
 {
+    if (m_isEmpty) return;
     m_drawables.push_back(d);
 }
 

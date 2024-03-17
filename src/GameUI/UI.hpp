@@ -11,6 +11,7 @@
 #include "../GameEntity/PreviewList.hpp"
 #include "../GameEntity/Hold.hpp"
 #include "../GameEntity/TetrominoContainer.hpp"
+#include "../Menu/Start.hpp"
 #include "../Menu/GameOver.hpp"
 #include "../Menu/Pause.hpp"
 #include "Status.hpp"
@@ -33,6 +34,7 @@ namespace GameUI
         GameEntity::PreviewList m_previewList;
         GameEntity::Hold m_hold;
         GameEntity::TetrominoContainer m_tetroContainer;
+        Menu::Start m_startMenu;
         Menu::GameOver m_gameOverMenu;
         Menu::Pause m_pauseMenu;
         
@@ -43,9 +45,11 @@ namespace GameUI
         void setRunning();
         void setAnimationPlaying();
         void setStatus(Status s);
+        void startGame();
         void startAnimation();
         void stopAnimation();
         static void forwarder_setStatus(GameUI::UI *, Status s);
+        static void forwarder_startGame(GameUI::UI *);
         static void forwarder_startAnimation(GameUI::UI *);
         static void forwarder_stopAnimation(GameUI::UI *);
         static void forwarder_retry(GameUI::UI *);

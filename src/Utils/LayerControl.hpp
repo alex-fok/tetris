@@ -11,6 +11,7 @@ namespace Utils
     private:
         std::vector<Utils::Layer *> m_layers;
         Layer *m_topLayer;
+        Layer *m_baseLayer;
     public:
         LayerControl();
         void addTop(Utils::Layer *l);

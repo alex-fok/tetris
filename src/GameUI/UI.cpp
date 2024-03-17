@@ -6,7 +6,7 @@
 
 GameUI::UI::UI():
     m_window(sf::VideoMode((unsigned int)Config::Window::Width, (unsigned int)Config::Window::Height), "Tetris"),
-    m_status(Running),
+    m_status(Start),
     m_scoreAnimation(
         &m_window,
         std::bind(GameUI::UI::forwarder_startAnimation, this),
@@ -31,6 +31,10 @@ GameUI::UI::UI():
         std::bind(GameEntity::Hold::forwarder_switchTetro, &m_hold, std::placeholders::_1),
         std::bind(GameUI::UI::forwarder_setStatus, this, std::placeholders::_1)
     ),
+    m_startMenu(Menu::Start(
+        &m_window,
+        std::bind(GameUI::UI::forwarder_startGame, this)
+    )),
     m_gameOverMenu(Menu::GameOver(
         &m_window,
         std::bind(GameUI::UI::forwarder_retry, this),
@@ -86,7 +90,7 @@ void GameUI::UI::setStatus(Status s)
     std::cout << "GAMEUI::UI >> setStatus " << s << std::endl;
     if (m_status == s)
         return;
-    
+
     if (m_status == GameOver || m_status == Paused)
         m_layerControl.remove(m_layerControl.top());
 
@@ -108,6 +112,25 @@ void GameUI::UI::setStatus(Status s)
     }
 }
 
+void GameUI::UI::startGame()
+{
+    m_layerControl.remove(m_layerControl.top());
+    Utils::Layer *gameLayer = new Utils::Layer(&m_window);
+    Utils::Layer *animationLayer = new Utils::Layer(&m_window);
+    
+    gameLayer->addDrawable(&m_tetroContainer);
+    gameLayer->addDrawable(&m_score);
+    gameLayer->addDrawable(&m_hold);
+    gameLayer->addDrawable(&m_previewList);
+    
+    animationLayer->addDrawable(&m_scoreAnimation);
+    animationLayer->addDrawable(&m_clearLinesAnimation);
+    
+    m_layerControl.addTop(gameLayer);
+    m_layerControl.addTop(animationLayer);
+    m_status = Running;
+}
+
 void GameUI::UI::startAnimation()
 {
     setStatus(AnimationPlaying);
@@ -126,6 +149,11 @@ void GameUI::UI::close()
 void GameUI::UI::forwarder_setStatus(GameUI::UI *self, Status s)
 {
     self->setStatus(s);
+}
+
+void GameUI::UI::forwarder_startGame(GameUI::UI *self)
+{
+    self->startGame();
 }
 
 void GameUI::UI::forwarder_startAnimation(GameUI::UI *self)
@@ -150,22 +178,18 @@ void GameUI::UI::forwarder_close(GameUI::UI *self)
 
 void GameUI::UI::run()
 {
-    // Base layer
-    Utils::Layer *baseLayer = &Utils::Layer(&m_window);
-    Utils::Layer *animationLayer = &Utils::Layer(&m_window);
-    
-    baseLayer->addDrawable(&m_tetroContainer);
-    baseLayer->addDrawable(&m_score);
-    baseLayer->addDrawable(&m_hold);
-    baseLayer->addDrawable(&m_previewList);
+    Utils::Layer *startLayer = new Utils::Layer(&m_window);
+    startLayer->addDrawable(&m_startMenu);
+    m_layerControl.addTop(startLayer);
 
-    animationLayer->addDrawable(&m_scoreAnimation);
-    animationLayer->addDrawable(&m_clearLinesAnimation);
-    
-    m_layerControl.addTop(baseLayer);
-    m_layerControl.addTop(animationLayer);
-    
-    sf::Keyboard::Key gameover_input[5] =
+    sf::Keyboard::Key start_inputs[3] = 
+    {
+        sf::Keyboard::Up,
+        sf::Keyboard::Down,
+        sf::Keyboard::Enter
+    };
+
+    sf::Keyboard::Key gameover_inputs[5] =
     {
         sf::Keyboard::Up,
         sf::Keyboard::Down,
@@ -174,7 +198,7 @@ void GameUI::UI::run()
         sf::Keyboard::Enter
     };
 
-    sf::Keyboard::Key paused_input[4] =
+    sf::Keyboard::Key paused_inputs[4] =
     {
         sf::Keyboard::Up,
         sf::Keyboard::Down,
@@ -195,7 +219,6 @@ void GameUI::UI::run()
         sf::Keyboard::C,
         sf::Keyboard::LControl
     };
-    
     while (m_window.isOpen())
     {
         if (m_status == Running)
@@ -215,8 +238,16 @@ void GameUI::UI::run()
 
                     switch (m_status)
                     {
+                        case Start:
+                            for (sf::Keyboard::Key input: start_inputs)
+                                if (sf::Keyboard::isKeyPressed(input))
+                                {
+                                    m_startMenu.handle(input);
+                                    break;
+                                }
+                            break;
                         case GameOver:
-                            for (sf::Keyboard::Key input: gameover_input)
+                            for (sf::Keyboard::Key input: gameover_inputs)
                                 if (sf::Keyboard::isKeyPressed(input))
                                 {
                                     m_gameOverMenu.handle(input);
@@ -224,7 +255,7 @@ void GameUI::UI::run()
                                 }
                             break;                    
                         case Paused:
-                            for (sf::Keyboard::Key input: paused_input)
+                            for (sf::Keyboard::Key input: paused_inputs)
                                 if (sf::Keyboard::isKeyPressed(input))
                                 {
                                     m_pauseMenu.handle(input);

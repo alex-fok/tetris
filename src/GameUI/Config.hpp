@@ -17,6 +17,11 @@ namespace GameUI
         namespace Menu
         {
             static constexpr float BorderWidth = 1.f;
+            namespace Start
+            {
+                static constexpr float Width = Window::Width;
+                static constexpr float Height = Window::Height;
+            }
             namespace GameOver
             {
                 static constexpr float Width = 250.f;

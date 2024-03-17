@@ -1,8 +1,12 @@
 #include <algorithm>
 #include "LayerControl.hpp"
+#include <iostream>
 
-Utils::LayerControl::LayerControl()
+Utils::LayerControl::LayerControl() :
+    m_baseLayer(new Layer()),
+    m_topLayer(m_baseLayer)
 {
+    m_layers.push_back(m_baseLayer);
 }
 
 void Utils::LayerControl::addTop(Layer *l)

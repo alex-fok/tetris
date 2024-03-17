@@ -3,6 +3,6 @@ namespace GameUI
 {
     enum Status
     {
-        GameOver = 0, Running, Paused, AnimationPlaying
+        Start = 0, GameOver, Running, Paused, AnimationPlaying
     };
 }
