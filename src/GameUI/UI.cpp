@@ -33,7 +33,8 @@ GameUI::UI::UI():
     ),
     m_startMenu(Menu::Start(
         &m_window,
-        std::bind(GameUI::UI::forwarder_startGame, this)
+        std::bind(GameUI::UI::forwarder_startGame, this),
+        std::bind(GameUI::UI::forwarder_close, this)
     )),
     m_gameOverMenu(Menu::GameOver(
         &m_window,
@@ -182,11 +183,12 @@ void GameUI::UI::run()
     startLayer->addDrawable(&m_startMenu);
     m_layerControl.addTop(startLayer);
 
-    sf::Keyboard::Key start_inputs[3] = 
+    sf::Keyboard::Key start_inputs[4] = 
     {
         sf::Keyboard::Up,
         sf::Keyboard::Down,
-        sf::Keyboard::Enter
+        sf::Keyboard::Enter,
+        sf::Keyboard::Q
     };
 
     sf::Keyboard::Key gameover_inputs[5] =
