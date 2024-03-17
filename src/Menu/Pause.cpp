@@ -2,7 +2,7 @@
 
 #define ButtonCount 1
 
-Menu::Pause::Pause(sf::RenderWindow *w, std::function<void()>resumeFn) :
+Menu::Pause::Pause(sf::RenderWindow *w, std::function<void()> resumeFn) :
     Base(w),
     m_resumeFn(resumeFn)
 {

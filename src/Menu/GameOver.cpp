@@ -4,7 +4,7 @@
 
 #define ButtonCount 2
 
-Menu::GameOver::GameOver(sf::RenderWindow *w, std::function<void()>retryFn, std::function<void()>quitFn) :
+Menu::GameOver::GameOver(sf::RenderWindow *w, std::function<void()> retryFn, std::function<void()> quitFn) :
     Base(w),
     m_retryFn(retryFn),
     m_quitFn(quitFn)
