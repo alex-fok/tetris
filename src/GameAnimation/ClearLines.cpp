@@ -31,7 +31,7 @@ void GameAnimation::ClearLines::drawFrame()
     float elapsedTime = m_startTime.getElapsedTime().asSeconds();
     if (elapsedTime < m_playTime)
     {
-        sf::Color color = ((int) ((elapsedTime / m_playTime) / 0.2f)) % 2 == 1 ? sf::Color::White : sf::Color::Black;
+        sf::Color color = ((int) ((elapsedTime / m_playTime) / 0.2f)) % 2 == 1 ? sf::Color::Transparent : sf::Color::Black;
         for (std::vector<sf::RectangleShape *>::iterator it = m_linesToClear.begin(); it != m_linesToClear.end(); ++it)
         {
             (*it)->setFillColor(color);
