@@ -1,6 +1,7 @@
+#include <cmath>
 #include "Base.hpp"
 #include "../GameUI/Config.hpp"
-#include <iostream>
+
 Menu::Base::Base(sf::RenderWindow *w) :
     Drawable(w),
     fontCollection(Resources::FontCollection::getInstance()),
