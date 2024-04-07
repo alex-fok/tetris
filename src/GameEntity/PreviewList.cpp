@@ -21,7 +21,7 @@ GameEntity::PreviewList::PreviewList(sf::RenderWindow *window, TetrominoFactory 
     
     m_text.setOrigin(localBounds.width / 2, localBounds.height / 2);
     m_text.setPosition((limit.Right + limit.Left) / 2, limit.Top + localBounds.height / 2);
-    m_text.setColor(sf::Color::White);
+    m_text.setFillColor(sf::Color::White);
 
     m_next.init(
         Next::ContainerSize,

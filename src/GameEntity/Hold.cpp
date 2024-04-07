@@ -16,7 +16,7 @@ GameEntity::Hold::Hold(sf::RenderWindow *window) :
     auto localBounds = m_text.getLocalBounds();
     m_text.setOrigin(localBounds.width / 2, localBounds.height / 2);
     m_text.setPosition((Hold::PosLimit.Right - Hold::PosLimit.Left) / 2, localBounds.height / 2 + Hold::PosLimit.Top);
-    m_text.setColor(sf::Color::White);
+    m_text.setFillColor(sf::Color::White);
 
     m_hold.init(
         Box::ContainerSize,
