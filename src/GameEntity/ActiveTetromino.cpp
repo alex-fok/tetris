@@ -1,8 +1,9 @@
 #include "ActiveTetromino.hpp"
 
-GameEntity::ActiveTetromino::ActiveTetromino(GameEntity::Tetromino *tetromino, Vector offset):
+GameEntity::ActiveTetromino::ActiveTetromino(GameEntity::Tetromino *tetromino, Vector offset, bool isSwitched):
 tetromino(tetromino),
-offset(offset)
+offset(offset),
+isSwitched(isSwitched)
 {
 }
 void GameEntity::ActiveTetromino::updateStat(ActiveStat s, bool isResetTimer)
