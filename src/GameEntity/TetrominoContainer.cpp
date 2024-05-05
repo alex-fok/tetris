@@ -39,7 +39,7 @@ GameEntity::TetrominoContainer::TetrominoContainer(
             int reverse_y = m_blockCount.y - 1 - y;
             m_arr[y][x].setPosition(limit.Left + borderWidth + x * blockSize - x, limit.Top + borderWidth + reverse_y * (blockSize - 1));
         }
-    updateActive();
+    updateActive(true);
 }
 
 void GameEntity::TetrominoContainer::reset()
@@ -50,7 +50,7 @@ void GameEntity::TetrominoContainer::reset()
         for (int x = 0; x < m_blockCount.x; ++x)
             m_arr[y][x].reset();
 
-    updateActive();
+    updateActive(true);
 }
 
 bool GameEntity::TetrominoContainer::isBlocked(Vector v)
@@ -61,7 +61,7 @@ bool GameEntity::TetrominoContainer::isBlocked(Vector v)
     return m_arr[v.y][v.x].t_id > -1 && m_arr[v.y][v.x].t_id != m_active.tetromino->id;
 }
 
-void GameEntity::TetrominoContainer::updateActive()
+void GameEntity::TetrominoContainer::updateActive(bool isResetTimer)
 {
     // Update Ghost
     int ghost_offset = 1;
@@ -91,10 +91,10 @@ void GameEntity::TetrominoContainer::updateActive()
         if (ghost_offset)
         {
             m_arr[v.y + m_active.offset.y + m_active.ghost_y][v.x + m_active.offset.x].setOutline(m_active.tetromino->type);
-            m_active.updateStat(ActiveTetromino::ActiveStat::Active);
+            m_active.updateStat(ActiveTetromino::ActiveStat::Active, isResetTimer);
         }
         else
-            m_active.updateStat(ActiveTetromino::ActiveStat::CountDown);
+            m_active.updateStat(ActiveTetromino::ActiveStat::CountDown, isResetTimer);
     }
 }
 
@@ -133,7 +133,7 @@ void GameEntity::TetrominoContainer::rotate(Tetromino::RotateDirection r)
             m_active.tetromino->rotate(r);
             m_active.isRotated = true;
             m_active.wallkickOffset = i;
-            updateActive();
+            updateActive(false);
             break;
         }
     }
@@ -155,13 +155,7 @@ void GameEntity::TetrominoContainer::move(Vector v)
     clearActive();
     m_active.offset.x += v.x;
     m_active.offset.y += v.y;
-    
-    if (isLanded)
-    {
-        m_active.updateStat(ActiveTetromino::ActiveStat::CountDown);
-        m_active.elapsed.restart();
-    }
-    updateActive();
+    updateActive(v.y < 0 ? true : false);
 }
 
 void GameEntity::TetrominoContainer::softDrop()
@@ -312,7 +306,7 @@ void GameEntity::TetrominoContainer::placeNewActive()
         clearLines();
     Tetromino *t = m_tetrominoFactory->getNext();
     m_active = ActiveTetromino(t, getStartPos(t));
-    updateActive();
+    updateActive(true);
 }
 
 void GameEntity::TetrominoContainer::settleActive()
@@ -345,7 +339,7 @@ void GameEntity::TetrominoContainer::settleActive()
     if (!m_linesToClear.empty())
         m_clearLinesAnimation->play(&m_linesToClear);
 
-    m_active.updateStat(ActiveTetromino::Settled);
+    m_active.updateStat(ActiveTetromino::Settled, false);
     scoreOrContinue();
 }
 
@@ -355,7 +349,7 @@ void GameEntity::TetrominoContainer::switchTetro()
     Tetromino *heldTetro = m_setHold(m_active.tetromino);
     if (!heldTetro) heldTetro = m_tetrominoFactory->getNext();
     m_active = ActiveTetromino(heldTetro, getStartPos(heldTetro));
-    updateActive();
+    updateActive(true);
 }
 
 void GameEntity::TetrominoContainer::nextStep()

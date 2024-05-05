@@ -22,7 +22,7 @@ namespace GameEntity
         sf::Clock elapsed;
         ActiveStat stat;
         ActiveTetromino(GameEntity::Tetromino *tetromino, Vector offset);
-        void updateStat(ActiveStat a);
+        void updateStat(ActiveStat a, bool isResetTimer);
         
         bool isSettled();
         bool shouldSettle();

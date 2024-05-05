@@ -62,7 +62,7 @@ namespace GameEntity
         void scoreOrContinue();
         void placeNewActive();
         void settleActive();
-        void updateActive();
+        void updateActive(bool isUpdateTimer);
         void clearActive();
         void switchTetro();
         void drawBlocks();

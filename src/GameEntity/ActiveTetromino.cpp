@@ -5,9 +5,11 @@ tetromino(tetromino),
 offset(offset)
 {
 }
-void GameEntity::ActiveTetromino::updateStat(ActiveStat s)
+void GameEntity::ActiveTetromino::updateStat(ActiveStat s, bool isResetTimer)
 {
-    elapsed.restart();
+    if (isResetTimer) {
+        elapsed.restart();
+    }
     stat = s;
 }
 
