@@ -89,13 +89,12 @@ void GameEntity::TetrominoContainer::updateActive(bool isResetTimer)
             .setTetromino(m_active.tetromino->id, m_active.tetromino->type);
 
         if (ghost_offset)
-        {
             m_arr[v.y + m_active.offset.y + m_active.ghost_y][v.x + m_active.offset.x].setOutline(m_active.tetromino->type);
-            m_active.updateStat(ActiveTetromino::ActiveStat::Active, isResetTimer);
-        }
-        else
-            m_active.updateStat(ActiveTetromino::ActiveStat::CountDown, isResetTimer);
     }
+    if (ghost_offset)
+        m_active.updateStat(ActiveTetromino::ActiveStat::Active, isResetTimer);
+    else
+        m_active.updateStat(ActiveTetromino::ActiveStat::CountDown, isResetTimer);
 }
 
 void GameEntity::TetrominoContainer::clearActive()

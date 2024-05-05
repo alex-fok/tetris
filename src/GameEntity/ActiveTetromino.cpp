@@ -7,9 +7,8 @@ offset(offset)
 }
 void GameEntity::ActiveTetromino::updateStat(ActiveStat s, bool isResetTimer)
 {
-    if (isResetTimer) {
+    if (isResetTimer)
         elapsed.restart();
-    }
     stat = s;
 }
 
