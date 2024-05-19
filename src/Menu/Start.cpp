@@ -13,7 +13,7 @@ Menu::Start::Start(sf::RenderWindow *w, std::function<void()> startGameFn, std::
     m_setup(m_width, m_height, "Tetris");
 
     // Start button
-    Utils::Button *start = new Utils::Button("Sart (Enter)", fontCollection);
+    Utils::Button *start = new Utils::Button("Start (Enter)", fontCollection);
 
     start->setClickFn(m_startGameFn);
     start->setHoverFn(std::bind(forwarder_setSelected, this, 0));
