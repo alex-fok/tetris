@@ -304,7 +304,8 @@ void GameEntity::TetrominoContainer::placeNewActive()
     if (!m_linesToClear.empty())
         clearLines();
     Tetromino *t = m_tetrominoFactory->getNext();
-    m_active = ActiveTetromino(t, getStartPos(t));
+    m_active = ActiveTetromino(t, {m_initPos.x, m_initPos.y});
+    m_active.offset = getStartPos(t);
     updateActive(true);
 }
 
@@ -317,7 +318,6 @@ void GameEntity::TetrominoContainer::settleActive()
         int x = m_active.offset.x + v.x;
         int y = m_active.offset.y + v.y;
         m_arr[y][x].setTetromino(m_active.tetromino->id, m_active.tetromino->type);
-
         if (map.count(y)) continue;
 
         // Check if line should be cleared
@@ -381,7 +381,7 @@ void GameEntity::TetrominoContainer::handle(sf::Keyboard::Key input)
             move({1, 0});
             break;
         case sf::Keyboard::Down:
-            move({0, -1});
+            softDrop();
             break;
         case sf::Keyboard::Left:
             move({-1, 0});
