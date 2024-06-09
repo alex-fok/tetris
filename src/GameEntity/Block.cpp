@@ -12,6 +12,9 @@ GameEntity::Block::Block(int id, BlockType type, float size) :
 }
 
 GameEntity::Block::Block() :
+    // t_id(-1),
+    // type(EMPTY),
+    // content(sf::RectangleShape(sf::Vector2(GameUI::Config::Block::Size, GameUI::Config::Block::Size)))
     Block::Block(-1, EMPTY, GameUI::Config::Block::Size)
 {
 };
@@ -28,7 +31,7 @@ void GameEntity::Block::copy(GameEntity::Block &other)
 void GameEntity::Block::setTetromino(int id, BlockType type)
 {
     t_id = id;
-    content.setFillColor(BlockColor[type]);
+    content.setFillColor(type == EMPTY ? sf::Color::Transparent : BlockColor[type]);
     content.setOutlineColor(OutlineColor_Default);
 }
 
