@@ -5,6 +5,7 @@
 #include "../GameAnimation/Scoring.hpp"
 #include "../GameAnimation/ClearLines.hpp"
 #include "../GameEntity/TetrominoFactory.hpp"
+#include "../GameSetting/Setting.hpp"
 #include "../GameEntity/ScoreAction.hpp"
 #include "../GameEntity/ScoringSystem.hpp"
 #include "../GameEntity/Score.hpp"
@@ -29,6 +30,7 @@ namespace GameUI
         GameAnimation::ClearLines m_clearLinesAnimation;
         int m_animationCount;
         GameEntity::TetrominoFactory m_tetroFactory;
+        GameSetting::Setting m_setting;
         GameEntity::ScoringSystem m_scoringSystem;
         GameEntity::Score m_score;
         GameEntity::PreviewList m_previewList;

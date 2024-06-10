@@ -8,6 +8,7 @@ GameEntity::TetrominoContainer::TetrominoContainer(
     sf::RenderWindow *window,
     TetrominoFactory *tetroFactory,
     ScoringSystem *scoringSystem,
+    GameSetting::Setting *setting,
     GameAnimation::ClearLines *clearLinesAnimation,
     std::function<Tetromino *(Tetromino *)> setHold,
     std::function<void(GameUI::Status)> statusSetter
@@ -19,6 +20,7 @@ GameEntity::TetrominoContainer::TetrominoContainer(
     ))),
     m_tetrominoFactory(tetroFactory),
     m_scoringSystem(scoringSystem),
+    m_setting(setting),
     m_clearLinesAnimation(clearLinesAnimation),
     m_active(ActiveTetromino(m_tetrominoFactory->getNext(), {m_initPos.x, m_initPos.y})),
     m_setHold(setHold),
@@ -38,6 +40,7 @@ GameEntity::TetrominoContainer::TetrominoContainer(
             // Note: reverse_y + y = BlockCount.y - 1. Ex: (0, 19), (1, 18), ..., (19, 0)
             int reverse_y = m_blockCount.y - 1 - y;
             m_arr[y][x].setPosition(limit.Left + borderWidth + x * blockSize - x, limit.Top + borderWidth + reverse_y * (blockSize - 1));
+            m_arr[y][x].setBlockThemeSetter(std::bind(GameSetting::Setting::forwarder_applyBlockTheme, m_setting, &m_arr[y][x], std::placeholders::_1));
         }
     updateActive(true);
 }

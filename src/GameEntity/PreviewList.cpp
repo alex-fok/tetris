@@ -3,11 +3,11 @@
 #include "Block.hpp"
 #include "iostream"
 
-GameEntity::PreviewList::PreviewList(sf::RenderWindow *window, TetrominoFactory *tetroFactory) :
+GameEntity::PreviewList::PreviewList(sf::RenderWindow *window, TetrominoFactory *tetroFactory, GameSetting::Setting *setting) :
     Drawable(window),
     m_tetroFactory(tetroFactory),
     m_tetros(new Tetromino *[GameUI::Config::PreviewList::Count]),
-    m_next(window),
+    m_next(window, setting),
     m_text(sf::Text())
 {
     m_tetroFactory->addSubscription(std::bind(forwarder_update, this));
@@ -34,7 +34,7 @@ GameEntity::PreviewList::PreviewList(sf::RenderWindow *window, TetrominoFactory 
     auto topContainerPosY = limit.Top + localBounds.height + Next::Margin_Top + Next::ContainerSize + InLine::Margin_Top + InLine::ContainerSize / 2;
     for (size_t i = 0; i < GameUI::Config::PreviewList::Count - 1; ++i)
     {
-        m_inLine[i] = GameEntity::SingleTetroBox(window);
+        m_inLine[i] = GameEntity::SingleTetroBox(window, setting);
         m_inLine[i].init(
             InLine::ContainerSize,
             { limit.Left + (GameUI::Config::Window::Width - limit.Left) / 2, topContainerPosY + InLine::ContainerSize * i + InLine::Margin_Top * i },

@@ -18,15 +18,17 @@ GameUI::UI::UI():
         std::bind(GameUI::UI::forwarder_stopAnimation, this)
     ),
     m_animationCount(0),
+    m_setting(),
     m_scoringSystem(&m_scoreAnimation),
     m_tetroFactory(GameEntity::TetrominoFactory()),
     m_score(&m_window, &m_scoringSystem),
-    m_previewList(GameEntity::PreviewList(&m_window, &m_tetroFactory)),
-    m_hold(&m_window),
+    m_previewList(GameEntity::PreviewList(&m_window, &m_tetroFactory, &m_setting)),
+    m_hold(&m_window, &m_setting),
     m_tetroContainer(
         &m_window,
         &m_tetroFactory,
         &m_scoringSystem,
+        &m_setting,
         &m_clearLinesAnimation,
         std::bind(GameEntity::Hold::forwarder_switchTetro, &m_hold, std::placeholders::_1),
         std::bind(GameUI::UI::forwarder_setStatus, this, std::placeholders::_1)

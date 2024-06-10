@@ -2,8 +2,9 @@
 #include <vector>
 #include "SFML/Graphics.hpp"
 #include "../Resources/FontCollection.hpp"
-#include "../GameUI/Config.hpp"
 #include "../Utils/Drawable.hpp"
+#include "../GameUI/Config.hpp"
+#include "../GameSetting/Setting.hpp"
 #include "Tetromino.hpp"
 #include "TetrominoFactory.hpp"
 #include "Vector.hpp"
@@ -23,9 +24,9 @@ namespace GameEntity
         sf::Text m_text;
    public:
         Tetromino **m_tetros;
-        PreviewList(sf::RenderWindow *window, TetrominoFactory *tetroFactory);
+        PreviewList(sf::RenderWindow *, TetrominoFactory *, GameSetting::Setting *);
         void update();
-        static void forwarder_update(PreviewList *self);
+        static void forwarder_update(PreviewList *);
         void render();
         ~PreviewList();
     };

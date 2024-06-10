@@ -1,14 +1,14 @@
 #include "Block.hpp"
 #include "../GameUI/Config.hpp"
 
-GameEntity::Block::Block(int id, BlockType type, float size) :
+GameEntity::Block::Block(int id, BlockType bType, float size) :
     t_id(id),
-    type(type),
+    type(bType),
     content(sf::RectangleShape(sf::Vector2(size, size)))
 {
-    content.setFillColor(type == EMPTY ? sf::Color::Transparent : BlockColor[type]);
     content.setOutlineThickness(-1.f);
     content.setOutlineColor(OutlineColor_Default);
+    content.setFillColor(type == EMPTY ? sf::Color::Transparent : BlockColor[type]);
 }
 
 GameEntity::Block::Block() :
@@ -28,16 +28,26 @@ void GameEntity::Block::copy(GameEntity::Block &other)
     content.setOutlineColor(other.content.getOutlineColor());
 }
 
-void GameEntity::Block::setTetromino(int id, BlockType type)
-{
-    t_id = id;
-    content.setFillColor(type == EMPTY ? sf::Color::Transparent : BlockColor[type]);
-    content.setOutlineColor(OutlineColor_Default);
+void GameEntity::Block::setBlockThemeSetter(std::function<void(BlockType)> blockThemeSetter) {
+    m_applyTheme = blockThemeSetter;
+    m_applyTheme(type);
 }
 
-void GameEntity::Block::setOutline(BlockType type)
+void GameEntity::Block::setTetromino(int id, BlockType bType)
 {
-    content.setOutlineColor(BlockColor[type]);
+    t_id = id;
+    if (!m_applyTheme)
+    {
+        content.setOutlineColor(OutlineColor_Default);
+        content.setFillColor(bType == EMPTY ? sf::Color::Transparent : BlockColor[bType]);
+    } else
+        m_applyTheme(bType);
+    
+}
+
+void GameEntity::Block::setOutline(BlockType bType)
+{
+    content.setOutlineColor(BlockColor[bType]);
 }
 
 void GameEntity::Block::reset()

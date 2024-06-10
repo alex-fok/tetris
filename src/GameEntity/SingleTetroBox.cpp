@@ -1,4 +1,5 @@
 #include "SingleTetroBox.hpp"
+#include <functional>
 
 const sf::Vector2f GameEntity::SingleTetroBox::relativePos[Tetromino::TypeCount][Tetromino::BlockCount] =
 {
@@ -22,8 +23,9 @@ GameEntity::SingleTetroBox::SingleTetroBox()
 {
 }
 
-GameEntity::SingleTetroBox::SingleTetroBox(sf::RenderWindow *window) :
-    Drawable(window)
+GameEntity::SingleTetroBox::SingleTetroBox(sf::RenderWindow *window, GameSetting::Setting *setting) :
+    Drawable(window),
+    m_setting(setting)
 {
 }
 
@@ -42,6 +44,7 @@ void GameEntity::SingleTetroBox::init(float size, sf::Vector2f pos, float outlin
     {
         m_blocks[i].setSize({tetroBlockSize, tetroBlockSize});
         m_blocks[i].setOutline({BlockType::EMPTY});
+        m_blocks[i].setBlockThemeSetter(std::bind(GameSetting::Setting::forwarder_applyBlockTheme, m_setting, &m_blocks[i], std::placeholders::_1));
     }
 }
 

@@ -4,6 +4,7 @@
 #include "../Utils/Drawable.hpp"
 #include "../GameUI/Config.hpp"
 #include "../GameUI/Status.hpp"
+#include "../GameSetting/Setting.hpp"
 #include "../GameAnimation/ClearLines.hpp"
 #include "Vector.hpp"
 #include "Block.hpp"
@@ -32,6 +33,7 @@ namespace GameEntity
         ActiveTetromino m_active;
         Block m_arr[m_blockCount.y + ActiveTetromino::Offset_size][m_blockCount.x];
         ScoringSystem *m_scoringSystem;
+        GameSetting::Setting *m_setting;
         GameAnimation::ClearLines *m_clearLinesAnimation;
         std::function<Tetromino *(Tetromino *)> m_setHold;
         std::function<void(GameUI::Status)> m_setStatus;
@@ -40,6 +42,7 @@ namespace GameEntity
             sf::RenderWindow *w,
             TetrominoFactory *tetroFactory,
             ScoringSystem *scoringSystem,
+            GameSetting::Setting *setting,
             GameAnimation::ClearLines *m_clearLinesAnimation,
             std::function<Tetromino *(Tetromino *)>setHold,
             std::function<void(GameUI::Status)> statusSetter

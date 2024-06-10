@@ -1,4 +1,5 @@
 #pragma once
+#include <functional>
 #include <SFML/Graphics.hpp>
 #include "BlockType.hpp"
 #include "Vector.hpp"
@@ -25,9 +26,11 @@ namespace GameEntity {
         sf::RectangleShape content;
         Block(int id, BlockType type, float size);
         Block();
+        std::function<void(BlockType)> m_applyTheme;
         void copy(Block &other);
-        void setTetromino(int id, GameEntity::BlockType);
-        void setOutline(GameEntity::BlockType);
+        void setBlockThemeSetter(std::function<void(BlockType)>);
+        void setTetromino(int id, BlockType);
+        void setOutline(BlockType);
         void reset();
         void setSize(sf::Vector2f v);
         void setPosition(float x, float y);

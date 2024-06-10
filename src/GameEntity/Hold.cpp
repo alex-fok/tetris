@@ -2,10 +2,10 @@
 
 #include "Hold.hpp"
 #include <iostream>
-GameEntity::Hold::Hold(sf::RenderWindow *window) :
+GameEntity::Hold::Hold(sf::RenderWindow *window, GameSetting::Setting *setting) :
     Drawable(window),
     m_tetromino(0),
-    m_hold(window),
+    m_hold(window, setting),
     m_text(sf::Text())
 {
     namespace Hold = GameUI::Config::Hold;
