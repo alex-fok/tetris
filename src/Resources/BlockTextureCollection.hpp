@@ -12,5 +12,6 @@ namespace Resources {
         BlockTextureCollection(BlockTextureCollection &btc) = delete;
         static BlockTextureCollection *getInstance();
         sf::Texture Wooden;
+        sf::Texture Grass;
     };
 }

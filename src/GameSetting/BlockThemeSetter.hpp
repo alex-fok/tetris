@@ -32,6 +32,7 @@ namespace GameSetting
         void addBlockThemeSubscription(GameEntity::Block *);
         void applyNone(GameEntity::Block *, GameEntity::BlockType);
         void applyWoodTexture(GameEntity::Block *, GameEntity::BlockType);
+        void applyGrassTexture(GameEntity::Block *, GameEntity::BlockType);
         void applyBlockTheme(GameEntity::Block *, GameEntity::BlockType);
     };
 }

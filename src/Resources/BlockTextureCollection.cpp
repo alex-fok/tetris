@@ -2,7 +2,8 @@
 
 Resources::BlockTextureCollection::BlockTextureCollection()
 {
-    Wooden.loadFromFile("../../assets/texture/brick.jpg");
+    Wooden.loadFromFile("../../assets/texture/wooden.jpg");
+    Grass.loadFromFile("../../assets/texture/grass.jpg");
 }
 
 Resources::BlockTextureCollection *Resources::BlockTextureCollection::btc_ptr = nullptr;

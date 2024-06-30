@@ -1,7 +1,7 @@
 #include "BlockThemeSetter.hpp"
 #include <iostream>
 GameSetting::BlockThemeSetter::BlockThemeSetter() :
-    m_blockTheme(wood)
+    m_blockTheme(none)
 {
 }
 
@@ -20,15 +20,22 @@ void GameSetting::BlockThemeSetter::addBlockThemeSubscription(GameEntity::Block 
 void GameSetting::BlockThemeSetter::applyNone(GameEntity::Block *block, GameEntity::BlockType type)
 {
     block->content.setFillColor(type == GameEntity::BlockType::EMPTY ? sf::Color::Transparent : BlockColor[type]);
-    block->content.setOutlineColor(OutlineColor_Default);
+    block->setOutline(GameEntity::BlockType::EMPTY);
     block->content.setTexture(NULL);
 }
 
 void GameSetting::BlockThemeSetter::applyWoodTexture(GameEntity::Block *block, GameEntity::BlockType type)
 {
     block->content.setFillColor(type == GameEntity::BlockType::EMPTY ? sf::Color::Transparent : BlockColor[type]);
-    block->content.setOutlineColor(OutlineColor_Default);
+    block->setOutline(GameEntity::BlockType::EMPTY);
     block->content.setTexture(&Resources::BlockTextureCollection::getInstance()->Wooden);
+}
+
+void GameSetting::BlockThemeSetter::applyGrassTexture(GameEntity::Block *block, GameEntity::BlockType type)
+{
+    block->content.setFillColor(type == GameEntity::BlockType::EMPTY ? sf::Color::Transparent : BlockColor[type]);
+    block->setOutline(type);
+    block->content.setTexture(&Resources::BlockTextureCollection::getInstance()->Grass);
 }
 
 void GameSetting::BlockThemeSetter::applyBlockTheme(GameEntity::Block *block, GameEntity::BlockType type)
@@ -41,6 +48,8 @@ void GameSetting::BlockThemeSetter::applyBlockTheme(GameEntity::Block *block, Ga
         case wood:
             applyWoodTexture(block, type);
             break;
+        case grass:
+            applyGrassTexture(block, type);
         default:
             break;
     }

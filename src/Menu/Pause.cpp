@@ -2,7 +2,7 @@
 #include <iostream>
 
 #define Options_ButtonCount 2
-#define Texture_ButtonCount 3
+#define Texture_ButtonCount 4
 
 Menu::Pause::Pause(sf::RenderWindow *w, GameSetting::Setting *setting, std::function<void()> resumeFn) :
     Base(w),
@@ -43,11 +43,15 @@ void Menu::Pause::renderStylingContent()
     wood->setClickFn(std::bind(GameSetting::Setting::forwarder_setBlockTheme, m_setting, GameSetting::BlockTheme::wood));
     wood->setHoverFn(std::bind(forwarder_setSelected, this, 1));
 
+    Utils::Button *grass = new Utils::Button("Grass", fontCollection);
+    grass->setClickFn(std::bind(GameSetting::Setting::forwarder_setBlockTheme, m_setting, GameSetting::BlockTheme::grass));
+    grass->setHoverFn(std::bind(forwarder_setSelected, this, 2));
+
     Utils::Button *back = new Utils::Button("Back", fontCollection);
     back->setClickFn(std::bind(forwarder_displayContent, this, options));
-    back->setHoverFn(std::bind(forwarder_setSelected, this, 2));
+    back->setHoverFn(std::bind(forwarder_setSelected, this, 3));
 
-    Utils::Clickable **arr = new Utils::Clickable *[Texture_ButtonCount]{none, wood, back};
+    Utils::Clickable **arr = new Utils::Clickable *[Texture_ButtonCount]{none, wood, grass, back};
     setClickables(arr, Texture_ButtonCount);
     m_setButtonPositions();
     setSelectedIdx(0);

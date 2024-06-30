@@ -40,10 +40,13 @@ void GameEntity::Block::setTetromino(int id, BlockType bType)
     type = bType;
     if (!m_applyTheme)
     {
-        content.setOutlineColor(OutlineColor_Default);
+        setOutline(EMPTY);
         content.setFillColor(bType == EMPTY ? sf::Color::Transparent : BlockColor[bType]);
     } else
+    {
         m_applyTheme(bType);
+    }
+     
     
 }
 
@@ -56,7 +59,7 @@ void GameEntity::Block::setOutline(BlockType bType)
 void GameEntity::Block::setGhost(BlockType bType)
 {
     isGhost = true;
-    setOutline(bType);
+    content.setOutlineColor(BlockColor[bType]);
 }
 
 void GameEntity::Block::reset()
