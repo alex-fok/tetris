@@ -40,6 +40,7 @@ namespace GameUI
         namespace TetrominoContainer
         {
             static constexpr Count BlockCount = {10, 20};
+            static constexpr int HiddenLines = 4;
             static constexpr float BorderWidth = 10.f;
             static constexpr float Width = (Block::Size - 1) * BlockCount.x + BorderWidth * 2.f + 1;
             static constexpr float Height = (Block::Size - 1) * BlockCount.y + BorderWidth * 2.f + 1;

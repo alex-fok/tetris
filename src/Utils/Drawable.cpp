@@ -1,5 +1,5 @@
 #include "Drawable.hpp"
-
+#include <array>
 Utils::Drawable::Drawable()
 {
 }
@@ -21,6 +21,17 @@ Utils::Clickable ** Utils::Drawable::getClickables()
     return clickables;
 };
 
+void Utils::Drawable::clearClickables()
+{
+    if (clickables == NULL || clickableCount < 1)
+        return;
+    for (size_t i = 0; i < clickableCount; ++i)
+        delete clickables[i];
+    
+    clickableCount = 0;
+    delete [] clickables;
+}
+
 void Utils::Drawable::draw(const sf::Drawable &d)
 {
     m_window->draw(d);
@@ -34,7 +45,7 @@ Utils::Drawable::~Drawable()
 {
     if (clickableCount <= 0) return;
     
-    for (unsigned i = 0; i < clickableCount; ++i)
+    for (size_t i = 0; i < clickableCount; ++i)
         delete clickables[i];
     
     delete [] clickables;

@@ -16,6 +16,7 @@ namespace Utils
         Drawable(sf::RenderWindow *w);
         void setClickables(Clickable **c, int size);
         Clickable **getClickables();
+        void clearClickables();
         virtual void render();
         void draw(const sf::Drawable &d);
         ~Drawable();

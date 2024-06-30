@@ -23,6 +23,7 @@ namespace GameEntity {
     public:
         int t_id;
         BlockType type;
+        bool isGhost;
         sf::RectangleShape content;
         Block(int id, BlockType type, float size);
         Block();
@@ -31,6 +32,7 @@ namespace GameEntity {
         void setBlockThemeSetter(std::function<void(BlockType)>);
         void setTetromino(int id, BlockType);
         void setOutline(BlockType);
+        void setGhost(BlockType);
         void reset();
         void setSize(sf::Vector2f v);
         void setPosition(float x, float y);

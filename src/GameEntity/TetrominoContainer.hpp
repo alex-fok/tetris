@@ -31,7 +31,7 @@ namespace GameEntity
 
         TetrominoFactory *m_tetrominoFactory;
         ActiveTetromino m_active;
-        Block m_arr[m_blockCount.y + ActiveTetromino::Offset_size][m_blockCount.x];
+        Block m_arr[m_blockCount.y + GameUI::Config::TetrominoContainer::HiddenLines][m_blockCount.x];
         ScoringSystem *m_scoringSystem;
         GameSetting::Setting *m_setting;
         GameAnimation::ClearLines *m_clearLinesAnimation;

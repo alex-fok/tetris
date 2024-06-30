@@ -45,6 +45,7 @@ GameUI::UI::UI():
     )),
     m_pauseMenu(Menu::Pause(
         &m_window,
+        &m_setting,
         std::bind(GameUI::UI::forwarder_setStatus, this, Status::Running)
     ))
 {
@@ -202,11 +203,12 @@ void GameUI::UI::run()
         sf::Keyboard::Enter
     };
 
-    sf::Keyboard::Key paused_inputs[4] =
+    sf::Keyboard::Key paused_inputs[5] =
     {
         sf::Keyboard::Up,
         sf::Keyboard::Down,
         sf::Keyboard::R,
+        sf::Keyboard::S,
         sf::Keyboard::Enter
     };
 

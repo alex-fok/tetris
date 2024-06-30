@@ -64,7 +64,7 @@ void Menu::Base::m_setButtonPositions()
 
 void Menu::Base::setSelectedIdx(unsigned int idx)
 {
-    if (m_selected == idx)
+    if (m_selected == idx || clickableCount < 1)
         return;
 
     m_selected = idx;
@@ -72,6 +72,11 @@ void Menu::Base::setSelectedIdx(unsigned int idx)
     auto fr = m_cursor.getLocalBounds();
     auto selected_pos = selectedBtn->getPosition();
     m_cursor.setPosition(selected_pos.x - selectedBtn->m_width - fr.width/2, selected_pos.y);
+}
+
+void Menu::Base::clearContent()
+{
+    clearClickables();
 }
 
 void Menu::Base::handle(sf::Keyboard::Key input)

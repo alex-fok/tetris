@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include "SFML/Graphics.hpp"
 #include "../Resources/BlockTextureCollection.hpp"
 #include "../GameEntity/BlockType.hpp"
@@ -24,9 +25,11 @@ namespace GameSetting
     {
     private:
         BlockTheme m_blockTheme;
+        std::vector<GameEntity::Block *> m_blocks;
     public:
         BlockThemeSetter();
         void setBlockTheme(BlockTheme);
+        void addBlockThemeSubscription(GameEntity::Block *);
         void applyNone(GameEntity::Block *, GameEntity::BlockType);
         void applyWoodTexture(GameEntity::Block *, GameEntity::BlockType);
         void applyBlockTheme(GameEntity::Block *, GameEntity::BlockType);

@@ -41,6 +41,7 @@ GameEntity::TetrominoContainer::TetrominoContainer(
             int reverse_y = m_blockCount.y - 1 - y;
             m_arr[y][x].setPosition(limit.Left + borderWidth + x * blockSize - x, limit.Top + borderWidth + reverse_y * (blockSize - 1));
             m_arr[y][x].setBlockThemeSetter(std::bind(GameSetting::Setting::forwarder_applyBlockTheme, m_setting, &m_arr[y][x], std::placeholders::_1));
+            m_setting->addBlockThemeSubscription(&m_arr[y][x]);
         }
     updateActive(true);
 }
@@ -49,7 +50,7 @@ void GameEntity::TetrominoContainer::reset()
 {
     m_tetrominoFactory->reset();
     m_active = ActiveTetromino(m_tetrominoFactory->getNext(), {m_initPos.x, m_initPos.y});
-    for (int y = 0; y < m_blockCount.y + ActiveTetromino::Offset_size; ++y)
+    for (int y = 0; y < m_blockCount.y + GameUI::Config::TetrominoContainer::HiddenLines; ++y)
         for (int x = 0; x < m_blockCount.x; ++x)
             m_arr[y][x].reset();
 
@@ -92,7 +93,7 @@ void GameEntity::TetrominoContainer::updateActive(bool isResetTimer)
             .setTetromino(m_active.tetromino->id, m_active.tetromino->type);
 
         if (ghost_offset)
-            m_arr[v.y + m_active.offset.y + m_active.ghost_y][v.x + m_active.offset.x].setOutline(m_active.tetromino->type);
+            m_arr[v.y + m_active.offset.y + m_active.ghost_y][v.x + m_active.offset.x].setGhost(m_active.tetromino->type);
     }
     if (ghost_offset)
         m_active.updateStat(ActiveTetromino::ActiveStat::Active, isResetTimer);

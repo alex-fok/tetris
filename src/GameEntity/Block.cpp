@@ -4,6 +4,7 @@
 GameEntity::Block::Block(int id, BlockType bType, float size) :
     t_id(id),
     type(bType),
+    isGhost(false),
     content(sf::RectangleShape(sf::Vector2(size, size)))
 {
     content.setOutlineThickness(-1.f);
@@ -36,6 +37,7 @@ void GameEntity::Block::setBlockThemeSetter(std::function<void(BlockType)> block
 void GameEntity::Block::setTetromino(int id, BlockType bType)
 {
     t_id = id;
+    type = bType;
     if (!m_applyTheme)
     {
         content.setOutlineColor(OutlineColor_Default);
@@ -47,11 +49,19 @@ void GameEntity::Block::setTetromino(int id, BlockType bType)
 
 void GameEntity::Block::setOutline(BlockType bType)
 {
-    content.setOutlineColor(BlockColor[bType]);
+    if (!isGhost)
+        content.setOutlineColor(BlockColor[bType]);
+}
+
+void GameEntity::Block::setGhost(BlockType bType)
+{
+    isGhost = true;
+    setOutline(bType);
 }
 
 void GameEntity::Block::reset()
 {
+    isGhost = false;
     setTetromino(-1, EMPTY);
 }
 
