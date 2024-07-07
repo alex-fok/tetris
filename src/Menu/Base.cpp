@@ -67,7 +67,6 @@ void Menu::Base::setSelectedIdx(unsigned int idx)
 {
     if (m_selected == idx || drawableCount < 1)
         return;
-    std::cout << "setting selected to " << idx << std::endl;
     m_selected = idx;
     auto selectedBtn = (Utils::Button *)drawables[idx];
     auto fr = m_cursor.getLocalBounds();

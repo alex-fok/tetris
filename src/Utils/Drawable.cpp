@@ -32,10 +32,8 @@ void Utils::Drawable::clearDrawables()
     if (drawables == NULL || drawableCount <= 0)
         return;
     for (size_t i = 0; i < drawableCount; ++i) {
-        std::cout << "Deleting drawble at index:" << i << std::endl;
         delete drawables[i];
     }
-    std::cout << "Deleting drawable" << std::endl;
     drawableCount = 0;
     delete [] drawables;
 }
@@ -59,8 +57,6 @@ void Utils::Drawable::render()
 
 Utils::Drawable::~Drawable()
 {
-    std::cout << "Deleting drawable" << std::endl;
-    std::cout << "This drawable has " << drawableCount << " inner drwawable" << std::endl;
     if (drawableCount <= 0) return;
     
     for (size_t i = 0; i < drawableCount; ++i)

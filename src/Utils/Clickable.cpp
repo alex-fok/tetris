@@ -11,7 +11,6 @@ sf::Text Utils::Clickable::getClickable()
 
 void Utils::Clickable::handleClick()
 {
-    std::cout << "Handling click in clickable" << std::endl;
     m_click_fn();
 }
 
@@ -22,7 +21,6 @@ void Utils::Clickable::handleHover()
 
 void Utils::Clickable::setClickFn(std::function<void()> fn)
 {
-    std::cout << "Setting click fn" << std::endl;
     m_click_fn = fn;
 }
 
