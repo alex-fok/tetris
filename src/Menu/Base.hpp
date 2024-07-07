@@ -25,6 +25,7 @@ namespace Menu
         sf::RectangleShape m_container;
         sf::Text m_title;
         void m_setup(float width, float height, const char *title);
+        void m_setGrid();
         void m_setButtonPositions();
         void m_renderBase();
     public:

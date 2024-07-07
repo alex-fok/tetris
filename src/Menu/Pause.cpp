@@ -27,8 +27,8 @@ void Menu::Pause::renderOptionsContent()
     setting->setClickFn(std::bind(forwarder_displayContent, this, style));
     setting->setHoverFn(std::bind(forwarder_setSelected, this, 1));
     
-    Utils::Clickable **arr = new Utils::Clickable *[Options_ButtonCount]{resume, setting};
-    setClickables(arr, Options_ButtonCount);
+    Utils::Drawable **arr = new Utils::Drawable *[Options_ButtonCount]{resume, setting};
+    setDrawables(arr, Options_ButtonCount);
     m_setButtonPositions();
     setSelectedIdx(0);
 }
@@ -50,16 +50,18 @@ void Menu::Pause::renderStylingContent()
     Utils::Button *back = new Utils::Button("Back", fontCollection);
     back->setClickFn(std::bind(forwarder_displayContent, this, options));
     back->setHoverFn(std::bind(forwarder_setSelected, this, 3));
-
-    Utils::Clickable **arr = new Utils::Clickable *[Texture_ButtonCount]{none, wood, grass, back};
-    setClickables(arr, Texture_ButtonCount);
+    std::cout << "render stying content" << std::endl;
+    Utils::Drawable **arr = new Utils::Drawable *[Texture_ButtonCount]{none, wood, grass, back};
+    setDrawables(arr, Texture_ButtonCount);
     m_setButtonPositions();
     setSelectedIdx(0);
 }
 
 void Menu::Pause::displayContent(Menu::Pause::ContentType content)
 {
+    std::cout << "display content" << std::endl;
     clearContent();
+    std::cout << "display content1" << std::endl;
     switch(content)
     {
         case options:

@@ -1,6 +1,7 @@
 #include <cmath>
 #include "Base.hpp"
 #include "../GameUI/Config.hpp"
+#include <iostream>
 
 Menu::Base::Base(sf::RenderWindow *w) :
     Drawable(w),
@@ -55,20 +56,20 @@ void Menu::Base::m_setup(float width, float height, const char *title)
 
 void Menu::Base::m_setButtonPositions()
 {
-    float start = ceil(5.f + (5.f - float(clickableCount)) / 2.f);
+    float start = ceil(5.f + (5.f - float(drawableCount)) / 2.f);
     float x = m_container.getPosition().x; // centered
     
-    for (std::size_t i = 0; i < clickableCount; ++i)
-        clickables[i]->setPosition({x, m_height * 0.1f * (i + start) + m_offset.top});
+    for (std::size_t i = 0; i < drawableCount; ++i)
+        drawables[i]->setPosition({x, m_height * 0.1f * (i + start) + m_offset.top});
 }
 
 void Menu::Base::setSelectedIdx(unsigned int idx)
 {
-    if (m_selected == idx || clickableCount < 1)
+    if (m_selected == idx || drawableCount < 1)
         return;
-
+    std::cout << "setting selected to " << idx << std::endl;
     m_selected = idx;
-    auto selectedBtn = (Utils::Button *)clickables[idx];
+    auto selectedBtn = (Utils::Button *)drawables[idx];
     auto fr = m_cursor.getLocalBounds();
     auto selected_pos = selectedBtn->getPosition();
     m_cursor.setPosition(selected_pos.x - selectedBtn->m_width - fr.width/2, selected_pos.y);
@@ -76,7 +77,7 @@ void Menu::Base::setSelectedIdx(unsigned int idx)
 
 void Menu::Base::clearContent()
 {
-    clearClickables();
+    clearDrawables();
 }
 
 void Menu::Base::handle(sf::Keyboard::Key input)
@@ -87,10 +88,10 @@ void Menu::Base::handle(sf::Keyboard::Key input)
             setSelectedIdx(std::max(m_selected - 1, 0));
             break;
         case sf::Keyboard::Down:
-            setSelectedIdx(std::min(m_selected + 1, clickableCount - 1));
+            setSelectedIdx(std::min(m_selected + 1, drawableCount - 1));
             break;
         case sf::Keyboard::Enter:
-            clickables[m_selected]->handleClick();
+            drawables[m_selected]->handleClick();
             break;
         default:
             break;
@@ -107,8 +108,8 @@ void Menu::Base::m_renderBase()
 void Menu::Base::render()
 {
     m_renderBase();
-    for (size_t i = 0; i < clickableCount; ++i)
-        draw(clickables[i]->getClickable());
+    for (size_t i = 0; i < drawableCount; ++i)
+        draw(drawables[i]->getDrawable());
 }
 
 void Menu::Base::forwarder_setSelected(Menu::Base *self, unsigned int idx)

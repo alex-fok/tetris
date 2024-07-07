@@ -1,7 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "Area.hpp"
-#include "Clickable.hpp"
 
 namespace Utils
 {
@@ -9,14 +8,18 @@ namespace Utils
     {
     protected:
         sf::RenderWindow *m_window;
+        sf::Text m_content;
     public:
-        Clickable **clickables;
-        int clickableCount;
+        Drawable **drawables;
+        int drawableCount;
         Drawable();
         Drawable(sf::RenderWindow *w);
-        void setClickables(Clickable **c, int size);
-        Clickable **getClickables();
-        void clearClickables();
+        sf::Text getDrawable();
+        virtual void setPosition(sf::Vector2f position);
+        void setDrawables(Drawable **, int size);
+        void clearDrawables();
+        virtual void handleClick();
+        virtual void handleHover();
         virtual void render();
         void draw(const sf::Drawable &d);
         ~Drawable();

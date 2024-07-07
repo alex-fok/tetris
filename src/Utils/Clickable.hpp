@@ -1,20 +1,18 @@
 #pragma once
 #include <functional>
 #include <SFML/Graphics.hpp>
+#include "Drawable.hpp"
 #include "Area.hpp"
 
 namespace Utils
 {
-    class Clickable : public Area
+    class Clickable : public Drawable
     {
     private:
         std::function<void()> m_click_fn;
         std::function<void()> m_hover_fn;
-    protected:
-        sf::Text m_content;
     public:
         Clickable();
-        virtual void setPosition(sf::Vector2f position);
         sf::Text getClickable();
         
         void handleClick();

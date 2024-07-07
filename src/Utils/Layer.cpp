@@ -25,11 +25,11 @@ void Utils::Layer::handleMouseEvent(Utils::Layer::MouseEvent event, sf::Vector2i
         if (!d->isInArea(mousePos))
             continue;
         
-        Utils::Clickable **clickables = d->clickables;
+        Utils::Drawable **drawables = d->drawables;
         
-        for (size_t i = 0; i < d->clickableCount; ++i)
+        for (size_t i = 0; i < d->drawableCount; ++i)
         {
-            if (clickables[i]->isInArea(mousePos))
+            if (drawables[i]->isInArea(mousePos))
             {
                 if (cursor.loadFromSystem(sf::Cursor::Hand))
                     m_window->setMouseCursor(cursor);
@@ -37,10 +37,10 @@ void Utils::Layer::handleMouseEvent(Utils::Layer::MouseEvent event, sf::Vector2i
                 switch(event)
                 {
                     case Click:
-                        clickables[i]->handleClick();
+                        drawables[i]->handleClick();
                         break;
                     default:
-                        clickables[i]->handleHover();
+                        drawables[i]->handleHover();
                         break;
                 }
                 break;

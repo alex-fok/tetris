@@ -22,7 +22,7 @@ GameUI::UI::UI():
     m_scoringSystem(&m_scoreAnimation),
     m_tetroFactory(GameEntity::TetrominoFactory()),
     m_score(&m_window, &m_scoringSystem),
-    m_previewList(GameEntity::PreviewList(&m_window, &m_tetroFactory, &m_setting)),
+    m_previewList(&m_window, &m_tetroFactory, &m_setting),
     m_hold(&m_window, &m_setting),
     m_tetroContainer(
         &m_window,
@@ -76,7 +76,6 @@ void GameUI::UI::setPaused()
 void GameUI::UI::setRunning()
 {
     m_status = Running;
-    std::cout << "GameUI::UI >> Status is set to Running" << std::endl;
 }
 
 void GameUI::UI::setAnimationPlaying()
@@ -91,7 +90,6 @@ void GameUI::UI::setAnimationPlaying()
 
 void GameUI::UI::setStatus(Status s)
 {
-    std::cout << "GAMEUI::UI >> setStatus " << s << std::endl;
     if (m_status == s)
         return;
 

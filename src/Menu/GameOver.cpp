@@ -24,8 +24,8 @@ Menu::GameOver::GameOver(sf::RenderWindow *w, std::function<void()> retryFn, std
     quit->setClickFn(quitFn);
     quit->setHoverFn(std::bind(forwarder_setSelected, this, 1));
 
-    Utils::Clickable **arr = new Utils::Clickable *[ButtonCount]{retry, quit};
-    setClickables(arr, ButtonCount);
+    Utils::Drawable **arr = new Utils::Drawable *[ButtonCount]{retry, quit};
+    setDrawables(arr, ButtonCount);
 
     m_setButtonPositions();
     setSelectedIdx(0);

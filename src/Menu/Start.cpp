@@ -24,8 +24,8 @@ Menu::Start::Start(sf::RenderWindow *w, std::function<void()> startGameFn, std::
     quit->setClickFn(m_quitFn);
     quit->setHoverFn(std::bind(forwarder_setSelected, this, 1));
 
-    Utils::Clickable ** arr = new Utils::Clickable *[ButtonCount]{start, quit};
-    setClickables(arr, ButtonCount);
+    Utils::Drawable ** arr = new Utils::Drawable *[ButtonCount]{start, quit};
+    setDrawables(arr, ButtonCount);
 
     m_setButtonPositions();
     setSelectedIdx(0);

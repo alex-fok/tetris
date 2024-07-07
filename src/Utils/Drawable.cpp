@@ -1,40 +1,56 @@
 #include "Drawable.hpp"
 #include <array>
-Utils::Drawable::Drawable()
+#include <iostream>
+Utils::Drawable::Drawable() :
+drawableCount(0)
 {
 }
 
 Utils::Drawable::Drawable(sf::RenderWindow *w) :
 m_window(w),
-clickableCount(-1)
+drawableCount(0)
 {
 }
 
-void Utils::Drawable::setClickables(Clickable **c, int size)
+sf::Text Utils::Drawable::getDrawable()
 {
-    clickables = c;
-    clickableCount = size;
+    return m_content;
 }
 
-Utils::Clickable ** Utils::Drawable::getClickables()
+void Utils::Drawable::setPosition(sf::Vector2f position)
 {
-    return clickables;
 };
 
-void Utils::Drawable::clearClickables()
+void Utils::Drawable::setDrawables(Drawable **d, int size)
 {
-    if (clickables == NULL || clickableCount < 1)
+    drawables = d;
+    drawableCount = size;
+};
+
+void Utils::Drawable::clearDrawables()
+{
+    if (drawables == NULL || drawableCount <= 0)
         return;
-    for (size_t i = 0; i < clickableCount; ++i)
-        delete clickables[i];
-    
-    clickableCount = 0;
-    delete [] clickables;
+    for (size_t i = 0; i < drawableCount; ++i) {
+        std::cout << "Deleting drawble at index:" << i << std::endl;
+        delete drawables[i];
+    }
+    std::cout << "Deleting drawable" << std::endl;
+    drawableCount = 0;
+    delete [] drawables;
 }
 
 void Utils::Drawable::draw(const sf::Drawable &d)
 {
     m_window->draw(d);
+}
+
+void Utils::Drawable::handleClick()
+{
+}
+
+void Utils::Drawable::handleHover()
+{
 }
 
 void Utils::Drawable::render()
@@ -43,10 +59,13 @@ void Utils::Drawable::render()
 
 Utils::Drawable::~Drawable()
 {
-    if (clickableCount <= 0) return;
+    std::cout << "Deleting drawable" << std::endl;
+    std::cout << "This drawable has " << drawableCount << " inner drwawable" << std::endl;
+    if (drawableCount <= 0) return;
     
-    for (size_t i = 0; i < clickableCount; ++i)
-        delete clickables[i];
+    for (size_t i = 0; i < drawableCount; ++i)
+        delete drawables[i];
     
-    delete [] clickables;
+    drawableCount = 0;
+    delete [] drawables;
 }
