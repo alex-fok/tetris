@@ -52,7 +52,7 @@ void Menu::Pause::renderStylingContent()
     back->setHoverFn(std::bind(forwarder_setSelected, this, 3));
     Utils::Drawable **arr = new Utils::Drawable *[Texture_ButtonCount]{none, wood, grass, back};
     setDrawables(arr, Texture_ButtonCount);
-    setListPositions(m_container.getPosition().x, m_offset.top);
+    setGridPositions(m_container.getPosition().x, m_offset.top);
     setSelectedIdx(0);
 }
 

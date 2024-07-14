@@ -1,6 +1,8 @@
 #include "Drawable.hpp"
 #include <array>
 #include <iostream>
+#include <cmath>
+
 Utils::Drawable::Drawable() :
 drawableCount(0)
 {
@@ -27,9 +29,16 @@ void Utils::Drawable::setDrawables(Drawable **d, int size)
     drawableCount = size;
 };
 
-void Utils::Drawable::setGridPositions()
+void Utils::Drawable::setGridPositions(float x, float offsetTop)
 {
-
+    float start = ceil(5.f + (5.f - (float)drawableCount) / 2.f);
+    float quarter = m_width / 4;
+    for (std::size_t i = 0; i < drawableCount; ++i) {
+        drawables[i]->setPosition({
+            x + quarter * ((float)(i % 2) * 2 - 1),
+            m_height * 0.1f * (float)(floor(i / 2) + start) + offsetTop
+        });
+    }
 }
 
 void Utils::Drawable::setListPositions(float x, float offsetTop)
