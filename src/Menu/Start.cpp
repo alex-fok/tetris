@@ -27,7 +27,7 @@ Menu::Start::Start(sf::RenderWindow *w, std::function<void()> startGameFn, std::
     Utils::Drawable ** arr = new Utils::Drawable *[ButtonCount]{start, quit};
     setDrawables(arr, ButtonCount);
 
-    m_setButtonPositions();
+    setListPositions(m_container.getPosition().x, m_offset.top);
     setSelectedIdx(0);
 }
 

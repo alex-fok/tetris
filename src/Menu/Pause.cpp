@@ -29,7 +29,7 @@ void Menu::Pause::renderOptionsContent()
     
     Utils::Drawable **arr = new Utils::Drawable *[Options_ButtonCount]{resume, setting};
     setDrawables(arr, Options_ButtonCount);
-    m_setButtonPositions();
+    setListPositions(m_container.getPosition().x, m_offset.top);
     setSelectedIdx(0);
 }
 
