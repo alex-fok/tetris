@@ -54,15 +54,6 @@ void Menu::Base::m_setup(float width, float height, const char *title)
     m_title.setPosition({window_width_ctr, height * 0.1f + m_offset.top});
 }
 
-void Menu::Base::m_setButtonPositions()
-{
-    float start = ceil(5.f + (5.f - float(drawableCount)) / 2.f);
-    float x = m_container.getPosition().x; // centered
-    
-    for (std::size_t i = 0; i < drawableCount; ++i)
-        drawables[i]->setPosition({x, m_height * 0.1f * (i + start) + m_offset.top});
-}
-
 void Menu::Base::setSelectedIdx(unsigned int idx)
 {
     if (m_selected == idx || drawableCount < 1)

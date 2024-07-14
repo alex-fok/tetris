@@ -17,6 +17,8 @@ namespace Utils
         sf::Text getDrawable();
         virtual void setPosition(sf::Vector2f position);
         void setDrawables(Drawable **, int size);
+        void setGridPositions();
+        void setListPositions(float x, float offsetTop);
         void clearDrawables();
         virtual void handleClick();
         virtual void handleHover();

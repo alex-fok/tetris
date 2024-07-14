@@ -16,7 +16,7 @@ namespace Menu
     class Base : public Utils::Drawable
     {
     private:
-        Offset m_offset;
+        
         int m_selected;
         sf::CircleShape m_cursor;
     protected:
@@ -24,9 +24,8 @@ namespace Menu
         sf::RenderWindow *m_window;
         sf::RectangleShape m_container;
         sf::Text m_title;
+        Offset m_offset;
         void m_setup(float width, float height, const char *title);
-        void m_setGrid();
-        void m_setButtonPositions();
         void m_renderBase();
     public:
         Base(sf::RenderWindow *w);

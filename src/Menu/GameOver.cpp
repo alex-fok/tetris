@@ -27,7 +27,7 @@ Menu::GameOver::GameOver(sf::RenderWindow *w, std::function<void()> retryFn, std
     Utils::Drawable **arr = new Utils::Drawable *[ButtonCount]{retry, quit};
     setDrawables(arr, ButtonCount);
 
-    m_setButtonPositions();
+    setListPositions(m_container.getPosition().x, m_offset.top);
     setSelectedIdx(0);
 }
 
