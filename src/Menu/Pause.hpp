@@ -22,6 +22,7 @@ namespace Menu
         void renderStylingContent();
         void displayContent(ContentType);
         void handle(sf::Keyboard::Key input);
+        void onClose();
         static void forwarder_displayContent(Pause *, ContentType);
     };
 }

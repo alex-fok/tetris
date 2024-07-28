@@ -238,7 +238,11 @@ void GameUI::UI::run()
                     break;
                 case sf::Event::KeyPressed:
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && m_status != GameOver && m_status != AnimationPlaying)
+                    {
+                        if (m_status == Paused)
+                            m_pauseMenu.onClose();
                         setStatus(m_status == Paused ? Running : Paused);
+                    }
 
                     switch (m_status)
                     {

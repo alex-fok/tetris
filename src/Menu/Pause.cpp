@@ -2,7 +2,7 @@
 #include <iostream>
 
 #define Options_ButtonCount 2
-#define Texture_ButtonCount 4
+#define Texture_ButtonCount 3
 
 Menu::Pause::Pause(sf::RenderWindow *w, GameSetting::Setting *setting, std::function<void()> resumeFn) :
     Base(w),
@@ -23,13 +23,13 @@ void Menu::Pause::renderOptionsContent()
     resume->setHoverFn(std::bind(forwarder_setSelected, this, 0));
     
     // Settings button
-    Utils::Button *setting = new Utils::Button("Settings (S)", fontCollection);
-    setting->setClickFn(std::bind(forwarder_displayContent, this, style));
-    setting->setHoverFn(std::bind(forwarder_setSelected, this, 1));
+    Utils::Button *settings = new Utils::Button("Settings (S)", fontCollection);
+    settings->setClickFn(std::bind(forwarder_displayContent, this, style));
+    settings->setHoverFn(std::bind(forwarder_setSelected, this, 1));
     
-    Utils::Drawable **arr = new Utils::Drawable *[Options_ButtonCount]{resume, setting};
+    Utils::Drawable **arr = new Utils::Drawable *[Options_ButtonCount]{resume, settings};
     setDrawables(arr, Options_ButtonCount);
-    setListPositions(m_container.getPosition().x, m_offset.top);
+    setListPositions(arr, Options_ButtonCount, m_container.getPosition().x, m_offset.top, 5.f);
     setSelectedIdx(0);
 }
 
@@ -47,17 +47,23 @@ void Menu::Pause::renderStylingContent()
     grass->setClickFn(std::bind(GameSetting::Setting::forwarder_setBlockTheme, m_setting, GameSetting::BlockTheme::grass));
     grass->setHoverFn(std::bind(forwarder_setSelected, this, 2));
 
+    Utils::Drawable **textureArr = new Utils::Drawable *[Texture_ButtonCount]{none, wood, grass};
+    setGridPositions(textureArr, Texture_ButtonCount, m_container.getPosition().x, m_offset.top, 3.f);
+
     Utils::Button *back = new Utils::Button("Back", fontCollection);
     back->setClickFn(std::bind(forwarder_displayContent, this, options));
-    back->setHoverFn(std::bind(forwarder_setSelected, this, 3));
-    Utils::Drawable **arr = new Utils::Drawable *[Texture_ButtonCount]{none, wood, grass, back};
-    setDrawables(arr, Texture_ButtonCount);
-    setGridPositions(m_container.getPosition().x, m_offset.top);
+    back->setHoverFn(std::bind(forwarder_setSelected, this, 0));
+    Utils::Drawable **backArr = new Utils::Drawable *[1]{back};
+    Utils::Drawable **all = new Utils::Drawable *[Texture_ButtonCount + 1]{none, wood, grass, back};
+
+    setDrawables(all, Texture_ButtonCount + 1);
+    setListPositions(backArr, 1, m_container.getPosition().x, m_offset.top, 5.f);
     setSelectedIdx(0);
 }
 
 void Menu::Pause::displayContent(Menu::Pause::ContentType content)
 {
+    setSelectedIdx(0);
     clearContent();
     switch(content)
     {
@@ -86,6 +92,11 @@ void Menu::Pause::handle(sf::Keyboard::Key input)
             Base::handle(input);
             break;
     }
+}
+
+void Menu::Pause::onClose()
+{
+    displayContent(options);
 }
 
 void Menu::Pause::forwarder_displayContent(Menu::Pause *self, Menu::Pause::ContentType content)

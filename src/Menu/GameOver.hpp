@@ -15,5 +15,6 @@ namespace Menu
     public:
         GameOver(sf::RenderWindow *w, std::function<void()> retryFn, std::function<void()> quitFn);
         void handle(sf::Keyboard::Key input);
+        void onClose();
     };
 }

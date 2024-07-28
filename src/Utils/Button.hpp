@@ -9,7 +9,9 @@ namespace Utils
     {
     public:
         Button(const char *name, Resources::FontCollection *fc);
+        sf::Text *getContent();
         void setPosition(sf::Vector2f position);
         sf::Vector2f getPosition();
+        virtual void render();
     };
 }

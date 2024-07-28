@@ -1,6 +1,7 @@
 #include <functional>
 #include "GameOver.hpp"
 #include "algorithm"
+#include "iostream"
 
 #define ButtonCount 2
 
@@ -27,7 +28,7 @@ Menu::GameOver::GameOver(sf::RenderWindow *w, std::function<void()> retryFn, std
     Utils::Drawable **arr = new Utils::Drawable *[ButtonCount]{retry, quit};
     setDrawables(arr, ButtonCount);
 
-    setListPositions(m_container.getPosition().x, m_offset.top);
+    setListPositions(arr, ButtonCount, m_container.getPosition().x, m_offset.top, 5.f);
     setSelectedIdx(0);
 }
 
@@ -45,4 +46,8 @@ void Menu::GameOver::handle(sf::Keyboard::Key input)
             Base::handle(input);
             break;
     }
+}
+
+void Menu::GameOver::onClose()
+{
 }

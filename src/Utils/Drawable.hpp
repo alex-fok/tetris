@@ -16,9 +16,8 @@ namespace Utils
         Drawable(sf::RenderWindow *w);
         sf::Text getDrawable();
         virtual void setPosition(sf::Vector2f position);
+        sf::Vector2f getPosition();
         void setDrawables(Drawable **, int size);
-        void setGridPositions(float x, float offsetTop);
-        void setListPositions(float x, float offsetTop);
         void clearDrawables();
         virtual void handleClick();
         virtual void handleHover();

@@ -4,11 +4,6 @@ Utils::Clickable::Clickable()
 {
 }
 
-sf::Text Utils::Clickable::getClickable()
-{
-    return m_content;
-}
-
 void Utils::Clickable::handleClick()
 {
     m_click_fn();
@@ -17,6 +12,10 @@ void Utils::Clickable::handleClick()
 void Utils::Clickable::handleHover()
 {
     m_hover_fn();
+}
+
+void Utils::Clickable::render()
+{
 }
 
 void Utils::Clickable::setClickFn(std::function<void()> fn)

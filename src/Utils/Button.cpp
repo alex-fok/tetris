@@ -1,4 +1,5 @@
 #include "Button.hpp"
+#include <iostream>
 
 Utils::Button::Button(const char *name, Resources::FontCollection *fc)
 {
@@ -20,7 +21,7 @@ void Utils::Button::setPosition(sf::Vector2f position)
    );
 }
 
-sf::Vector2f Utils::Button::getPosition()
+void Utils::Button::render()
 {
-    return m_content.getPosition();
+    draw(m_content);
 }

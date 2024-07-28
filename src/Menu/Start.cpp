@@ -1,5 +1,5 @@
 #include "Start.hpp"
-
+#include <iostream>
 #define ButtonCount 2
 
 Menu::Start::Start(sf::RenderWindow *w, std::function<void()> startGameFn, std::function<void()> quitFn) :
@@ -11,7 +11,6 @@ Menu::Start::Start(sf::RenderWindow *w, std::function<void()> startGameFn, std::
     m_height = GameUI::Config::Menu::Start::Height;
 
     m_setup(m_width, m_height, "Tetris");
-
     // Start button
     Utils::Button *start = new Utils::Button("Start (Enter)", fontCollection);
 
@@ -27,7 +26,7 @@ Menu::Start::Start(sf::RenderWindow *w, std::function<void()> startGameFn, std::
     Utils::Drawable ** arr = new Utils::Drawable *[ButtonCount]{start, quit};
     setDrawables(arr, ButtonCount);
 
-    setListPositions(m_container.getPosition().x, m_offset.top);
+    setListPositions(arr, ButtonCount, m_container.getPosition().x, m_offset.top, 5.f);
     setSelectedIdx(0);
 }
 

@@ -13,10 +13,9 @@ namespace Utils
         std::function<void()> m_hover_fn;
     public:
         Clickable();
-        sf::Text getClickable();
-        
         void handleClick();
         void handleHover();
+        virtual void render();
         void setClickFn(std::function<void()> fn);
         void setHoverFn(std::function<void()> fn);
     };
