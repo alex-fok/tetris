@@ -9,8 +9,6 @@ Cross-platform Tetris using [SFML Library](https://www.sfml-dev.org/).
 ### Prerequisite Libraries
 - [CMake](https://cmake.org/download/)
 
-- [SFML](https://www.sfml-dev.org/download.php)
-
 ### Steps
 
 <strong>Build</strong>
