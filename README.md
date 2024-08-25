@@ -6,7 +6,7 @@ Cross-platform Tetris using [SFML Library](https://www.sfml-dev.org/).
 
 ## Installation
 
-### Prequisite Libraries
+### Prerequisite Libraries
 - [CMake](https://cmake.org/download/)
 
 - [SFML](https://www.sfml-dev.org/download.php)
