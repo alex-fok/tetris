@@ -8,7 +8,7 @@ Resources::FontCollection::FontCollection()
     const char *ENVIRONMENT = std::getenv("ENVIRONMENT");
     std::string assetPath = std::string(ENVIRONMENT != NULL && std::strcmp(ENVIRONMENT, "dev") == 0 ? "../../assets/" : "../assets/");
     std::string robotoFontLocation = std::string(assetPath + "font/Roboto-Regular.ttf");
-    RobotoRegular.loadFromFile(assetPath + robotoFontLocation);
+    RobotoRegular.loadFromFile(robotoFontLocation);
 }
 
 Resources::FontCollection *Resources::FontCollection::fc_ptr = nullptr;

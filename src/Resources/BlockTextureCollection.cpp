@@ -1,9 +1,14 @@
+#include <cstdlib>
 #include "BlockTextureCollection.hpp"
 
 Resources::BlockTextureCollection::BlockTextureCollection()
 {
-    Wooden.loadFromFile("../../assets/texture/wooden.jpg");
-    Grass.loadFromFile("../../assets/texture/grass.jpg");
+    const char *ENVIRONMENT = std::getenv("ENVIRONMENT");
+    std::string assetPath = std::string(ENVIRONMENT != NULL && std::strcmp(ENVIRONMENT, "dev") == 0 ? "../../assets/" : "../assets/");
+    std::string woodenLocation = std::string(assetPath + "texture/wooden.jpg");
+    std::string grassLocation = std::string(assetPath + "texture/grass.jpg");
+    Wooden.loadFromFile(woodenLocation);
+    Grass.loadFromFile(grassLocation);
 }
 
 Resources::BlockTextureCollection *Resources::BlockTextureCollection::btc_ptr = nullptr;
