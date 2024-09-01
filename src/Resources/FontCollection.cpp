@@ -1,5 +1,5 @@
 #include <cstdlib>
-#include <string>
+#include <cstring>
 #include "FontCollection.hpp"
 #include <stdlib.h>
 
