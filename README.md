@@ -8,7 +8,21 @@ Cross-platform Tetris using [SFML Library](https://www.sfml-dev.org/).
 
 ### Prerequisite Libraries
 - [CMake](https://cmake.org/download/)
-
+- For Linux users, a series of system packages will need to be installed. Here are the commands for Ubuntu OS:
+  ```
+  sudo apt update
+  sudo apt install \
+    libxrandr-dev \
+    libxcursor-dev \
+    libudev-dev \
+    libopenal-dev \
+    libflac-dev \
+    libvorbis-dev \
+    libgl1-mesa-dev \
+    libegl1-mesa-dev \
+    libdrm-dev \
+    libgbm-dev
+  ```
 ### Steps
 
 <strong>Build</strong>
