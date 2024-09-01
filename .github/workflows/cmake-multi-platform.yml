@@ -57,7 +57,8 @@ jobs:
     - name: Install Open GL Libraries
       # Install required Linux packages as per https://www.sfml-dev.org/tutorials/2.6/start-cmake.php
       run: |
-        apt install \
+        sudo apt update
+        sudo apt install \
           libxrandr-dev \
           libxcursor-dev \
           libudev-dev \
