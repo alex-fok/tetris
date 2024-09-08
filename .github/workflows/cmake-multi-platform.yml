@@ -60,6 +60,10 @@ jobs:
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: ctest --build-config ${{ matrix.build_type }}
 
+    - name: CPack
+      run: >
+        cpack ${{ github.workspace }}
+
   build_linux:
     runs-on: ${{ matrix.os }}
 
@@ -125,8 +129,20 @@ jobs:
       run: >
         cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
 
+    - name: CPack
+      run: >
+        cpack ${{ github.workspace }}
+    
+    - uses: actions/upload-artifact@v4
+      with:
+        name: windows
+        path: |
+          ${{ steps.strings.outputs.build-output-dir }}
+          Tetris-0.1.1-Linux.tar.gz
+
     - name: Test
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
       # Execute tests defined by the CMake configuration. Note that --build-config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: ctest --build-config ${{ matrix.build_type }}
+    
