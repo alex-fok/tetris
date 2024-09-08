@@ -62,7 +62,14 @@ jobs:
 
     - name: Install
       run: >
-        cmake --install ${{github.workspace}}/build --config ${{ matrix.build_type }}
+        cmake --install ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: linux
+        path: |
+          ${{ steps.strings.outputs.build-output-dir }}
+          Tetris-0.1.1-win64.exe
 
   build_linux:
     runs-on: ${{ matrix.os }}
@@ -137,14 +144,11 @@ jobs:
 
     - name: Install
       run: >
-        cmake --install ${{github.workspace}}/build --config ${{ matrix.build_type }}
+        sudo cmake --install ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
     
     - uses: actions/upload-artifact@v4
       with:
-        name: windows
+        name: linux
         path: |
           ${{ steps.strings.outputs.build-output-dir }}
           Tetris-0.1.1-Linux.tar.gz
-
-
-    
