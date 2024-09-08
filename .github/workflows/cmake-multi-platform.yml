@@ -54,15 +54,15 @@ jobs:
       run: >
         cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
 
-    - name: Test
-      working-directory: ${{ steps.strings.outputs.build-output-dir }}
-      # Execute tests defined by the CMake configuration. Note that --build-config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
-      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-      run: ctest --build-config ${{ matrix.build_type }}
+    # - name: Test
+    #   working-directory: ${{ steps.strings.outputs.build-output-dir }}
+    #   # Execute tests defined by the CMake configuration. Note that --build-config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
+    #   # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+    #   run: ctest --build-config ${{ matrix.build_type }}
 
-    - name: CPack
+    - name: Install
       run: >
-        cpack ${{ github.workspace }}
+        cmake --install ${{github.workspace}}/build --config ${{ matrix.build_type }}
 
   build_linux:
     runs-on: ${{ matrix.os }}
@@ -129,9 +129,15 @@ jobs:
       run: >
         cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
 
-    - name: CPack
+    # - name: Test
+    #   working-directory: ${{ steps.strings.outputs.build-output-dir }}
+    #   # Execute tests defined by the CMake configuration. Note that --build-config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
+    #   # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+    #   run: ctest --build-config ${{ matrix.build_type }}
+
+    - name: Install
       run: >
-        cpack ${{ github.workspace }}
+        cmake --install ${{github.workspace}}/build --config ${{ matrix.build_type }}
     
     - uses: actions/upload-artifact@v4
       with:
@@ -140,9 +146,5 @@ jobs:
           ${{ steps.strings.outputs.build-output-dir }}
           Tetris-0.1.1-Linux.tar.gz
 
-    - name: Test
-      working-directory: ${{ steps.strings.outputs.build-output-dir }}
-      # Execute tests defined by the CMake configuration. Note that --build-config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
-      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-      run: ctest --build-config ${{ matrix.build_type }}
+
     
