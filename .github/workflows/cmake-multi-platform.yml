@@ -66,7 +66,7 @@ jobs:
 
     - uses: actions/upload-artifact@v4
       with:
-        name: linux
+        name: windows
         path: |
           ${{ steps.strings.outputs.build-output-dir }}
           Tetris-0.1.1-win64.exe
@@ -86,7 +86,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         build_type: [Release]
-        c_compiler: [gcc, clang]
+        c_compiler: [gcc]
         include:
           - os: ubuntu-latest
             c_compiler: gcc
